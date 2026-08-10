@@ -310,6 +310,43 @@ model NotificationDelivery {
   @@index([channel, status])
 }
 
+model OutboxEvent {
+  id             String    @id @default(uuid())
+  eventType      String    @db.VarChar(100)
+  aggregateType  String    @db.VarChar(50)
+  aggregateId    String    @db.VarChar(36)
+  payload        Json
+  topic          String    @db.VarChar(100)
+  attempts       Int       @default(0)
+  lastError      String?
+  publishedAt    DateTime?
+  createdAt      DateTime  @default(now())
+
+  @@index([publishedAt, createdAt])
+  @@index([topic])
+}
+
+model RoleChangeAudit {
+  id             String    @id @default(uuid())
+  actorId        String
+  actorRole      Role
+  targetId       String
+  targetRole     Role
+  previousRole   Role
+  newRole        Role
+  action         String    @default("ROLE_CHANGE")
+  status         String    @default("SUCCESS")
+  reason         String?
+  ipAddress      String?
+  userAgent      String?
+  metadata       Json?
+  createdAt      DateTime  @default(now())
+
+  @@index([actorId, createdAt])
+  @@index([targetId, createdAt])
+  @@index([createdAt])
+}
+
 model FanoutAudit {
   id             String       @id @default(uuid())
   fanoutId       String       @unique
