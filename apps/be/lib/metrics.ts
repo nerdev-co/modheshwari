@@ -28,6 +28,44 @@ export const notificationDlqSize = new client.Gauge({
   help: 'Number of items currently in notifications DLQ (Redis list)',
 });
 
+export const outboxPendingEvents = new client.Gauge({
+  name: 'outbox_pending_events',
+  help: 'Number of unprocessed outbox events',
+});
+
+export const outboxPublishFailures = new client.Counter({
+  name: 'outbox_publish_failures_total',
+  help: 'Total number of outbox publish failures',
+  labelNames: ['topic'],
+});
+
+export const outboxRetryCount = new client.Counter({
+  name: 'outbox_retry_count_total',
+  help: 'Total number of outbox event retries',
+});
+
+export const websocketReconciliationCount = new client.Counter({
+  name: 'websocket_reconciliation_count_total',
+  help: 'Total number of WebSocket reconnection reconciliations',
+});
+
+export const elasticsearchIndexFailures = new client.Counter({
+  name: 'elasticsearch_index_failures_total',
+  help: 'Total number of Elasticsearch indexing failures',
+  labelNames: ['event_type'],
+});
+
+export const elasticsearchReconciliationCount = new client.Counter({
+  name: 'elasticsearch_reconciliation_count_total',
+  help: 'Total number of Elasticsearch reconciliation runs',
+});
+
+export const roleChangeAnomalyCount = new client.Counter({
+  name: 'role_change_anomaly_count_total',
+  help: 'Total number of role change anomalies detected',
+  labelNames: ['anomaly_type'],
+});
+
 /**
  * Performs metrics handler operation.
  * @returns {Promise<Response>} Description of return value

@@ -1,5 +1,12 @@
-import prisma from "@modheshwari/db";
-import { randomUUID } from "crypto";
+export type OutboxEventParams = {
+  eventType: string;
+  aggregateType: string;
+  aggregateId: string;
+  payload: unknown;
+  topic: string;
+};
+
+export type OutboxEventParamsArray = Array<OutboxEventParams>;
 
 /**
  * Creates an outbox event within an existing Prisma transaction.
@@ -7,13 +14,7 @@ import { randomUUID } from "crypto";
  */
 export async function createOutboxEvent(
   tx: any,
-  params: {
-    eventType: string;
-    aggregateType: string;
-    aggregateId: string;
-    payload: Record<string, unknown>;
-    topic: string;
-  },
+  params: OutboxEventParams,
 ) {
   await tx.outboxEvent.create({
     data: {
@@ -31,13 +32,7 @@ export async function createOutboxEvent(
  */
 export async function createOutboxEvents(
   tx: any,
-  events: Array<{
-    eventType: string;
-    aggregateType: string;
-    aggregateId: string;
-    payload: Record<string, unknown>;
-    topic: string;
-  }>,
+  events: OutboxEventParamsArray,
 ) {
   if (events.length === 0) return;
   await tx.outboxEvent.createMany({
