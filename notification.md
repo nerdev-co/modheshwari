@@ -316,19 +316,25 @@ API → broadcastNotification(strategy, priority)
        │                             │
        │  • Notification             │
        │  • NotificationDelivery     │
-       │  • OutboxEvent              │
-       └─────────────────────────────┘
-                      │
-                      ▼
-       ┌─────────────────────────────┐
-       │     Outbox Relay            │
-       │  (single instance, locked)  │
-       └──┬──────────────────────────┘
-          │
-          ├─ Kafka (notification.events)
-          ├─ Elasticsearch (indexing)
-          └─ Retry with backoff
+        │  • OutboxEvent              │
+        │  • OutboxEventDeadLetter    │
+        └─────────────────────────────┘
+                       │
+                       ▼
+        ┌─────────────────────────────┐
+        │     Outbox Relay            │
+        │  (single instance, locked)  │
+        └──┬──────────────────────────┘
+           │
+           ├─ Kafka (notification.events)
+           ├─ Elasticsearch (indexing)
+           ├─ Retry with backoff
+           └─ DLQ after max attempts (OutboxEventDeadLetter)
 ```
+
+### Elasticsearch Reconciliation
+
+A periodic `esReconciliation` worker runs every `ES_RECONCILIATION_INTERVAL_MS` (default 1 hour) to re-index users and events updated since the last run. This repairs ES drift caused by downtime or missed relay events.
 
 ### Message Flow with Outbox
 
