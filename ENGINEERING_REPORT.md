@@ -40,7 +40,7 @@ The repository contained four critical reliability gaps that could cause silent 
 | `apps/be/lib/prismaIndexHooks.ts` | Prisma `$use` middleware now enqueues ES indexing into outbox instead of calling ES directly | Decouple DB writes from ES availability | ES downtime does not block DB writes | Type-checked |
 | `apps/be/lib/redisClient.ts` | Exponential reconnection with max retries | Avoid infinite reconnect storms on Redis failure | Client retries up to 10 times then surfaces error | Type-checked |
 | `apps/ws/handlers.ts` | Added `reconcileMissedNotifications` on WS open + `handleSync` for missed messages | Recover messages missed during disconnect | Up to 100 missed notifications delivered on reconnect | Type-checked |
-| `apps/ws/types.ts` | Added `sync` to `IncomingMessage.type` and `lastSeenAt` field | Support reconnect reconciliation | — | Type-checked |
+| `apps/ws/types.ts` | Added `sync` to `IncomingMessage.type`, `lastSeenAt`, `limit`, and `cursor` | Support reconnect reconciliation with pagination | Client receives `hasMore` + `nextCursor` for paginated recovery | Type-checked |
 | `apps/be/routes/notifications.ts` | `broadcastNotification` replaced with atomic outbox event creation | Eliminate DB-then-Kafka gap | 202 Accepted; relay publishes async | Type-checked, linted |
 | `apps/be/routes/notificationsFanout.ts` | Fanout now enqueues outbox event | Same atomic guarantee | 202 Accepted | Type-checked, linted |
 | `apps/be/routes/notificationRead.ts` | Read events now enqueued via outbox instead of direct Kafka producer | Atomic read + event creation | 200 OK | Type-checked, linted |
@@ -96,7 +96,7 @@ Application transaction
 - The outbox relay picks up `elasticsearch.indexing` topic events and calls `indexUser`, `indexEvent`, `deleteUser`, `deleteEvent`.
 - Postgres remains the system of record; ES is always a derived view.
 - Failed ES indexing increments `attempts` and retries on the next relay tick.
-- A reconciliation job can be scheduled later if needed (not implemented yet).
+- A periodic `esReconciliation` worker runs every `ES_RECONCILIATION_INTERVAL_MS` (default 1 hour) to re-index recently updated users/events and repair drift.
 
 ## 9. RBAC/security
 
@@ -120,9 +120,9 @@ No test cases were added per your instruction. Existing lint, type-check, and bu
 
 ## 12. Remaining limitations
 
-- **Outbox reconciliation job**: No periodic full-reconciliation job exists yet. If the relay falls behind or crashes repeatedly, events will accumulate but not be lost.
-- **Dead-letter queue for outbox**: Events that exceed `attempts` remain in the outbox table. A production system should move them to a DLQ after N failures.
-- **WebSocket sync limit**: Reconnect returns up to 100 notifications and 200 chat messages. Very long disconnects may still miss older data.
+- **Outbox DLQ**: Implemented. Events exceeding `OUTBOX_MAX_ATTEMPTS` (default 10) are moved to `OutboxEventDeadLetter` with reason and metadata. No automatic replay UI yet.
+- **Periodic ES reconciliation**: Implemented via `esReconciliation` worker. Very large datasets may need cursor-based pagination inside the worker.
+- **WebSocket sync cap**: Reconnect returns up to 500 notifications and paginated chat messages (default 200, max 500 per page) with `cursor`/`hasMore`. Very long disconnects can still require multiple `sync` requests from the client.
 - **COMMUNITY_HEAD unilateral power**: The role-change audit and anomaly detection do not prevent a compromised account from making valid-looking changes; they only make the activity visible and countable.
 - **PostGIS**: The `nearby` endpoint uses raw SQL for `ST_DWithin` (pre-existing). No changes were made to this path.
 
@@ -153,13 +153,13 @@ Role changes are written to an immutable `RoleChangeAudit` table. Simple anomaly
 | "Broadcast and escalation strategies exist." | TRUE | `BROADCAST` and `ESCALATION` implemented with escalation worker | — |
 | "Escalation is 10 minutes / 40 minutes." | TRUE | `ESCALATION_DELAYS.SMS = 10min`, `ESCALATION_DELAYS.EMAIL = 40min` | — |
 | "Failed deliveries retry." | TRUE | `notificationDelivery.attemptCount` incremented; rescheduled every 5 min up to 3 attempts | — |
-| "Dead-letter handling exists." | PARTIALLY TRUE | Redis-backed DLQ for notifications exists; outbox DLQ not yet implemented | DLQ exists for notifications; outbox DLQ is future work |
+| "Dead-letter handling exists." | TRUE | Outbox DLQ implemented via `OutboxEventDeadLetter`; notifications DLQ already existed | DLQ exists for both outbox and notifications |
 | "WebSocket connections are separated from REST." | TRUE | Separate Bun process on port 3002 | — |
 | "Multiple WS instances can serve one user." | TRUE | Redis Pub/Sub + sync reconciliation support multi-instance | — |
 | "Five-level RBAC exists." | TRUE | `COMMUNITY_HEAD`, `COMMUNITY_SUBHEAD`, `GOTRA_HEAD`, `FAMILY_HEAD`, `MEMBER` | — |
 | "Multi-admin approval exists." | TRUE | Events require approval from all admin roles | — |
 | "COMMUNITY_HEAD is uniquely privileged." | TRUE | `permissions.ts` grants COMMUNITY_HEAD broad edit rights | Now audited and rate-limited |
-| "Elasticsearch is eventually consistent." | PARTIALLY TRUE | ES is now derived via outbox relay; previously fire-and-forget | ES is eventually consistent via outbox relay |
+| "Elasticsearch is eventually consistent." | TRUE | ES is derived via outbox relay with periodic reconciliation worker | ES is eventually consistent via outbox relay + reconciliation |
 | "Elasticsearch indexing is currently fire-and-forget." | FALSE | Indexing now goes through outbox relay with retry | ES indexing is relay-based with retry |
 | "Transactional outbox is implemented." | TRUE | `OutboxEvent` model + relay worker with Redis lock | — |
 | "Redis Pub/Sub is durable." | FALSE | Redis Pub/Sub is still ephemeral; durability comes from Postgres persistence + sync | Redis is a fan-out mechanism; Postgres is durable |

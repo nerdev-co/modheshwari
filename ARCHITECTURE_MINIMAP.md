@@ -26,8 +26,24 @@ Postgres Transaction
 Outbox Relay (single instance, Redis-locked)
   ├── Kafka (notifications, escalations)
   ├── Elasticsearch (derived index updates)
-  └── Retry with backoff on failure
+  ├── Retry with backoff on failure
+  └── Dead-letter queue after max attempts (OutboxEventDeadLetter)
 ```
+
+### 3a. WebSocket Message Durability and Sync
+
+- Messages are persisted to Postgres before Redis Pub/Sub fan-out
+- On connect, server pushes unread notifications (up to 500)
+- Client can send `sync` with `lastSeenAt`, `limit` (default 200, max 500), and `cursor` for paginated missed message recovery
+- Response includes `hasMore` and `nextCursor` for client-side pagination
+- Duplicate delivery handled by client-side `messageId` deduplication
+
+### 3b. Elasticsearch Reconciliation
+
+- A periodic worker (`esReconciliation`) runs every `ES_RECONCILIATION_INTERVAL_MS` (default 1 hour)
+- Re-indexes users and events updated since the last run
+- Repairs ES drift caused by downtime or missed relay events
+- Does not replace the relay; complements it with periodic full-reconciliation
 
 ### 4. Multi-Level Approval Workflow
 

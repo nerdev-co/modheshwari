@@ -46,9 +46,10 @@ flowchart LR
 ### Reliability improvements
 
 - **Transactional outbox**: business mutations and outbox events commit atomically in PostgreSQL. A relay worker publishes pending events to Kafka and Elasticsearch with retry and backpressure.
+- **Outbox DLQ**: events exceeding max attempts (default 10) are moved to `OutboxEventDeadLetter` for manual inspection and replay.
 - **Kafka consumer idempotency**: Redis-backed deduplication prevents duplicate processing across consumer restarts.
-- **WebSocket message durability**: chat/notification messages are persisted to PostgreSQL before fan-out. Reconnecting clients recover missed messages via a sync endpoint.
-- **Elasticsearch derived index**: ES indexing is routed through the outbox relay. Postgres remains the authoritative source.
+- **WebSocket message durability**: chat/notification messages are persisted to PostgreSQL before fan-out. Reconnecting clients recover missed messages via a paginated sync endpoint (`limit` + `cursor`).
+- **Elasticsearch derived index**: ES indexing is routed through the outbox relay. A periodic reconciliation worker re-indexes recently updated documents to repair drift.
 - **Role-change audit**: every role change is recorded in an immutable audit log with anomaly counters for rate-limited and mass-demotion patterns.
 
 ## API docs
