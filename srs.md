@@ -1,7 +1,7 @@
 # Modheshwari — System Design & SRS (Implementation-Ready)
 
-**Document Version:** 1.1
-**Last Updated:** October 31, 2025
+**Document Version:** 1.2
+**Last Updated:** August 10, 2026
 **Audience:** Developers, Architects, Product Owners
 
 ---
@@ -48,6 +48,7 @@ This SRS focuses on being developer-first: accurate data model, clear API primit
 - Complex payments/refunds workflows (scaffolded but not implemented in seed).
 - Real-time chat/streaming (future feature).
 - Federated multi-tenant isolation (future).
+- Out-of-band security alerting for role changes (future; current implementation uses audit log + anomaly metrics).
 
 ---
 
@@ -87,7 +88,9 @@ Roles (from schema):
    - If any `changes_requested` → `Event.status = PENDING`/`NEEDS_ACTION` (implementation choice); we use `PENDING` and reflect reviewer remarks; the creator updates the event and approvals can be reset.
    - If all required approvers `approved` → `Event.status = APPROVED`.
 
-5. Notifications generated for approvers/creator at each relevant action.
+5. Notifications generated for approvers/creator at each relevant action via the outbox + Kafka router. Delivery strategies:
+   - `BROADCAST`: all enabled channels fire immediately.
+   - `ESCALATION`: in-app first; if unread after 10 minutes → SMS; if unread after 40 minutes → email.
 
 ### Resource request workflow
 
@@ -97,16 +100,16 @@ Roles (from schema):
 
 ## Technical architecture (brief)
 
-Recommended stack (as in original SRS):
-
 - Frontend: Next.js + Tailwind
-- Backend API: Node.js (Serverless or containerized), Prisma ORM
-- DB: PostgreSQL
-- Cache: Redis for sessions / hot queries
-- Search: Elasticsearch (async indexing)
-- Storage: S3 for files
+- Backend API: Bun + Elysia, Prisma ORM
+- DB: PostgreSQL (Neon in production)
+- Cache: Redis (sessions, Pub/Sub, DLQ, idempotency locks, outbox relay lock)
+- Message queue: Kafka (notification.events, email, push, sms, read)
+- Search: Elasticsearch (derived index, not authoritative)
+- Realtime: WebSocket service (Bun + ws) with Redis Pub/Sub fan-out
+- Reliability: Transactional outbox (`OutboxEvent`), DLQ (`OutboxEventDeadLetter`), Kafka consumer idempotency, periodic ES reconciliation worker
 - CI/CD: GitHub Actions
-- Monitoring: Prometheus / Grafana; Sentry for errors
+- Monitoring: Prometheus / Grafana; Alertmanager for alerts
 
 ---
 
@@ -446,15 +449,118 @@ model ResourceRequest {
 
 ```prisma
 model Notification {
-  id        String   @id @default(uuid())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  type      String
-  message   String
-  read      Boolean  @default(false)
-  createdAt DateTime @default(now())
+  id            String            @id @default(uuid())
+  user          User              @relation(fields: [userId], references: [id])
+  userId        String
+  type          NotificationType
+  message       String
+  subject       String?
+  channels      NotificationChannel[]
+  priority      NotificationPriority?
+  deliveryStrategy DeliveryStrategy?
+  read          Boolean           @default(false)
+  readAt        DateTime?
+  eventId       String?
+  createdAt     DateTime          @default(now())
 }
 ```
+
+**Notes**
+
+- `channels` and `priority` control broadcast vs escalation delivery.
+- `deliveryStrategy` is `BROADCAST` or `ESCALATION`.
+- `eventId` links the notification to a triggering event when applicable.
+
+### `OutboxEvent`
+
+Durable side-effect queue. Business mutations and outbox events commit atomically in the same Postgres transaction.
+
+```prisma
+model OutboxEvent {
+  id             String    @id @default(uuid())
+  eventType      String    @db.VarChar(100)
+  aggregateType  String    @db.VarChar(50)
+  aggregateId    String    @db.VarChar(36)
+  payload        Json
+  topic          String    @db.VarChar(100)
+  attempts       Int       @default(0)
+  lastError      String?
+  publishedAt    DateTime?
+  createdAt      DateTime  @default(now())
+
+  @@index([publishedAt, createdAt])
+  @@index([topic])
+}
+```
+
+**Notes**
+
+- `publishedAt` is set by the outbox relay after successful delivery.
+- `attempts` is incremented on each failure.
+- `topic` determines the destination: Kafka topics or `elasticsearch.indexing`.
+- The relay is single-instance, locked via Redis (`outbox:relay:lock`).
+
+### `OutboxEventDeadLetter`
+
+Dead-letter queue for outbox events that exceeded `OUTBOX_MAX_ATTEMPTS` (default 10).
+
+```prisma
+model OutboxEventDeadLetter {
+  id             String    @id @default(uuid())
+  eventType      String    @db.VarChar(100)
+  aggregateType  String    @db.VarChar(50)
+  aggregateId    String    @db.VarChar(36)
+  payload        Json
+  topic          String    @db.VarChar(100)
+  attempts       Int       @default(0)
+  lastError      String?
+  publishedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  deadLetteredAt DateTime  @default(now())
+  reason         String?
+
+  @@index([topic, createdAt])
+  @@index([createdAt])
+}
+```
+
+**Notes**
+
+- Events are moved here by the outbox relay after max attempts.
+- No automatic retry; manual inspection/replay required.
+
+### `RoleChangeAudit`
+
+Immutable audit log for role changes.
+
+```prisma
+model RoleChangeAudit {
+  id             String    @id @default(uuid())
+  actorId        String
+  actorRole      Role
+  targetId       String
+  targetRole     Role
+  previousRole   Role
+  newRole        Role
+  action         String    @default("ROLE_CHANGE")
+  status         String    @default("SUCCESS")
+  reason         String?
+  ipAddress      String?
+  userAgent      String?
+  metadata       Json?
+  createdAt      DateTime  @default(now())
+
+  @@index([actorId, createdAt])
+  @@index([targetId, createdAt])
+  @@index([createdAt])
+}
+```
+
+**Notes**
+
+- Immutable: no update/delete endpoints are exposed.
+- `actorRole` is the role at the time of change (snapshot).
+- `metadata` can store request metadata (user agent, IP, etc.).
 
 ### `MemberInvite` (new)
 
@@ -525,6 +631,10 @@ This is the seed setup used for development and QA. It maps directly to your ear
   - Creator gets "event_submission" notification.
   - Approvers get "event_review" notifications.
   - Approved event creator gets "event_status" notification.
+- Role change audit records (sample):
+  - Vikram → Rajesh: MEMBER → FAMILY_HEAD (Mehta family)
+  - Vikram → Sunita: MEMBER → COMMUNITY_SUBHEAD
+  - Vikram → Ramesh: MEMBER → GOTRA_HEAD
 
 ### Example seed logic (pseudo summary)
 
@@ -563,6 +673,8 @@ New invite endpoints (family-join flow):
 
 - All list endpoints must support pagination (`page`, `limit`) and consistent `error` payloads.
 - Ensure idempotency for registration/payment endpoints (use idempotency keys).
+- Notification creation is async via outbox; API returns 202 Accepted.
+- WebSocket `sync` endpoint supports paginated missed message recovery via `limit` + `cursor`.
 
 ---
 
@@ -570,10 +682,13 @@ New invite endpoints (family-join flow):
 
 - **Soft deletes**: prefer `deletedAt` field for `User`, `Family`, `Event` to preserve audit history.
 - **Timestamps**: `createdAt`, `updatedAt` present in schema; ensure DB timezone standard (UTC).
-- **Audit logging**: capture user actions (approvals, edits) in an Audit log table or use event sourcing pattern for critical flows.
+- **Audit logging**: role changes are recorded in `RoleChangeAudit` (immutable). Approval actions are captured via `EventApproval` records.
 - **Indexing**: index `User.email`, `Family.uniqueId`, `Event.date`, `Event.status`, `EventApproval.eventId`, `UserRelation` composite fields.
 - **Backups**: daily DB backups and point-in-time recovery should be configured for production.
 - **Notifications**: use a background worker for email/push (enqueue `Notification` and worker sends email/push, updates `Notification` record on success).
+- **Outbox relay**: runs as a single locked instance; publishes pending `OutboxEvent` rows to Kafka or Elasticsearch. Failed events retry with backoff up to `OUTBOX_MAX_ATTEMPTS`, then move to `OutboxEventDeadLetter`.
+- **ES reconciliation**: a periodic worker re-indexes recently updated users/events to repair Elasticsearch drift.
+- **WebSocket sync**: clients should implement `sync` with `lastSeenAt` + `cursor` pagination to recover missed messages after reconnect.
 
 ---
 
@@ -581,7 +696,7 @@ New invite endpoints (family-join flow):
 
 - Add `leftAt` + `active` on `FamilyMember` for explicit membership lifecycle if you need to query historical/current easily.
 - Convert `EventApproval.status` and `ResourceRequest.status` to enums for DB-level strictness.
-- Add `ApprovalHistory` or `Audit` model to keep every approval action as an immutable record (if detailed history required).
+- Add out-of-band security alerting for role changes (e.g., email/SMS to secondary admins when `COMMUNITY_HEAD` performs bulk demotions).
 - If modeling pedigree extensively, add automated derivation functions (siblings inferred from shared parents).
 - If needing multi-tenancy (multiple independent communities), add `organizationId` on top-level models.
 
@@ -594,6 +709,11 @@ New invite endpoints (family-join flow):
 - `Role`: COMMUNITY_HEAD, COMMUNITY_SUBHEAD, GOTRA_HEAD, FAMILY_HEAD, MEMBER
 - `RelationType`: SPOUSE, PARENT, CHILD, SIBLING
 - `EventStatus`: PENDING, APPROVED, REJECTED, CANCELLED
+- `NotificationType`: EVENT_APPROVAL, EVENT_REGISTRATION, RESOURCE_REQUEST, PAYMENT_RECEIPT, GENERIC, STATUS_UPDATE_REQUEST
+- `NotificationChannel`: IN_APP, EMAIL, PUSH, SMS
+- `NotificationPriority`: LOW, NORMAL, HIGH, URGENT, CRITICAL
+- `DeliveryStrategy`: BROADCAST, ESCALATION
+- `DeliveryStatus`: PENDING, SCHEDULED, SENT, DELIVERED, FAILED, CANCELLED
 
 **Glossary**
 
@@ -601,3 +721,8 @@ New invite endpoints (family-join flow):
 - **FamilyMember**: membership record linking `User` to `Family`.
 - **UserRelation**: directed relationship between users (spouse/parent/child).
 - **EventApproval**: per-approver record used to decide final event state.
+- **OutboxEvent**: durable side-effect queue entry; commits atomically with business state.
+- **OutboxEventDeadLetter**: DLQ for outbox events that exceeded max delivery attempts.
+- **RoleChangeAudit**: immutable record of role changes for security and compliance.
+- **NotificationDelivery**: per-channel delivery record for a notification (email, push, SMS, in-app).
+- **Escalation**: timed delivery strategy that falls back to higher-priority channels if the initial in-app notification is not read.
