@@ -14,7 +14,7 @@ COPY packages/eslint-config/package.json ./packages/eslint-config/package.json
 COPY packages/typescript-config/package.json ./packages/typescript-config/package.json
 COPY packages/db/package.json ./packages/db/package.json
 COPY packages/db/schema.prisma ./packages/db/schema.prisma
-COPY packages/config/package.json ./packages/config/package.json
+COPY packages/config ./packages/config
 RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile
 
 FROM base AS builder
@@ -36,7 +36,7 @@ COPY --from=deps /app/packages/eslint-config/package.json ./packages/eslint-conf
 COPY --from=deps /app/packages/typescript-config/package.json ./packages/typescript-config/package.json
 COPY --from=deps /app/packages/db/package.json ./packages/db/package.json
 COPY --from=deps /app/packages/db/schema.prisma ./packages/db/schema.prisma
-COPY --from=deps /app/packages/config/package.json ./packages/config/package.json
+COPY --from=deps /app/packages/config ./packages/config
 RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile --production
 COPY --from=builder --chown=app:app /app/packages ./packages
 
