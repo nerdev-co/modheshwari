@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@modheshwari/config": "*",
+    "@modheshwari/redis": "*",
     "elysia": "^1.4.13",
     "kafkajs": "^2.2.4",
     "prom-client": "^15.1.3",

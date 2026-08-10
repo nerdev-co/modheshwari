@@ -25,7 +25,8 @@
     "baseUrl": ".",
     "paths": {
       "@modheshwari/config": ["../../packages/config/index.ts"],
-      "@modheshwari/config/*": ["../../packages/config/*.ts"]
+      "@modheshwari/config/*": ["../../packages/config/*.ts"],
+      "@modheshwari/redis": ["../../packages/redis/index.ts"]
     }
   },
   "include": ["**/*.ts"]

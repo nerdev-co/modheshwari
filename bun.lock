@@ -47,6 +47,7 @@
       "name": "be",
       "dependencies": {
         "@modheshwari/config": "*",
+        "@modheshwari/redis": "*",
         "elysia": "^1.4.13",
         "kafkajs": "^2.2.4",
         "prom-client": "^15.1.3",
@@ -98,6 +99,7 @@
       "name": "ws",
       "dependencies": {
         "@modheshwari/config": "*",
+        "@modheshwari/redis": "*",
         "@prisma/client": "^6",
         "ws": "^8.19.0",
       },
@@ -136,6 +138,13 @@
         "globals": "^16.3.0",
         "typescript": "^5.9.2",
         "typescript-eslint": "^8.40.0",
+      },
+    },
+    "packages/redis": {
+      "name": "@modheshwari/redis",
+      "version": "0.1.0",
+      "dependencies": {
+        "@modheshwari/config": "*",
       },
     },
     "packages/typescript-config": {
@@ -446,6 +455,8 @@
     "@modheshwari/config": ["@modheshwari/config@workspace:packages/config"],
 
     "@modheshwari/db": ["@modheshwari/db@workspace:packages/db"],
+
+    "@modheshwari/redis": ["@modheshwari/redis@workspace:packages/redis"],
 
     "@modheshwari/utils": ["@modheshwari/utils@workspace:packages/utils"],
 

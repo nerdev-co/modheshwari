@@ -7,7 +7,7 @@ import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 
 import { requireAuth } from "../authMiddleware";
-import getRedisClient from "../../lib/redisClient";
+import getRedisClient from "@modheshwari/redis";
 import type { TreeView, TreeFormat } from "./types";
 import { buildAncestorTree, buildDescendantTree, buildFullTree } from "./builders";
 import { buildGraphData } from "./graph";

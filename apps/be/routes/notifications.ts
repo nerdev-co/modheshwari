@@ -7,7 +7,7 @@ import { Role, NotificationType, NotificationChannel } from "@prisma/client";
 import { requireAuth } from "./authMiddleware";
 import { TOPICS } from "../kafka/config";
 import { createOutboxEvent } from "../lib/outbox";
-import getRedisClient from "../lib/redisClient";
+import getRedisClient from "@modheshwari/redis";
 
 /**
  * Shape of create notification request body

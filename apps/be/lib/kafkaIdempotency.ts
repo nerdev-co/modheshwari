@@ -1,4 +1,4 @@
-import getRedisClient from "./redisClient";
+import getRedisClient from "@modheshwari/redis";
 
 const PROCESSED_PREFIX = "kafka:processed:";
 const PROCESSED_TTL = 24 * 60 * 60; // 24 hours

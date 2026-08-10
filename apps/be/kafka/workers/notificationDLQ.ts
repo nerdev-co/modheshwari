@@ -2,7 +2,7 @@ import type { RedisClientType } from 'redis';
 import prisma from '@modheshwari/db';
 import { NOTIFICATION_DLQ_RETRY_BATCH, NOTIFICATION_DLQ_MAX_ATTEMPTS, NOTIFICATION_DLQ_BASE_DELAY_MS, NOTIFICATION_DLQ_RETRY_INTERVAL_MS } from "@modheshwari/config/be";
 
-import getRedisClient from '../../lib/redisClient';
+import getRedisClient from '@modheshwari/redis';
 import { logger } from '../../lib/logger';
 import { notificationDlqSize, errorCounter } from '../../lib/metrics';
 

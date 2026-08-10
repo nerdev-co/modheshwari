@@ -9,7 +9,7 @@ import {
   normalizeBloodGroup,
 } from "../utils/searchParser";
 import { logger } from "../lib/logger";
-import getRedisClient from "../lib/redisClient";
+import getRedisClient from "@modheshwari/redis";
 
 const PROFILE_TTL = Number(process.env.PROFILE_TTL_SECONDS || 300);
 

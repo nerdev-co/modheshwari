@@ -15,6 +15,7 @@ COPY packages/typescript-config/package.json ./packages/typescript-config/packag
 COPY packages/db/package.json ./packages/db/package.json
 COPY packages/db/schema.prisma ./packages/db/schema.prisma
 COPY packages/config ./packages/config
+COPY packages/redis/package.json ./packages/redis/package.json
 RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile
 
 FROM base AS builder
@@ -37,6 +38,7 @@ COPY --from=deps /app/packages/typescript-config/package.json ./packages/typescr
 COPY --from=deps /app/packages/db/package.json ./packages/db/package.json
 COPY --from=deps /app/packages/db/schema.prisma ./packages/db/schema.prisma
 COPY --from=deps /app/packages/config ./packages/config
+COPY --from=deps /app/packages/redis/package.json ./packages/redis/package.json
 RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile --production
 COPY --from=builder --chown=app:app /app/packages ./packages
 

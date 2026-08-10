@@ -6,8 +6,8 @@ let client: RedisClientType | null = null;
 
 /**
  * Performs get redis client operation.
- * @param {string} url - Description of url
- * @returns {Promise<import("/Users/nalindalal/modheshwari/node_modules/redis/dist/index").RedisClientType>} Description of return value
+ * @param {string} [url] - Redis connection URL, defaults to REDIS_URL from config
+ * @returns {Promise<RedisClientType>} Description of return value
  */
 export async function getRedisClient(url?: string): Promise<RedisClientType> {
   if (client) return client;

@@ -1,0 +1,10 @@
+{
+  "name": "@modheshwari/redis",
+  "version": "0.1.0",
+  "private": true,
+  "module": "index.ts",
+  "type": "module",
+  "dependencies": {
+    "@modheshwari/config": "*"
+  }
+}

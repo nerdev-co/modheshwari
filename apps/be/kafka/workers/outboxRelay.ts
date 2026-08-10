@@ -3,7 +3,7 @@ import { OUTBOX_BATCH_SIZE, OUTBOX_POLL_INTERVAL_MS, OUTBOX_LOCK_TTL_MS, OUTBOX_
 
 import { producer } from "../config";
 import { indexUser, deleteUser, indexEvent, deleteEvent } from "../../lib/elasticIndexer";
-import getRedisClient from "../../lib/redisClient";
+import getRedisClient from "@modheshwari/redis";
 import { logger } from "../../lib/logger";
 import { errorCounter, outboxPendingEvents, outboxRetryCount } from "../../lib/metrics";
 

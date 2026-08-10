@@ -2,7 +2,7 @@ import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 
 import { getUserIdFromRequest } from "./auth";
-import getRedisClient from "../../lib/redisClient";
+import getRedisClient from "@modheshwari/redis";
 
 const CONVERSATIONS_TTL = Number(
   process.env.CONVERSATIONS_TTL_SECONDS || 30,

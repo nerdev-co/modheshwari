@@ -5,7 +5,8 @@
       "@modheshwari/db": ["packages/db/index.ts"],
       "@modheshwari/utils/*": ["packages/utils/index.ts"],
       "@modheshwari/config": ["packages/config/index.ts"],
-      "@modheshwari/config/*": ["packages/config/*.ts"]
+      "@modheshwari/config/*": ["packages/config/*.ts"],
+      "@modheshwari/redis": ["packages/redis/index.ts"]
     }
   },
 
