@@ -31,7 +31,8 @@
     "turbo": "^2.10.8",
     "typedoc": "^0.28.14",
     "typescript": "5.9.2",
-    "typescript-eslint": "^8.46.2"
+    "typescript-eslint": "^8.46.2",
+    "@modheshwari/config": "*"
   },
   "engines": {
     "node": ">=18"
@@ -39,7 +40,8 @@
   "packageManager": "bun@1.2.19",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "packages/config"
   ],
   "dependencies": {
     "@elastic/elasticsearch": "^9.3.1",
