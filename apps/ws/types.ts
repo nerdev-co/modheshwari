@@ -30,11 +30,12 @@ export type ChatMessage = {
 };
 
 export type IncomingMessage = {
-    type: "chat" | "typing" | "read";
+    type: "chat" | "typing" | "read" | "sync";
     conversationId?: string;
     content?: string;
     recipientIds?: string[];
     messageIds?: string[];
+    lastSeenAt?: string;
 };
 
 export type WSMap = Map<string, Set<ServerWebSocket<WSData>>>;

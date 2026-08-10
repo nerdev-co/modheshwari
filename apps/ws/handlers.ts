@@ -52,6 +52,37 @@ export function handleOpen(ws: ServerWebSocket<WSData>) {
         }
     }, HEARTBEAT_INTERVAL) as unknown as number;
     ws.data.heartbeatId = heartbeatId;
+
+    // Reconcile missed notifications on connect
+    reconcileMissedNotifications(ws.data.userId);
+}
+
+async function reconcileMissedNotifications(userId: string) {
+  try {
+    const notifications = await prisma.notification.findMany({
+      where: { userId, read: false },
+      select: { id: true, type: true, message: true, createdAt: true, eventId: true },
+      orderBy: { createdAt: "asc" },
+      take: 100,
+    });
+
+    for (const n of notifications) {
+      pushToUser(userId, {
+        type: "notification",
+        notification: {
+          eventId: n.eventId ?? undefined,
+          message: n.message,
+          type: n.type,
+          timestamp: n.createdAt.toISOString(),
+        },
+      });
+    }
+  } catch (err) {
+    logger.error("Failed to reconcile notifications", {
+      error: err instanceof Error ? err.message : String(err),
+      userId,
+    });
+  }
 }
 
 /**
@@ -105,6 +136,8 @@ export async function handleMessage(
             handleTypingIndicator(data, userId);
         } else if (data.type === "read") {
             await handleReadReceipt(data, userId);
+        } else if (data.type === "sync") {
+            await handleSync(ws, data, userId);
         }
     } catch (err) {
         logger.error("Failed to handle message", {
@@ -287,4 +320,69 @@ export function handleClose(ws: ServerWebSocket<WSData>) {
         clearInterval(ws.data.heartbeatId);
     }
     logger.info("disconnected", { userId: ws.data.userId });
+}
+
+/**
+ * Handle sync request: return missed messages since lastSeenAt.
+ */
+async function handleSync(
+    ws: ServerWebSocket<WSData>,
+    data: IncomingMessage,
+    userId: string,
+) {
+    const lastSeenAt = data.lastSeenAt ? new Date(data.lastSeenAt) : new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+    if (isNaN(lastSeenAt.getTime())) {
+        ws.send(JSON.stringify({ type: "error", message: "Invalid lastSeenAt" }));
+        return;
+    }
+
+    try {
+        const conversations = await prisma.conversation.findMany({
+            where: { participants: { has: userId } },
+            select: { id: true },
+        });
+
+        const conversationIds = conversations.map((c) => c.id);
+        if (conversationIds.length === 0) {
+            ws.send(JSON.stringify({ type: "sync", messages: [] }));
+            return;
+        }
+
+        const messages = await prisma.message.findMany({
+            where: {
+                conversationId: { in: conversationIds },
+                createdAt: { gt: lastSeenAt },
+            },
+            orderBy: { createdAt: "asc" },
+            take: 200,
+            select: {
+                id: true,
+                conversationId: true,
+                senderId: true,
+                senderName: true,
+                content: true,
+                createdAt: true,
+            },
+        });
+
+        ws.send(JSON.stringify({
+            type: "sync",
+            messages: messages.map((m) => ({
+                type: "chat",
+                messageId: m.id,
+                conversationId: m.conversationId,
+                senderId: m.senderId,
+                senderName: m.senderName,
+                content: m.content,
+                timestamp: m.createdAt.toISOString(),
+            })),
+        }));
+    } catch (err) {
+        logger.error("Sync failed", {
+            error: err instanceof Error ? err.message : String(err),
+            userId,
+        });
+        ws.send(JSON.stringify({ type: "error", message: "Sync failed" }));
+    }
 }
