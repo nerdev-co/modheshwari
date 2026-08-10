@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Shield, Users } from "lucide-react";
-
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 
 const signupOptions = [

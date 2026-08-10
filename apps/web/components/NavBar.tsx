@@ -19,6 +19,7 @@ import {
   MessageCircle,
   Stethoscope,
 } from "lucide-react";
+
 import { useUser } from "../lib/UserContext";
 import Tooltip from "./Tooltip";
 import useNotifications from "../hooks/useNotifications";

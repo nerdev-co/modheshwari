@@ -19,10 +19,10 @@ import { LoaderOne } from "@repo/ui/loading";
 import { NotAuthenticated } from "@repo/ui/notAuthenticated";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { useToast } from "@repo/ui/toast";
 
 import apiFetch from "../../../lib/api";
 import { API_BASE } from "../../../lib/config";
-import { useToast } from "@repo/ui/toast";
 
 interface EventDetails {
     id: string;

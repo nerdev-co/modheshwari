@@ -1,6 +1,7 @@
 "use client";
 
 import { ToastProvider } from "@repo/ui/toast";
+
 import { UserProvider } from "../lib/UserContext";
 
 /**

@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import { LoaderFour } from "@repo/ui/loading";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { formatBloodGroup } from "@modheshwari/utils/format";
 
 import { useUser } from "../../lib/UserContext";
-import { formatBloodGroup } from "@modheshwari/utils/format";
 
 function ProfileField({
   label,

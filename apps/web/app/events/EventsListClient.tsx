@@ -16,10 +16,10 @@ import {
 import { motion } from "framer-motion";
 import { LoaderOne } from "@repo/ui/loading";
 import { NotAuthenticated } from "@repo/ui/notAuthenticated";
+import { useToast } from "@repo/ui/toast";
 
 import { API_BASE } from "../../lib/config";
 import apiFetch from "../../lib/api";
-import { useToast } from "@repo/ui/toast";
 
 type Event = {
   id: string;
