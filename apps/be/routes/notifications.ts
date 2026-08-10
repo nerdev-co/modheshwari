@@ -5,7 +5,8 @@ import { success, failure } from "@modheshwari/utils/response";
 import { Role, NotificationType, NotificationChannel } from "@prisma/client";
 
 import { requireAuth } from "./authMiddleware";
-import { broadcastNotification } from "../kafka/notificationProducer";
+import { TOPICS } from "../kafka/config";
+import { createOutboxEvent } from "../lib/outbox";
 import getRedisClient from "../lib/redisClient";
 
 /**
@@ -17,7 +18,7 @@ interface CreateNotificationBody {
     channels?: NotificationChannel[];
     targetRole?: Role;
     subject?: string;
-    priority?: "low" | "normal" | "high" | "urgent";
+    priority?: "low" | "normal" | "high" | "urgent" | "CRITICAL";
 }
 
 /**
@@ -42,12 +43,11 @@ export async function handleCreateNotification(req: Request) {
          */
         const rawBody: unknown = await req.json().catch(() => null);
 
+        const body = rawBody as CreateNotificationBody;
         if (
-            !rawBody ||
-            typeof rawBody !== "object" ||
-            !("message" in rawBody) ||
-            typeof (rawBody as any).message !== "string" ||
-            !(rawBody as any).message.trim()
+            !body ||
+            typeof body.message !== "string" ||
+            !body.message.trim()
         ) {
             return failure("Missing message", "Validation Error", 400);
         }
@@ -59,7 +59,7 @@ export async function handleCreateNotification(req: Request) {
             targetRole,
             subject,
             priority = "normal",
-        } = rawBody as CreateNotificationBody;
+        } = body;
 
         const senderId = auth.payload.userId;
         const senderRole = auth.payload.role as Role;
@@ -170,19 +170,48 @@ export async function handleCreateNotification(req: Request) {
             return failure("No users found for broadcast", "Not Found", 404);
         }
 
-        /**
-         * Use Kafka pub/sub to broadcast notifications
-         * This decouples notification creation from delivery
-         */
-        const result = await broadcastNotification({
-            message,
-            type,
-            channels,
-            subject,
-            recipientIds: users.map((u) => u.id),
-            senderId,
-            priority,
+        const eventId = randomUUID();
+        const timestamp = new Date().toISOString();
+
+        let deliveryStrategy: "BROADCAST" | "ESCALATION" = "BROADCAST";
+        const notificationPriority = priority || "MEDIUM";
+        if (notificationPriority === "CRITICAL") {
+            deliveryStrategy = "BROADCAST";
+        }
+
+        const recipientIds = users.map((u) => u.id);
+
+        const payload = {
+          eventId,
+          message,
+          type,
+          channels,
+          subject: subject ?? null,
+          recipientIds,
+          senderId,
+          priority,
+          timestamp,
+          deliveryStrategy,
+          notificationPriority,
+        };
+
+        await prisma.$transaction(async (tx) => {
+          await createOutboxEvent(tx, {
+            eventType: "notification.broadcast",
+            aggregateType: "NotificationBroadcast",
+            aggregateId: eventId,
+            payload,
+            topic: TOPICS.NOTIFICATION_EVENTS,
+          });
         });
+
+        const result = {
+          eventId,
+          recipientCount: recipientIds.length,
+          timestamp,
+          deliveryStrategy,
+          notificationPriority,
+        };
 
         // If IN_APP channel requested, publish lightweight realtime preview events to Redis
         // so WS subscribers can receive an immediate preview before DB persistence.
@@ -190,13 +219,12 @@ export async function handleCreateNotification(req: Request) {
             try {
                 const redis = await getRedisClient();
                 const now = new Date().toISOString();
-                const previewId = result?.eventId || randomUUID();
                 const PREVIEW_TTL = Number(process.env.NOTIFICATION_PREVIEW_TTL_SECONDS || 60);
                 const pipeline = redis.multi();
                 for (const u of users) {
-                    const payload = JSON.stringify({ notification: { previewId, message, subject: subject ?? null, createdAt: now } });
-                    pipeline.publish(`inapp:${u.id}`, payload);
-                    pipeline.set(`notification_preview:${u.id}:${previewId}`, '1', { EX: PREVIEW_TTL });
+                    const redisPayload = JSON.stringify({ notification: { previewId: eventId, message, subject: subject ?? null, createdAt: now } });
+                    pipeline.publish(`inapp:${u.id}`, redisPayload);
+                    pipeline.set(`notification_preview:${u.id}:${eventId}`, '1', { EX: PREVIEW_TTL });
                 }
                 await pipeline.exec();
             } catch (err) {

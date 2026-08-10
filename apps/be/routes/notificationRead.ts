@@ -8,69 +8,8 @@
 import prisma from "@modheshwari/db";
 import { verifyJWT } from "@modheshwari/utils/jwt";
 
-import { kafka } from "../kafka/config";
-
-const producer = kafka.producer();
-
-// Track producer readiness
-let producerReady = false;
-let connectionPromise: Promise<void> | null = null;
-
-/**
- * Ensure producer is connected before sending
- */
-async function ensureProducerConnected() {
-  if (producerReady) return;
-  if (connectionPromise) {
-    await connectionPromise;
-    return;
-  }
-
-  connectionPromise = (async () => {
-    try {
-      await producer.connect();
-      producerReady = true;
-    } catch {
-      throw new Error("Kafka producer connection failed");
-    }
-  })();
-
-  try {
-    await connectionPromise;
-  } catch (error) {
-    connectionPromise = null;
-    throw error;
-  }
-
-  connectionPromise = null;
-}
-
-/**
- * Publish notification read event to Kafka
- * This triggers the escalation worker to cancel pending escalations
- */
-async function publishReadEvent(notificationId: string, userId: string) {
-  try {
-    // Ensure producer is connected
-    await ensureProducerConnected();
-
-    await producer.send({
-      topic: "notification.read",
-      messages: [
-        {
-          key: notificationId,
-          value: JSON.stringify({
-            notificationId,
-            userId,
-            readAt: new Date().toISOString(),
-          }),
-        },
-      ],
-    });
-    } catch {
-      // Don't fail the request if Kafka publish fails
-    }
-  }
+import { createOutboxEvent, createOutboxEvents } from "../lib/outbox";
+import { TOPICS } from "../kafka/config";
 
   /**
    * Mark a notification as read
@@ -115,8 +54,19 @@ export async function handleMarkAsRead(req: Request, id: string): Promise<Respon
       }),
     );
 
-    // Publish read event to Kafka to cancel escalations
-    await publishReadEvent(notificationId, userId as string);
+    await prisma.$transaction(async (tx) => {
+      await createOutboxEvent(tx, {
+        eventType: "notification.read",
+        aggregateType: "Notification",
+        aggregateId: notificationId,
+        payload: {
+          notificationId,
+          userId,
+          readAt: new Date().toISOString(),
+        },
+        topic: TOPICS.NOTIFICATION_READ,
+      });
+    });
 
     return new Response(
       JSON.stringify({
@@ -211,7 +161,21 @@ export async function handleMarkMultipleAsRead(req: Request): Promise<Response> 
     ]);
 
     const updatedIds = updatedNotifications.map(n => n.id);
-    await Promise.all(updatedIds.map((id: string) => publishReadEvent(id, userId)));
+    
+    await prisma.$transaction(async (tx) => {
+      const events = updatedIds.map((id) => ({
+        eventType: "notification.read",
+        aggregateType: "Notification",
+        aggregateId: id,
+        payload: {
+          notificationId: id,
+          userId,
+          readAt: new Date().toISOString(),
+        },
+        topic: TOPICS.NOTIFICATION_READ,
+      }));
+      await createOutboxEvents(tx, events);
+    });
 
     return new Response(
       JSON.stringify({
@@ -283,24 +247,22 @@ export async function handleMarkAllAsRead(req: Request): Promise<Response> {
       }),
     ]);
 
-    // Publish read events in batch (single Kafka send with multiple messages)
+    // Publish read events via outbox
     if (unreadNotifications.length > 0) {
-      try {
-        await ensureProducerConnected();
-        await producer.send({
-          topic: "notification.read",
-          messages: unreadNotifications.map((notif: { id: string }) => ({
-            key: notif.id,
-            value: JSON.stringify({
-              notificationId: notif.id,
-              userId,
-              readAt: new Date().toISOString(),
-            }),
-          })),
-        });
-      } catch {
-        // Don't fail the request if Kafka publish fails
-      }
+      await prisma.$transaction(async (tx) => {
+        const events = unreadNotifications.map((notif) => ({
+          eventType: "notification.read",
+          aggregateType: "Notification",
+          aggregateId: notif.id,
+          payload: {
+            notificationId: notif.id,
+            userId,
+            readAt: new Date().toISOString(),
+          },
+          topic: TOPICS.NOTIFICATION_READ,
+        }));
+        await createOutboxEvents(tx, events);
+      });
     }
 
     return new Response(
@@ -415,37 +377,4 @@ export async function handleGetDeliveryStatus(req: Request, id: string): Promise
     );
   }
 }
-
-// Graceful shutdown
-let isShuttingDown = false;
-
-/**
- * Performs shutdown producer operation.
- * @returns {Promise<void>} Description of return value
- */
-async function shutdownProducer() {
-  if (isShuttingDown) return;
-  isShuttingDown = true;
-
-  try {
-    if (producerReady) {
-      await producer.disconnect();
-      console.log(" Kafka producer disconnected");
-    }
-  } catch (error) {
-    console.error(" Error disconnecting producer:", error);
-  }
-}
-
-process.on("SIGINT", async () => {
-  console.log("\n  SIGINT: Shutting down notification read handler...");
-  await shutdownProducer();
-  process.exit(0);
-});
-
-process.on("SIGTERM", async () => {
-  console.log("\n⏹  SIGTERM: Shutting down notification read handler...");
-  await shutdownProducer();
-  process.exit(0);
-});
 

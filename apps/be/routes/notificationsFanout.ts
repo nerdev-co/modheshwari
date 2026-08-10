@@ -3,9 +3,20 @@ import { success, failure } from '@modheshwari/utils/response';
 
 import { requireAuth } from './authMiddleware';
 import resolveRecipients from '../utils/recipientResolver';
-import { publishFanout } from '../kafka/fanoutProducer';
+import { TOPICS } from '../kafka/config';
+import { createOutboxEvent } from '../lib/outbox';
 
 type Scope = 'gotra' | 'community' | 'family';
+
+interface FanoutBody {
+  scope?: string;
+  scopeValue?: string;
+  message?: string;
+  channels?: string[];
+  roleFilter?: string[];
+  preview?: boolean;
+  priority?: string;
+}
 
 /**
  * POST /api/notifications/fanout
@@ -25,6 +36,7 @@ export async function handleFanoutNotification(req: Request) {
         const raw: unknown = await req.json().catch(() => null);
         if (!raw || typeof raw !== 'object') return failure('Invalid body', 'Validation Error', 400);
 
+        const body = raw as FanoutBody;
         const {
             scope,
             scopeValue,
@@ -33,7 +45,7 @@ export async function handleFanoutNotification(req: Request) {
             roleFilter,
             preview = false,
             priority = 'normal',
-        } = raw as any;
+        } = body;
 
         if (!scope || !scopeValue || !message) return failure('Missing required fields', 'Validation Error', 400);
         if (!['gotra', 'community', 'family'].includes(scope)) return failure('Invalid scope', 'Validation Error', 400);
@@ -57,14 +69,24 @@ export async function handleFanoutNotification(req: Request) {
             return success('Preview', { recipientCount: resolved.count, sample }, 200);
         }
 
-        // Enqueue fanout event to Kafka
+        // Enqueue fanout event to Kafka via outbox
         const senderId = auth.payload.userId;
-        await publishFanout({
-            initiatedBy: senderId,
-            recipientIds: resolved.recipients.map((r) => r.id),
-            channels,
-            message,
-            priority,
+        const fanoutId = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+        await prisma.$transaction(async (tx) => {
+          await createOutboxEvent(tx, {
+            eventType: "notification.fanout",
+            aggregateType: "Fanout",
+            aggregateId: fanoutId,
+            payload: {
+              fanoutId,
+              initiatedBy: senderId,
+              recipientIds: resolved.recipients.map((r) => r.id),
+              channels,
+              message,
+              priority,
+            },
+            topic: TOPICS.NOTIFICATION_EVENTS,
+          });
         });
 
         return success('Fanout queued', { recipientCount: resolved.count }, 202);

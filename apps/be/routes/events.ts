@@ -12,6 +12,8 @@ import {
 
 import { requireAuth } from "./authMiddleware";
 import { extractAndVerifyToken } from "../utils/auth";
+import { createOutboxEvent } from "../lib/outbox";
+import { TOPICS } from "../kafka/config";
 
 /**
  * Creates a new event with a multi-level approval workflow.
@@ -48,47 +50,72 @@ export async function handleCreateEvent(req: Request): Promise<Response> {
     }
 
     // Create event
-    const event = await prisma.event.create({
-      data: {
-        name: body.name,
-        description: body.description,
-        date: new Date(body.date),
-        venue: body.venue,
-        createdById: userId,
-        status: "PENDING",
-      },
-    });
-
-    // Create approval records for all admins (COMMUNITY_HEAD, COMMUNITY_SUBHEAD, GOTRA_HEAD)
-    const admins = await prisma.user.findMany({
-      where: {
-        role: {
-          in: ["COMMUNITY_HEAD", "COMMUNITY_SUBHEAD", "GOTRA_HEAD"],
-        },
-      },
-      select: { id: true, name: true, role: true },
-    });
-
-    if (admins.length > 0) {
-      await prisma.eventApproval.createMany({
-        data: admins.map((admin) => ({
-          eventId: event.id,
-          approverId: admin.id,
-          approverName: admin.name,
-          role: admin.role,
+    const event = await prisma.$transaction(async (tx) => {
+      const ev = await tx.event.create({
+        data: {
+          name: body.name,
+          description: body.description,
+          date: new Date(body.date),
+          venue: body.venue,
+          createdById: userId,
           status: "PENDING",
-        })),
+        },
       });
 
-      // Notify admins
-      await prisma.notification.createMany({
-        data: admins.map((admin) => ({
-          userId: admin.id,
-          type: "EVENT_APPROVAL",
-          message: `New event "${event.name}" requires your approval`,
-        })),
+      // Create approval records for all admins (COMMUNITY_HEAD, COMMUNITY_SUBHEAD, GOTRA_HEAD)
+      const admins = await tx.user.findMany({
+        where: {
+          role: {
+            in: ["COMMUNITY_HEAD", "COMMUNITY_SUBHEAD", "GOTRA_HEAD"],
+          },
+        },
+        select: { id: true, name: true, role: true },
       });
-    }
+
+      if (admins.length > 0) {
+        await tx.eventApproval.createMany({
+          data: admins.map((admin) => ({
+            eventId: ev.id,
+            approverId: admin.id,
+            approverName: admin.name,
+            role: admin.role,
+            status: "PENDING",
+          })),
+        });
+
+        await createOutboxEvent(tx, {
+          eventType: "event.created",
+          aggregateType: "Event",
+          aggregateId: ev.id,
+          payload: {
+            eventId: ev.id,
+            eventName: ev.name,
+            createdById: userId,
+            approverIds: admins.map((a) => a.id),
+          },
+          topic: TOPICS.NOTIFICATION_EVENTS,
+        });
+      }
+
+      await createOutboxEvent(tx, {
+          eventType: "event.created",
+          aggregateType: "Event",
+          aggregateId: ev.id,
+          payload: {
+            id: ev.id,
+            name: ev.name,
+            description: ev.description,
+            date: ev.date.toISOString(),
+            venue: ev.venue,
+            status: ev.status,
+            locationLat: (ev as { locationLat?: number | null }).locationLat ?? null,
+            locationLng: (ev as { locationLng?: number | null }).locationLng ?? null,
+          },
+          topic: "elasticsearch.indexing",
+        });
+
+      return ev;
+    });
 
     return success("Event created successfully", { event }, 201);
   } catch (err) {
@@ -524,12 +551,42 @@ export async function handleApproveEvent(
 
     // Update event status if changed
     if (eventStatus !== approval.event.status) {
-      await prisma.event.update({
-        where: { id },
-        data: { status: eventStatus },
+      await prisma.$transaction(async (tx) => {
+        const updatedEvent = await tx.event.update({
+          where: { id },
+          data: { status: eventStatus },
+        });
+
+        await createOutboxEvent(tx, {
+          eventType: "event.updated",
+          aggregateType: "Event",
+          aggregateId: id,
+          payload: {
+            id: updatedEvent.id,
+            name: updatedEvent.name,
+            description: updatedEvent.description,
+            date: updatedEvent.date.toISOString(),
+            venue: updatedEvent.venue,
+            status: updatedEvent.status,
+          },
+          topic: "elasticsearch.indexing",
+        });
+
+        await createOutboxEvent(tx, {
+          eventType: "event.status_changed",
+          aggregateType: "Event",
+          aggregateId: id,
+          payload: {
+            eventId: id,
+            eventName: approval.event.name,
+            previousStatus: approval.event.status,
+            newStatus: eventStatus,
+            approverId,
+          },
+          topic: TOPICS.NOTIFICATION_EVENTS,
+        });
       });
 
-      // Notify event creator
       await prisma.notification.create({
         data: {
           userId: approval.event.createdById,
