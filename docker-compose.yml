@@ -63,7 +63,7 @@ services:
 
   # Backend API - Elysia + Bun
   be:
-    image: ghcr.io/nerdev-co/modheshwari-be:latest
+    image: ghcr.io/nerdev-co/modheshwari-be:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile
@@ -96,7 +96,7 @@ services:
 
   # Frontend - Next.js
   web:
-    image: ghcr.io/nerdev-co/modheshwari-web:latest
+    image: ghcr.io/nerdev-co/modheshwari-web:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile
@@ -125,7 +125,7 @@ services:
 
   # WebSocket Server - Bun + ws
   ws:
-    image: ghcr.io/nerdev-co/modheshwari-ws:latest
+    image: ghcr.io/nerdev-co/modheshwari-ws:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile

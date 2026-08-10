@@ -62,7 +62,9 @@ jobs:
           context: .
           target: runner-be
           push: true
-          tags: ghcr.io/nerdev-co/modheshwari-be:latest
+          tags: |
+            ghcr.io/nerdev-co/modheshwari-be:${{ github.sha }}
+            ghcr.io/nerdev-co/modheshwari-be:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -72,7 +74,9 @@ jobs:
           context: .
           target: runner-web
           push: true
-          tags: ghcr.io/nerdev-co/modheshwari-web:latest
+          tags: |
+            ghcr.io/nerdev-co/modheshwari-web:${{ github.sha }}
+            ghcr.io/nerdev-co/modheshwari-web:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -82,7 +86,9 @@ jobs:
           context: .
           target: runner-ws
           push: true
-          tags: ghcr.io/nerdev-co/modheshwari-ws:latest
+          tags: |
+            ghcr.io/nerdev-co/modheshwari-ws:${{ github.sha }}
+            ghcr.io/nerdev-co/modheshwari-ws:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -108,18 +114,27 @@ jobs:
             set -e
             cd ~/modheshwari
 
+            # Deterministic config sync - discard local edits, match origin/main exactly
+            git fetch origin
+            git checkout main || true
+            git reset --hard origin/main
+
             # Login to GHCR
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
             export COMPOSE_HTTP_TIMEOUT=300
             export DOCKER_CLIENT_TIMEOUT=300
+            export IMAGE_TAG="${{ github.sha }}"
 
-            # Tag current images as :previous for rollback
+            # Snapshot currently running images as :previous for rollback
             for svc in be web ws; do
-              IMAGE="ghcr.io/nerdev-co/modheshwari-${svc}:latest"
-              docker image inspect "$IMAGE" >/dev/null 2>&1 && \
-                docker tag "$IMAGE" "modheshwari-${svc}:previous" || \
-                echo "No existing image for $svc, skipping backup"
+              CUR=$(docker inspect --format '{{.Config.Image}}' "modheshwari-${svc}" 2>/dev/null || true)
+              if [ -n "$CUR" ]; then
+                docker tag "$CUR" "modheshwari-${svc}:previous"
+                echo "Backup for $svc: $CUR"
+              else
+                echo "No running container for $svc, skipping backup"
+              fi
             done
 
             # Pull new images
@@ -128,25 +143,37 @@ jobs:
             # Deploy
             docker compose --env-file .env up -d --remove-orphans
 
-            # Health check with retries
+            # Refresh nginx: recreated upstreams changed IPs + config file may have changed
+            docker compose restart nginx
+
+            # Health check with retries - all services must be healthy
             echo "Waiting for services to start..."
-            sleep 15
+            sleep 30
             HEALTHY=false
-            for i in 1 2 3 4 5; do
-              echo "Health check attempt $i/5..."
-              if docker compose exec -T be bun -e "try { const r = await fetch('http://localhost:3001/api/health'); process.exit(r.ok ? 0 : 1) } catch { process.exit(1) }" 2>/dev/null; then
+            for i in 1 2 3 4 5 6 7 8 9 10; do
+              echo "Health check attempt $i/10..."
+              ALL_OK=true
+              for svc in be web ws; do
+                ST=$(docker inspect --format '{{.State.Health.Status}}' "modheshwari-${svc}" 2>/dev/null || echo "missing")
+                if [ "$ST" != "healthy" ]; then
+                  ALL_OK=false
+                  echo "modheshwari-${svc}: $ST"
+                fi
+              done
+              if [ "$ALL_OK" = true ]; then
                 HEALTHY=true
                 break
               fi
-              sleep 10
+              sleep 15
             done
 
             if [ "$HEALTHY" = false ]; then
               echo "Health check failed — rolling back to previous images"
               for svc in be web ws; do
-                PREV="modheshwari-${svc}:latest"
-                docker image inspect "modheshwari-${svc}:previous" >/dev/null 2>&1 && \
-                  docker tag "modheshwari-${svc}:previous" "$PREV" || true
+                if docker image inspect "modheshwari-${svc}:previous" >/dev/null 2>&1; then
+                  docker tag "modheshwari-${svc}:previous" "ghcr.io/nerdev-co/modheshwari-${svc}:${IMAGE_TAG}"
+                  echo "Rolling back $svc"
+                fi
               done
               docker compose --env-file .env up -d --remove-orphans
               echo "Rolled back to previous version"
