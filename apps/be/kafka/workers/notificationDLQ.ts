@@ -1,5 +1,6 @@
 import type { RedisClientType } from 'redis';
 import prisma from '@modheshwari/db';
+import { NOTIFICATION_DLQ_RETRY_BATCH, NOTIFICATION_DLQ_MAX_ATTEMPTS, NOTIFICATION_DLQ_BASE_DELAY_MS, NOTIFICATION_DLQ_RETRY_INTERVAL_MS } from "@modheshwari/config/be";
 
 import getRedisClient from '../../lib/redisClient';
 import { logger } from '../../lib/logger';
@@ -8,9 +9,9 @@ import { notificationDlqSize, errorCounter } from '../../lib/metrics';
 const DLQ_KEY = 'notifications:dlq';
 const SCHEDULED_ZSET = 'notifications:dlq:scheduled';
 const ALERT_LIST = 'notifications:alerts';
-const BATCH_SIZE = Number(process.env.NOTIFICATION_DLQ_RETRY_BATCH || 50);
-const MAX_ATTEMPTS = Number(process.env.NOTIFICATION_DLQ_MAX_ATTEMPTS || 5);
-const BASE_DELAY_MS = Number(process.env.NOTIFICATION_DLQ_BASE_DELAY_MS || 60 * 1000); // 1min
+const BATCH_SIZE = NOTIFICATION_DLQ_RETRY_BATCH;
+const MAX_ATTEMPTS = NOTIFICATION_DLQ_MAX_ATTEMPTS;
+const BASE_DELAY_MS = NOTIFICATION_DLQ_BASE_DELAY_MS;
 
 /**
  * Performs parse entry operation.
@@ -140,7 +141,7 @@ export async function processDlqOnce(client?: RedisClientType) {
  * @param {number} intervalMs - Description of intervalMs
  * @returns {{ stop(): void; }} Description of return value
  */
-export function startDLQRetryWorker(intervalMs = Number(process.env.NOTIFICATION_DLQ_RETRY_INTERVAL_MS || 30 * 1000)) {
+export function startDLQRetryWorker(intervalMs = NOTIFICATION_DLQ_RETRY_INTERVAL_MS) {
   let running = true;
   const redisPromise = getRedisClient();
 

@@ -10,6 +10,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@modheshwari/config": "*",
     "@prisma/client": "^6",
     "ws": "^8.19.0"
   },

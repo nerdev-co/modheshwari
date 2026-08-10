@@ -1,9 +1,10 @@
 import { Kafka } from "kafkajs";
+import { KAFKA_BROKER } from "@modheshwari/config/be";
 
 // Kafka configuration
 export const kafka = new Kafka({
   clientId: "modheshwari-app",
-  brokers: [process.env.KAFKA_BROKER || "localhost:9092"],
+  brokers: [KAFKA_BROKER],
 });
 
 // Create producer instance
@@ -28,4 +29,5 @@ export const TOPICS = {
   NOTIFICATION_EMAIL: "notification.email",
   NOTIFICATION_PUSH: "notification.push",
   NOTIFICATION_SMS: "notification.sms",
+  NOTIFICATION_READ: "notification.read",
 } as const;

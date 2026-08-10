@@ -4,6 +4,8 @@
     "paths": {
       "@modheshwari/db": ["packages/db/index.ts"],
       "@modheshwari/utils/*": ["packages/utils/index.ts"],
+      "@modheshwari/config": ["packages/config/index.ts"],
+      "@modheshwari/config/*": ["packages/config/*.ts"]
     }
   },
 

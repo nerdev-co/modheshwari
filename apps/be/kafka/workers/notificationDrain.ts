@@ -1,5 +1,6 @@
 import type { RedisClientType } from 'redis';
 import prisma from '@modheshwari/db';
+import { NOTIFICATION_DRAIN_SCAN_COUNT, NOTIFICATION_DRAIN_INTERVAL_MS } from "@modheshwari/config/be";
 
 import getRedisClient from '../../lib/redisClient';
 import { errorCounter } from '../../lib/metrics';
@@ -7,7 +8,7 @@ import { logger } from '../../lib/logger';
 
 const DLQ_KEY = 'notifications:dlq';
 const NOTIFICATION_KEY_PATTERN = 'notifications:*';
-const SCAN_COUNT = Number(process.env.NOTIFICATION_DRAIN_SCAN_COUNT || 100);
+const SCAN_COUNT = NOTIFICATION_DRAIN_SCAN_COUNT;
 
 /**
  * Performs parse cached operation.
@@ -100,7 +101,7 @@ export async function drainOnce(redis?: RedisClientType | null) {
  * @param {number} intervalMs - Description of intervalMs
  * @returns {{ stop(): void; }} Description of return value
  */
-export function startNotificationDrain(intervalMs = Number(process.env.NOTIFICATION_DRAIN_INTERVAL_MS || 1000 * 60 * 5)) {
+export function startNotificationDrain(intervalMs = NOTIFICATION_DRAIN_INTERVAL_MS) {
   let running = true;
   const redisPromise = getRedisClient();
 

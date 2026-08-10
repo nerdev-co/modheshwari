@@ -11,20 +11,18 @@
  * - server/router.ts: Main request routing logic
  */
 
-import { join } from "path";
-
 import { serve } from "bun";
-import { config } from "dotenv";
-
-// Load environment variables first
-config({ path: join(process.cwd(), "../../.env") });
-
+import { loadAppEnv } from "@modheshwari/config/loadEnv";
 import prisma from "@modheshwari/db";
+
 import { router } from "./server/router";
 import { logger } from "./lib/logger";
 import "./lib/metrics";
 import startNotificationDrain from "./kafka/workers/notificationDrain";
 import startDLQRetryWorker from "./kafka/workers/notificationDLQ";
+import startOutboxRelay from "./kafka/workers/outboxRelay";
+
+loadAppEnv();
 
 /**
  * Performs register prisma hooks operation.
@@ -55,17 +53,24 @@ logger.info(`Server running on http://localhost:${PORT}`);
 // Start background workers after server is up (graceful if Redis/Kafka unavailable)
 let drainHandle: { stop?: () => void } | null = null;
 let dlqHandle: { stop?: () => void } | null = null;
+let outboxHandle: { stop?: () => void } | null = null;
 
 try {
-  drainHandle = startNotificationDrain();
+    drainHandle = startNotificationDrain();
 } catch (err) {
-  logger.warn('Notification drain worker not started (Redis may be unavailable)', err);
+    logger.warn('Notification drain worker not started (Redis may be unavailable)', err);
 }
 
 try {
-  dlqHandle = startDLQRetryWorker();
+    dlqHandle = startDLQRetryWorker();
 } catch (err) {
-  logger.warn('DLQ retry worker not started (Redis may be unavailable)', err);
+    logger.warn('DLQ retry worker not started (Redis may be unavailable)', err);
+}
+
+try {
+    outboxHandle = startOutboxRelay();
+} catch (err) {
+    logger.warn('Outbox relay worker not started (Kafka may be unavailable)', err);
 }
 
 // Graceful shutdown
@@ -79,6 +84,7 @@ async function shutdown(signal: string) {
     try {
         drainHandle?.stop?.();
         dlqHandle?.stop?.();
+        outboxHandle?.stop?.();
         await prisma.$disconnect();
     } catch (e) {
         logger.warn('Error during shutdown', e);

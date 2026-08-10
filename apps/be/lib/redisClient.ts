@@ -1,5 +1,6 @@
 import { createClient } from 'redis';
 import type { RedisClientType } from 'redis';
+import { REDIS_URL } from "@modheshwari/config/be";
 
 let client: RedisClientType | null = null;
 
@@ -10,8 +11,16 @@ let client: RedisClientType | null = null;
  */
 export async function getRedisClient(url?: string): Promise<RedisClientType> {
   if (client) return client;
-  const redisUrl = url || process.env.REDIS_URL || 'redis://localhost:6379';
-  client = createClient({ url: redisUrl, socket: { reconnectStrategy: false } });
+  const redisUrl = url || REDIS_URL;
+  client = createClient({ 
+    url: redisUrl, 
+    socket: { 
+      reconnectStrategy: (retries) => {
+        if (retries > 10) return new Error("Max Redis reconnection attempts reached");
+        return Math.min(retries * 200, 5000);
+      }
+    } 
+  });
   client.on('error', (err: Error) => {
     console.error('Redis client error', err instanceof Error ? err.message : String(err));
   });
