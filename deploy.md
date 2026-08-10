@@ -329,6 +329,20 @@ git push origin main
 | WebSocket   | 3002 | ws://YOUR_VM_IP:3002              |
 | Kafka UI    | 8080 | http://YOUR_VM_IP:8080            |
 
+## Final Architecture
+
+```
+Browser → Cloudflare (HTTPS) → EC2:443 → Nginx (SSL termination)
+                                           ├→ /api/* → be:3001
+                                           ├→ /ws → ws:3002
+                                           └→ /* → web:3000
+
+be → Neon PostgreSQL (ap-southeast-1)
+be → Redis (redis:6379)
+be → Kafka (kafka:9092)
+ws → Redis + Kafka
+```
+
 ---
 
 ## Nginx Reverse Proxy (Production)
@@ -774,3 +788,23 @@ sudo resize2fs /dev/nvme0n1p1
 - Unused variables (`logout`, `userLoading`, `Me` type)
 
 Fix: Remove unused imports/variables before pushing.
+
+## Files Modified During Deployment
+
+| File | Change |
+|------|--------|
+| `.dockerignore` | Added recursive exclusions, removed turbo.json etc. |
+| `Dockerfile` | Added `# syntax=docker/dockerfile:1`, bun cache mount, packages/config workspace support |
+| `docker-compose.yml` | Added port 443, cert volume mount for nginx |
+| `nginx.conf` | Added SSL server block, HTTP→HTTPS redirect |
+| `apps/web/app/medical/page.tsx` | Removed unused `logout` |
+| `apps/web/app/notifications/page.tsx` | Removed unused `apiFetch`, `Me`, `userLoading` |
+| `apps/web/app/resources/page.tsx` | Removed unused `useCallback`, `Me` |
+| `packages/config/` | New workspace package for centralized env loading |
+| `apps/be/lib/outbox.ts` | Transactional outbox helper |
+| `apps/be/kafka/workers/outboxRelay.ts` | Outbox relay with DLQ promotion |
+| `apps/be/kafka/workers/esReconciliation.ts` | Periodic ES reconciliation worker |
+| `apps/ws/handlers.ts` | Message durability + sync pagination |
+| `deploy.md` | Added lessons learned section |
+
+---
