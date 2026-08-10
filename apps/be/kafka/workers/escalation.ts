@@ -15,6 +15,7 @@ import prisma from "@modheshwari/db";
 
 import { kafka } from "../config";
 import { publishToChannel } from "../notificationProducer";
+import { ensureIdempotent } from "../../lib/kafkaIdempotency";
 
 // Escalation timings (in milliseconds)
 const ESCALATION_DELAYS = {
@@ -239,6 +240,11 @@ async function startReadEventConsumer() {
     await readConsumer.run({
         eachMessage: async ({ topic: _topic, partition: _partition, message }) => {
             try {
+                const isDuplicate = await ensureIdempotent(message.key);
+                if (isDuplicate) {
+                    return;
+                }
+
                 const value = message.value?.toString();
                 if (!value) return;
 

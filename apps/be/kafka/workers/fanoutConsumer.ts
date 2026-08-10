@@ -3,6 +3,7 @@ import { createClient } from 'redis';
 
 import { createConsumer, TOPICS, producer } from '../config';
 import { processFanoutMessage } from './fanoutWorker';
+import { ensureIdempotent } from '../../lib/kafkaIdempotency';
 
 /**
  * Fanout consumer: subscribes to notification events and processes
@@ -30,6 +31,11 @@ export async function runFanoutConsumer() {
     await consumer.run({
         eachMessage: async ({ topic: _topic, partition: _partition, message }) => {
             try {
+                const isDuplicate = await ensureIdempotent(message.key);
+                if (isDuplicate) {
+                    return;
+                }
+
                 const raw = message.value?.toString();
                 if (!raw) return;
 

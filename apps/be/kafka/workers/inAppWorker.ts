@@ -2,6 +2,7 @@ import type { RedisClientType } from 'redis';
 
 import { createConsumer, TOPICS } from '../config';
 import getRedisClient from '../../lib/redisClient';
+import { ensureIdempotent } from '../../lib/kafkaIdempotency';
 
 interface NotificationEvent {
     eventId?: string;
@@ -26,6 +27,11 @@ export async function runInAppWorker() {
     await consumer.run({
         eachMessage: async ({ message }) => {
             try {
+                const isDuplicate = await ensureIdempotent(message.key);
+                if (isDuplicate) {
+                    return;
+                }
+
                 const raw = message.value?.toString();
                 if (!raw) return;
                 const payload = JSON.parse(raw) as NotificationEvent;

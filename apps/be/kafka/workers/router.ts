@@ -5,6 +5,7 @@ import { createConsumer, TOPICS } from "../config";
 import { publishToChannel } from "../notificationProducer";
 import type { NotificationEvent } from "../notificationProducer";
 import { scheduleEscalation } from "./escalation";
+import { ensureIdempotent } from "../../lib/kafkaIdempotency";
 
 /**
  * Retrieve recipient details (email, FCM token, phone, preferences)
@@ -98,6 +99,11 @@ export async function startRouterConsumer(): Promise<void> {
     await consumer.run({
         eachMessage: async ({ topic: _topic, partition: _partition, message }: EachMessagePayload) => {
             try {
+                const isDuplicate = await ensureIdempotent(message.key);
+                if (isDuplicate) {
+                    return;
+                }
+
                 if (!message.value) {
                     return;
                 }
