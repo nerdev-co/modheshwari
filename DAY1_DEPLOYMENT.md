@@ -32,6 +32,7 @@ Started with `docker compose --env-file .env up -d --build` on a `t2.micro` (1GB
 **Root cause:** The build context was **83MB** and took **21 minutes** just to transfer to Docker daemon. Why? `apps/web/node_modules/` was 105MB and `.dockerignore` wasn't excluding it properly.
 
 **Fix:** Rewrote `.dockerignore` with recursive `**/` patterns:
+
 ```dockerignore
 **/node_modules
 **/.next
@@ -54,6 +55,7 @@ Build failed with `Could not find turbo.json`. The file existed locally but wasn
 **Root cause:** EC2 had a different `.dockerignore` that excluded `turbo.json`, `tsconfig.json`, `eslint.config.js`, and even `.dockerignore` itself.
 
 **The files the Dockerfile absolutely needs:**
+
 - `package.json`, `bun.lock` — for `bun install`
 - `apps/*/package.json`, `packages/*/package.json` — workspace setup
 - `packages/db/schema.prisma` — for `prisma generate`
@@ -69,6 +71,7 @@ Build failed with `Could not find turbo.json`. The file existed locally but wasn
 Build killed with `signal: killed`. `t2.micro` has 1GB RAM. Building Bun + Next.js + native modules (bcrypt, esbuild, tree-sitter) needs 2-3GB peak.
 
 **Fix:** Upgraded to `t3.medium` (4GB RAM):
+
 1. EC2 Console → Stop instance
 2. Actions → Change Instance Type → t3.medium
 3. Start instance
@@ -76,6 +79,7 @@ Build killed with `signal: killed`. `t2.micro` has 1GB RAM. Building Bun + Next.
 **Gotcha:** Public IP changed after stop/start! Had to update GitHub Actions `HOST` secret.
 
 **Rule of thumb:**
+
 - `t2.micro` (1GB): Can't build this project
 - `t3.small` (2GB): Barely, might OOM
 - `t3.medium` (4GB): Comfortable
@@ -88,17 +92,21 @@ Build killed with `signal: killed`. `t2.micro` has 1GB RAM. Building Bun + Next.
 Even with enough RAM, the build failed with `no space left on device`. Docker images + build cache ate all 19GB.
 
 **Fix:**
+
 1. Expanded EBS volume from 19GB → 30GB (AWS Console)
 2. Resized filesystem on the instance:
+
 ```bash
 sudo growpart /dev/nvme0n1 1
 sudo resize2fs /dev/nvme0n1p1
 ```
+
 3. Cleaned up: `docker system prune -a --volumes -f`
 
 **Lesson:** AWS console expands the volume, but the OS filesystem needs manual resize. Always use 30GB+ for this project.
 
 **When disk is tight, build sequentially:**
+
 ```bash
 docker compose --env-file .env build be
 docker compose --env-file .env build ws
@@ -113,6 +121,7 @@ docker compose --env-file .env up -d
 Containers started but `be` and `ws` crashed with `Missing JWT_REFRESH_SECRET`.
 
 **Root cause:** EC2 `.env` was missing `JWT_REFRESH_SECRET` and had wrong service URLs:
+
 - `REDIS_URL=redis://localhost:6379` → should be `redis://redis:6379`
 - `KAFKA_BROKERS=localhost:9092` → should be `KAFKA_BROKER=kafka:9092`
 
@@ -147,6 +156,7 @@ Added inbound rule: HTTP (80) from 0.0.0.0/0.
 Docker nginx uses port 80. Certbot needs port 80 for HTTP challenge. They conflict.
 
 **Solution:**
+
 ```bash
 # Stop Docker nginx
 docker compose stop nginx
@@ -159,6 +169,7 @@ docker compose start nginx
 ```
 
 **Updated nginx.conf:**
+
 ```nginx
 server {
     listen 80;
@@ -176,17 +187,19 @@ server {
 ```
 
 **Updated docker-compose.yml:**
+
 ```yaml
 nginx:
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+  ports:
+    - "80:80"
+    - "443:443"
+  volumes:
+    - /etc/letsencrypt:/etc/letsencrypt:ro
+    - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
 ```
 
 **Auto-renewal:**
+
 ```bash
 echo '0 12 * * * /usr/bin/certbot renew --quiet --post-hook "cd /home/ubuntu/modheshwari && docker compose restart nginx"' | sudo crontab -
 ```
@@ -200,6 +213,7 @@ SSL cert was set up but Cloudflare couldn't reach the origin.
 **Root cause:** Port 443 wasn't open in EC2 security group AND wasn't exposed in docker-compose.yml.
 
 **Fix:** Both:
+
 1. Security group: Add HTTPS (443) inbound rule
 2. docker-compose.yml: Add `"443:443"` to nginx ports
 
@@ -208,6 +222,7 @@ SSL cert was set up but Cloudflare couldn't reach the origin.
 ### Act 10: CI/CD Pipeline
 
 Workflow at `.github/workflows/deploy.yml`:
+
 1. Push to main → CI runs (lint, check-types, build)
 2. CI passes → SSH into EC2 → `git stash` → `git pull` → build → deploy
 
@@ -270,18 +285,18 @@ docker compose --env-file .env build 2>&1 | grep "transferring context"
 
 ## Files Modified
 
-| File | What Changed |
-|------|-------------|
-| `.dockerignore` | Recursive exclusions, kept build-critical files |
-| `Dockerfile` | Added `# syntax=docker/dockerfile:1`, bun cache mount |
-| `docker-compose.yml` | Added port 443, cert volume mount |
-| `nginx.conf` | SSL server block, HTTP→HTTPS redirect |
-| `.github/workflows/deploy.yml` | Added `git stash` before pull |
-| `apps/web/app/medical/page.tsx` | Removed unused `logout` |
-| `apps/web/app/notifications/page.tsx` | Removed unused `apiFetch`, `Me`, `userLoading` |
-| `apps/web/app/resources/page.tsx` | Removed unused `useCallback`, `Me` |
-| `deploy.md` | Full deployment guide with SSL, Neon, lessons learned |
-| `deploy-learn.md` | Detailed session notes |
+| File                                  | What Changed                                          |
+| ------------------------------------- | ----------------------------------------------------- |
+| `.dockerignore`                       | Recursive exclusions, kept build-critical files       |
+| `Dockerfile`                          | Added `# syntax=docker/dockerfile:1`, bun cache mount |
+| `docker-compose.yml`                  | Added port 443, cert volume mount                     |
+| `nginx.conf`                          | SSL server block, HTTP→HTTPS redirect                 |
+| `.github/workflows/deploy.yml`        | Added `git stash` before pull                         |
+| `apps/web/app/medical/page.tsx`       | Removed unused `logout`                               |
+| `apps/web/app/notifications/page.tsx` | Removed unused `apiFetch`, `Me`, `userLoading`        |
+| `apps/web/app/resources/page.tsx`     | Removed unused `useCallback`, `Me`                    |
+| `deploy.md`                           | Full deployment guide with SSL, Neon, lessons learned |
+| `deploy-learn.md`                     | Detailed session notes                                |
 
 ---
 
@@ -302,15 +317,15 @@ docker compose --env-file .env build 2>&1 | grep "transferring context"
 
 ## Cost
 
-| Item | Cost |
-|------|------|
-| t3.medium (4GB) | ~$30/month |
-| 30GB gp3 EBS | ~$3/month |
-| Neon DB | Free tier |
-| Cloudflare | Free |
-| Domain | ~$12/year |
-| **Total** | **~$35/month** |
+| Item            | Cost           |
+| --------------- | -------------- |
+| t3.medium (4GB) | ~$30/month     |
+| 30GB gp3 EBS    | ~$3/month      |
+| Neon DB         | Free tier      |
+| Cloudflare      | Free           |
+| Domain          | ~$12/year      |
+| **Total**       | **~$35/month** |
 
 ---
 
-*This document is a memoir of the first deployment session. Things will go wrong. That's normal. The key is to read the errors, understand what they mean, and fix one thing at a time.*
+_This document is a memoir of the first deployment session. Things will go wrong. That's normal. The key is to read the errors, understand what they mean, and fix one thing at a time._

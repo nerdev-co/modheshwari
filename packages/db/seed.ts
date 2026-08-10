@@ -21,10 +21,18 @@ const prisma = new PrismaClient();
 
 const PASSWORD = "demo123";
 
+/**
+ * Performs hash password operation.
+ * @returns {Promise<any>} Description of return value
+ */
 async function hashPassword() {
     return bcrypt.hash(PASSWORD, 10);
 }
 
+/**
+ * Performs main operation.
+ * @returns {Promise<void>} Description of return value
+ */
 async function main() {
     console.log(" Seeding database...");
 

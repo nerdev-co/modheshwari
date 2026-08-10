@@ -48,6 +48,11 @@ const UserContext = createContext<UserContextValue>({
   updateProfile: () => {},
 });
 
+/**
+ * Performs  user provider operation.
+ * @param {{ children: React.ReactNode; }} { children } - Description of { children }
+ * @returns {React.JSX.Element} Description of return value
+ */
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -117,6 +122,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * Performs use user operation.
+ * @returns {UserContextValue} Description of return value
+ */
 export function useUser() {
   return useContext(UserContext);
 }

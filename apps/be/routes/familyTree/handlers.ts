@@ -15,6 +15,13 @@ import { getReciprocalType } from "./utils";
 
 const FAMILY_TREE_TTL = Number(process.env.FAMILY_TREE_TTL_SECONDS || 60);
 
+/**
+ * Performs family tree key operation.
+ * @param {string} userId - Description of userId
+ * @param {import("/Users/nalindalal/modheshwari/apps/be/routes/familyTree/types").TreeView} view - Description of view
+ * @param {number} depth - Description of depth
+ * @returns {string} Description of return value
+ */
 function familyTreeKey(userId: string, view: TreeView, depth: number): string {
   return `familyTree:${userId}:${view}:${depth}`;
 }

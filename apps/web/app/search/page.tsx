@@ -7,6 +7,10 @@ import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 
 import SearchInput from "./SearchInput";
 
+/**
+ * Performs  search page operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function SearchPage() {
   const [focusTrigger, setFocusTrigger] = useState(0);
   const [isMac, setIsMac] = useState(false);

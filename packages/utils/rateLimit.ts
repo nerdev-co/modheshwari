@@ -21,6 +21,11 @@ const MAX_ENTRIES = 10_000;
    over X-Forwarded-For (client-controlled)
    ------------------------------------------- */
 
+/**
+ * Performs get client ip operation.
+ * @param {Request} req - Description of req
+ * @returns {string} Description of return value
+ */
 export function getClientIp(req: Request): string {
     const realIp = req.headers.get("x-real-ip");
     if (realIp) return realIp.trim();
@@ -35,6 +40,12 @@ export function getClientIp(req: Request): string {
    Rate Limiter
    ------------------------------------------- */
 
+/**
+ * Performs is rate limited operation.
+ * @param {Request} req - Description of req
+ * @param {RateLimitOptions} { max, windowMs, scope = "global" } - Description of { max, windowMs, scope = "global" }
+ * @returns {boolean} Description of return value
+ */
 export function isRateLimited(
     req: Request,
     { max, windowMs, scope = "global" }: RateLimitOptions,

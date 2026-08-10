@@ -18,14 +18,28 @@ type EventItem = {
   createdAt?: string;
 };
 
+/**
+ * Performs start of month operation.
+ * @param {Date} d - Description of d
+ * @returns {Date} Description of return value
+ */
 function startOfMonth(d: Date) {
   return new Date(d.getFullYear(), d.getMonth(), 1);
 }
 
+/**
+ * Performs end of month operation.
+ * @param {Date} d - Description of d
+ * @returns {Date} Description of return value
+ */
 function endOfMonth(d: Date) {
   return new Date(d.getFullYear(), d.getMonth() + 1, 0);
 }
 
+/**
+ * Performs  events calendar operation.
+ * @returns {any} Description of return value
+ */
 export default function EventsCalendar() {
   const [current, setCurrent] = useState(() => startOfMonth(new Date()));
   const [events, setEvents] = useState<EventItem[]>([]);

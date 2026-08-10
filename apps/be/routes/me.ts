@@ -13,10 +13,20 @@ import getRedisClient from "../lib/redisClient";
 
 const PROFILE_TTL = Number(process.env.PROFILE_TTL_SECONDS || 300);
 
+/**
+ * Performs profile cache key operation.
+ * @param {string} userId - Description of userId
+ * @returns {string} Description of return value
+ */
 function profileCacheKey(userId: string): string {
   return `user:profile:${userId}`;
 }
 
+/**
+ * Performs fetch user with families operation.
+ * @param {string} userId - Description of userId
+ * @returns {import("/Users/nalindalal/modheshwari/node_modules/.prisma/client/index").Prisma.Prisma__UserClient<{ name: string; id: string; email: string; role: import("/Users/nalindalal/modheshwari/node_modules/.prisma/client/index").$Enums.Role; status: boolean; profile: { allergies: string; phone: string; address: string; profession: string; gotra: string; location: string; medicalNotes: string; locationLat: number; locationLng: number; bloodGroup: import("/Users/nalindalal/modheshwari/node_modules/.prisma/client/index").$Enums.bloodGroup; }; families: { id: string; role: import("/Users/nalindalal/modheshwari/node_modules/.prisma/client/index").$Enums.Role; family: { name: string; id: string; uniqueId: string; }; familyId: string; joinedAt: Date; }[]; }, null, import("/Users/nalindalal/modheshwari/node_modules/@prisma/client/runtime/library").DefaultArgs, import("/Users/nalindalal/modheshwari/node_modules/.prisma/client/index").Prisma.PrismaClientOptions>} Description of return value
+ */
 function fetchUserWithFamilies(userId: string) {
   return prisma.user.findUnique({
     where: { id: userId },

@@ -8,6 +8,17 @@ import { formatBloodGroup } from "@modheshwari/utils/format";
 
 import { useUser } from "../../lib/UserContext";
 
+/**
+ * Performs  profile field operation.
+ * @param {{ label: string; value?: string; }} {
+ *   label,
+ *   value,
+ * } - Description of {
+ *   label,
+ *   value,
+ * }
+ * @returns {React.JSX.Element} Description of return value
+ */
 function ProfileField({
   label,
   value,
@@ -25,6 +36,10 @@ function ProfileField({
   );
 }
 
+/**
+ * Performs  me page operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function MePage() {
   const router = useRouter();
   const { user, loading, logout } = useUser();

@@ -18,6 +18,10 @@ const signupOptions = [
   },
 ];
 
+/**
+ * Performs  signup landing page operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function SignupLandingPage() {
   return (
     <DreamySunsetBackground className="flex items-center justify-center px-4 py-12 min-h-screen">

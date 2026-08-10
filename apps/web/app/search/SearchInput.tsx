@@ -27,6 +27,17 @@ interface SearchResult {
 
 type FilterMode = "text" | "gotra" | "profession" | "location" | "blood" | "role";
 
+/**
+ * Performs  search input operation.
+ * @param {{ placeholder?: string; focusSignal?: number; }} {
+ *   placeholder = "Search...",
+ *   focusSignal,
+ * } - Description of {
+ *   placeholder = "Search...",
+ *   focusSignal,
+ * }
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function SearchInput({
   placeholder = "Search...",
   focusSignal,

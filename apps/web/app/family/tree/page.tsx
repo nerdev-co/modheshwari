@@ -4,6 +4,10 @@ import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 
 import FamilyTreeView from "../FamilyTreeView";
 
+/**
+ * Performs  family tree page operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function FamilyTreePage() {
   return (
     <DreamySunsetBackground className="px-6 py-10">

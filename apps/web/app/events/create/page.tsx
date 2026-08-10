@@ -9,6 +9,10 @@ import { Button } from "@repo/ui/button";
 
 import apiFetch from "../../../lib/api";
 
+/**
+ * Performs  create event page operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function CreateEventPage() {
   const router = useRouter();
   const [hydrated, setHydrated] = useState(false);

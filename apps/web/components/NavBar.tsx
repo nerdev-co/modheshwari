@@ -24,6 +24,10 @@ import { useUser } from "../lib/UserContext";
 import Tooltip from "./Tooltip";
 import useNotifications from "../hooks/useNotifications";
 
+/**
+ * Performs  nav bar operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function NavBar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -281,6 +285,23 @@ export default function NavBar() {
   );
 }
 
+/**
+ * Performs  mobile link operation.
+ * @param {{ href: string; Icon: React.ComponentType<{ className?: string; }>; label: string; onClick: () => void; unreadCount?: number; }} {
+ *   href,
+ *   Icon,
+ *   label,
+ *   onClick,
+ *   unreadCount,
+ * } - Description of {
+ *   href,
+ *   Icon,
+ *   label,
+ *   onClick,
+ *   unreadCount,
+ * }
+ * @returns {React.JSX.Element} Description of return value
+ */
 function MobileLink({
   href,
   Icon,

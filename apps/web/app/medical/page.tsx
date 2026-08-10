@@ -19,6 +19,10 @@ interface MedicalInfo {
   medicalNotes?: string;
 }
 
+/**
+ * Performs  medical operation.
+ * @returns {any} Description of return value
+ */
 export default function Medical() {
   const router = useRouter();
   const { toast } = useToast();

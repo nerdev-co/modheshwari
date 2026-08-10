@@ -7,6 +7,11 @@ import prisma from "@modheshwari/db";
 
 import type { TreeNode } from "./types";
 
+/**
+ * Performs make node operation.
+ * @param {{ id: string; name: string; email: string; role: string; }} user - Description of user
+ * @returns {import("/Users/nalindalal/modheshwari/apps/be/routes/familyTree/types").TreeNode} Description of return value
+ */
 function makeNode(user: { id: string; name: string; email: string; role: string }): TreeNode {
   return { id: user.id, name: user.name, email: user.email, role: user.role };
 }

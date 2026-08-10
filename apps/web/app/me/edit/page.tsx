@@ -11,6 +11,10 @@ import apiFetch from "../../../lib/api";
 import { API_BASE } from "../../../lib/config";
 import { useUser } from "../../../lib/UserContext";
 
+/**
+ * Performs  edit profile page operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function EditProfilePage() {
   const router = useRouter();
   const { toast } = useToast();

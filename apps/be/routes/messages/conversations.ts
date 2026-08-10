@@ -8,6 +8,11 @@ const CONVERSATIONS_TTL = Number(
   process.env.CONVERSATIONS_TTL_SECONDS || 30,
 );
 
+/**
+ * Performs conversations cache key operation.
+ * @param {string} userId - Description of userId
+ * @returns {string} Description of return value
+ */
 function conversationsCacheKey(userId: string): string {
   return `user:conversations:${userId}`;
 }

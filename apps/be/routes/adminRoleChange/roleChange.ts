@@ -178,6 +178,11 @@ export async function handleChangeUserRole(
   }
 }
 
+/**
+ * Performs get role level operation.
+ * @param {import("/Users/nalindalal/modheshwari/node_modules/.prisma/client/index").$Enums.Role} role - Description of role
+ * @returns {number} Description of return value
+ */
 function getRoleLevel(role: Role): number {
   const levels: Record<Role, number> = {
     COMMUNITY_HEAD: 5,
