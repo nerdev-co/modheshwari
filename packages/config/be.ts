@@ -32,3 +32,7 @@ export const NOTIFICATION_DLQ_RETRY_BATCH = Number(process.env.NOTIFICATION_DLQ_
 export const NOTIFICATION_DLQ_MAX_ATTEMPTS = Number(process.env.NOTIFICATION_DLQ_MAX_ATTEMPTS || "5");
 export const NOTIFICATION_DLQ_BASE_DELAY_MS = Number(process.env.NOTIFICATION_DLQ_BASE_DELAY_MS || String(60 * 1000));
 export const NOTIFICATION_DLQ_RETRY_INTERVAL_MS = Number(process.env.NOTIFICATION_DLQ_RETRY_INTERVAL_MS || String(30 * 1000));
+
+export const OUTBOX_MAX_ATTEMPTS = Number(process.env.OUTBOX_MAX_ATTEMPTS || "10");
+
+export const ES_RECONCILIATION_INTERVAL_MS = Number(process.env.ES_RECONCILIATION_INTERVAL_MS || String(1000 * 60 * 60));

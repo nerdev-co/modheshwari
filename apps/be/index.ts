@@ -21,6 +21,7 @@ import "./lib/metrics";
 import startNotificationDrain from "./kafka/workers/notificationDrain";
 import startDLQRetryWorker from "./kafka/workers/notificationDLQ";
 import startOutboxRelay from "./kafka/workers/outboxRelay";
+import startEsReconciliation from "./kafka/workers/esReconciliation";
 
 loadAppEnv();
 
@@ -54,23 +55,30 @@ logger.info(`Server running on http://localhost:${PORT}`);
 let drainHandle: { stop?: () => void } | null = null;
 let dlqHandle: { stop?: () => void } | null = null;
 let outboxHandle: { stop?: () => void } | null = null;
+let esReconHandle: { stop?: () => void } | null = null;
 
 try {
-    drainHandle = startNotificationDrain();
+  drainHandle = startNotificationDrain();
 } catch (err) {
-    logger.warn('Notification drain worker not started (Redis may be unavailable)', err);
+  logger.warn('Notification drain worker not started (Redis may be unavailable)', err);
 }
 
 try {
-    dlqHandle = startDLQRetryWorker();
+  dlqHandle = startDLQRetryWorker();
 } catch (err) {
-    logger.warn('DLQ retry worker not started (Redis may be unavailable)', err);
+  logger.warn('DLQ retry worker not started (Redis may be unavailable)', err);
 }
 
 try {
-    outboxHandle = startOutboxRelay();
+  outboxHandle = startOutboxRelay();
 } catch (err) {
-    logger.warn('Outbox relay worker not started (Kafka may be unavailable)', err);
+  logger.warn('Outbox relay worker not started (Kafka may be unavailable)', err);
+}
+
+try {
+  esReconHandle = startEsReconciliation();
+} catch (err) {
+  logger.warn('ES reconciliation worker not started', err);
 }
 
 // Graceful shutdown
@@ -85,6 +93,7 @@ async function shutdown(signal: string) {
         drainHandle?.stop?.();
         dlqHandle?.stop?.();
         outboxHandle?.stop?.();
+        esReconHandle?.stop?.();
         await prisma.$disconnect();
     } catch (e) {
         logger.warn('Error during shutdown', e);

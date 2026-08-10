@@ -57,13 +57,18 @@ export function handleOpen(ws: ServerWebSocket<WSData>) {
     reconcileMissedNotifications(ws.data.userId);
 }
 
+/**
+ * Performs reconcile missed notifications operation.
+ * @param {string} userId - Description of userId
+ * @returns {Promise<void>} Description of return value
+ */
 async function reconcileMissedNotifications(userId: string) {
   try {
     const notifications = await prisma.notification.findMany({
       where: { userId, read: false },
       select: { id: true, type: true, message: true, createdAt: true, eventId: true },
       orderBy: { createdAt: "asc" },
-      take: 100,
+      take: 500,
     });
 
     for (const n of notifications) {
@@ -337,6 +342,8 @@ async function handleSync(
         return;
     }
 
+    const limit = Math.min(Math.max(data.limit ?? 200, 1), 500);
+
     try {
         const conversations = await prisma.conversation.findMany({
             where: { participants: { has: userId } },
@@ -345,17 +352,31 @@ async function handleSync(
 
         const conversationIds = conversations.map((c) => c.id);
         if (conversationIds.length === 0) {
-            ws.send(JSON.stringify({ type: "sync", messages: [] }));
+            ws.send(JSON.stringify({ type: "sync", messages: [], hasMore: false }));
             return;
         }
 
+        const messageWhere: Prisma.MessageWhereInput = {
+            conversationId: { in: conversationIds },
+            createdAt: { gt: lastSeenAt },
+        };
+
+        if (data.cursor) {
+            const cursorMessage = await prisma.message.findUnique({
+                where: { id: data.cursor },
+                select: { createdAt: true, id: true },
+            });
+
+            if (cursorMessage) {
+                messageWhere.createdAt = { gt: cursorMessage.createdAt };
+                messageWhere.id = { not: data.cursor };
+            }
+        }
+
         const messages = await prisma.message.findMany({
-            where: {
-                conversationId: { in: conversationIds },
-                createdAt: { gt: lastSeenAt },
-            },
+            where: messageWhere,
             orderBy: { createdAt: "asc" },
-            take: 200,
+            take: limit + 1,
             select: {
                 id: true,
                 conversationId: true,
@@ -366,9 +387,13 @@ async function handleSync(
             },
         });
 
+        const hasMore = messages.length > limit;
+        const page = hasMore ? messages.slice(0, limit) : messages;
+        const nextCursor = hasMore ? page[page.length - 1]?.id : undefined;
+
         ws.send(JSON.stringify({
             type: "sync",
-            messages: messages.map((m) => ({
+            messages: page.map((m) => ({
                 type: "chat",
                 messageId: m.id,
                 conversationId: m.conversationId,
@@ -377,6 +402,8 @@ async function handleSync(
                 content: m.content,
                 timestamp: m.createdAt.toISOString(),
             })),
+            hasMore,
+            nextCursor,
         }));
     } catch (err) {
         logger.error("Sync failed", {

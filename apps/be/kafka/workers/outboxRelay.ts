@@ -1,5 +1,5 @@
 import prisma from "@modheshwari/db";
-import { OUTBOX_BATCH_SIZE, OUTBOX_POLL_INTERVAL_MS, OUTBOX_LOCK_TTL_MS } from "@modheshwari/config/be";
+import { OUTBOX_BATCH_SIZE, OUTBOX_POLL_INTERVAL_MS, OUTBOX_LOCK_TTL_MS, OUTBOX_MAX_ATTEMPTS } from "@modheshwari/config/be";
 
 import { producer } from "../config";
 import { indexUser, deleteUser, indexEvent, deleteEvent } from "../../lib/elasticIndexer";
@@ -11,9 +11,14 @@ const BATCH_SIZE = OUTBOX_BATCH_SIZE;
 const POLL_INTERVAL_MS = OUTBOX_POLL_INTERVAL_MS;
 const ES_TOPIC = "elasticsearch.indexing";
 const LOCK_TTL_MS = OUTBOX_LOCK_TTL_MS;
+const MAX_ATTEMPTS = OUTBOX_MAX_ATTEMPTS;
 const LOCK_KEY = "outbox:relay:lock";
 const INSTANCE_ID = `${process.pid}-${Math.random().toString(36).slice(2, 9)}`;
 
+/**
+ * Performs claim pending events operation.
+ * @returns {Promise<{ payload: Record<string, unknown>; id: string; createdAt: Date; eventType: string; aggregateType: string; aggregateId: string; topic: string; attempts: number; lastError: string; }[]>} Description of return value
+ */
 async function claimPendingEvents() {
   const events = await prisma.outboxEvent.findMany({
     where: { publishedAt: null },
@@ -40,6 +45,10 @@ async function claimPendingEvents() {
   }));
 }
 
+/**
+ * Performs acquire lock operation.
+ * @returns {Promise<boolean>} Description of return value
+ */
 async function acquireLock() {
   const redis = await getRedisClient();
   const acquired = await redis.set(LOCK_KEY, INSTANCE_ID, {
@@ -49,6 +58,10 @@ async function acquireLock() {
   return acquired === "OK";
 }
 
+/**
+ * Performs release lock operation.
+ * @returns {Promise<void>} Description of return value
+ */
 async function releaseLock() {
   try {
     const redis = await getRedisClient();
@@ -63,6 +76,11 @@ async function releaseLock() {
   }
 }
 
+/**
+ * Performs publish to kafka operation.
+ * @param {{ id: string; topic: string; payload: Record<string, unknown>; }} event - Description of event
+ * @returns {Promise<void>} Description of return value
+ */
 async function publishToKafka(event: {
   id: string;
   topic: string;
@@ -82,6 +100,11 @@ async function publishToKafka(event: {
   });
 }
 
+/**
+ * Performs handle elasticsearch indexing operation.
+ * @param {{ id: string; eventType: string; payload: Record<string, unknown>; }} event - Description of event
+ * @returns {Promise<void>} Description of return value
+ */
 async function handleElasticsearchIndexing(event: {
   id: string;
   eventType: string;
@@ -109,6 +132,11 @@ async function handleElasticsearchIndexing(event: {
   }
 }
 
+/**
+ * Performs mark published operation.
+ * @param {string} id - Description of id
+ * @returns {Promise<void>} Description of return value
+ */
 async function markPublished(id: string) {
   await prisma.outboxEvent.updateMany({
     where: { id, publishedAt: null },
@@ -116,6 +144,12 @@ async function markPublished(id: string) {
   });
 }
 
+/**
+ * Performs increment attempts operation.
+ * @param {string} id - Description of id
+ * @param {string} error - Description of error
+ * @returns {Promise<void>} Description of return value
+ */
 async function incrementAttempts(id: string, error: string) {
   await prisma.outboxEvent.updateMany({
     where: { id },
@@ -127,6 +161,54 @@ async function incrementAttempts(id: string, error: string) {
   outboxRetryCount.inc(1);
 }
 
+/**
+ * Performs move to dead letter operation.
+ * @param {{ id: string; eventType: string; aggregateType: string; aggregateId: string; payload: Record<string, unknown>; topic: string; attempts: number; lastError: string; createdAt: Date; }} event - Description of event
+ * @param {string} reason - Description of reason
+ * @returns {Promise<void>} Description of return value
+ */
+async function moveToDeadLetter(event: {
+  id: string;
+  eventType: string;
+  aggregateType: string;
+  aggregateId: string;
+  payload: Record<string, unknown>;
+  topic: string;
+  attempts: number;
+  lastError: string | null;
+  createdAt: Date;
+}, reason: string) {
+  await prisma.outboxEventDeadLetter.create({
+    data: {
+      eventType: event.eventType,
+      aggregateType: event.aggregateType,
+      aggregateId: event.aggregateId,
+      payload: JSON.parse(JSON.stringify(event.payload)),
+      topic: event.topic,
+      attempts: event.attempts,
+      lastError: event.lastError ?? undefined,
+      publishedAt: null,
+      reason,
+    },
+  });
+
+  await prisma.outboxEvent.deleteMany({
+    where: { id: event.id },
+  });
+
+  logger.warn("Outbox event moved to dead letter", {
+    outboxId: event.id,
+    topic: event.topic,
+    attempts: event.attempts,
+    reason,
+  });
+  errorCounter.inc({ type: "outbox_dlq" }, 1);
+}
+
+/**
+ * Performs process outbox once operation.
+ * @returns {Promise<number>} Description of return value
+ */
 export async function processOutboxOnce() {
   const events = await claimPendingEvents();
   if (events.length === 0) return 0;
@@ -151,6 +233,10 @@ export async function processOutboxOnce() {
       });
       errorCounter.inc({ type: "outbox_publish_failure" }, 1);
       await incrementAttempts(event.id, errorMsg);
+
+      if (event.attempts + 1 >= MAX_ATTEMPTS) {
+        await moveToDeadLetter(event, `Max attempts (${MAX_ATTEMPTS}) exceeded`);
+      }
     }
   }
 
@@ -159,6 +245,11 @@ export async function processOutboxOnce() {
 
 let running = true;
 
+/**
+ * Performs start outbox relay operation.
+ * @param {number} intervalMs - Description of intervalMs
+ * @returns {{ stop(): void; }} Description of return value
+ */
 export function startOutboxRelay(intervalMs = POLL_INTERVAL_MS) {
   async function tick() {
     if (!running) return;

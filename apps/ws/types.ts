@@ -36,6 +36,8 @@ export type IncomingMessage = {
     recipientIds?: string[];
     messageIds?: string[];
     lastSeenAt?: string;
+    limit?: number;
+    cursor?: string;
 };
 
 export type WSMap = Map<string, Set<ServerWebSocket<WSData>>>;

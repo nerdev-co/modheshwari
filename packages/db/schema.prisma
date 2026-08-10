@@ -326,6 +326,24 @@ model OutboxEvent {
   @@index([topic])
 }
 
+model OutboxEventDeadLetter {
+  id             String    @id @default(uuid())
+  eventType      String    @db.VarChar(100)
+  aggregateType  String    @db.VarChar(50)
+  aggregateId    String    @db.VarChar(36)
+  payload        Json
+  topic          String    @db.VarChar(100)
+  attempts       Int       @default(0)
+  lastError      String?
+  publishedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  deadLetteredAt DateTime @default(now())
+  reason         String?
+
+  @@index([topic, createdAt])
+  @@index([createdAt])
+}
+
 model RoleChangeAudit {
   id             String    @id @default(uuid())
   actorId        String
