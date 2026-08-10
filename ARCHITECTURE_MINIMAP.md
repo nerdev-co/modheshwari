@@ -315,21 +315,31 @@ modheshwari/
     │
     ├── Search Architecture
     │   ├── Structured query parser (blood:, gotra:, role:, family:, profession:, location:)
-    │   ├── Elasticsearch primary index (users, events)
+    │   ├── Elasticsearch derived index (users, events)
+    │   ├── Postgres remains authoritative
     │   ├── Prisma fallback for DB queries
     │   └── In-memory cache (60s TTL, mode-aware keys)
     │
     ├── Real-time Architecture
     │   ├── WebSocket server (port 3002) authenticates via JWT
-    │   ├── Kafka consumer → pushes notifications to WS connections
+    │   ├── Messages persisted to Postgres before Redis fan-out
     │   ├── Redis pub/sub → in-app notification fanout across WS instances
+    │   ├── Sync reconciliation on reconnect (lastSeenAt / missed messages)
     │   └── Heartbeat (30s interval, 60s timeout)
+    │
+    ├── Reliability Architecture
+    │   ├── Transactional outbox: DB write + outbox event in same transaction
+    │   ├── Outbox relay: polls pending events, publishes to Kafka/Elasticsearch
+    │   ├── Redis lock: single relay instance processes events safely
+    │   ├── Kafka consumer idempotency: Redis-backed duplicate detection
+    │   ├── ES indexing via outbox: Postgres remains system of record
+    │   └── Role-change audit log: immutable history + anomaly counters
     │
     └── Key Infrastructure Decisions
         ├── PostgreSQL with PostGIS (spatial queries for nearby users)
-        ├── Redis for caching + pub/sub + DLQ + notification drain
+        ├── Redis for caching + pub/sub + DLQ + notification drain + idempotency locks
         ├── Kafka for async notification delivery (4 topics)
-        ├── Elasticsearch for full-text + structured search
+        ├── Elasticsearch for full-text + structured search (derived, not authoritative)
         ├── Bun runtime (not Node.js) for all services
         ├── Elysia framework for backend API
         ├── Prisma ORM with connection pooling
@@ -339,18 +349,36 @@ modheshwari/
 ## Key Architectural Patterns
 
 ### 1. Three-Service Architecture
+
 - **be** (Elysia + Bun): REST API, all business logic, Prisma ORM
 - **web** (Next.js 15): SSR/CSR React frontend, API routes for OpenAPI/AsyncAPI docs
 - **ws** (Bun + ws): Real-time WebSocket server for chat + notifications
 
 ### 2. Event-Driven Notification Pipeline
+
 ```
-API Handler → Kafka (notification.events) → Router Worker
-  → Per-channel topics (email, push, SMS) → Channel Workers
-  → Redis pub/sub → WebSocket server → Client
+API Handler → Outbox Event (atomic with DB write)
+  → Outbox Relay → Kafka (notification.events) → Router Worker
+    → Per-channel topics (email, push, SMS) → Channel Workers
 ```
 
-### 3. Multi-Level Approval Workflow
+### 3. Outbox-Based Side Effects
+
+```
+Postgres Transaction
+  ├── business state change
+  └── outbox event
+       ↓
+  COMMIT
+       ↓
+Outbox Relay (single instance, Redis-locked)
+  ├── Kafka (notifications, escalations)
+  ├── Elasticsearch (derived index updates)
+  └── Retry with backoff on failure
+```
+
+### 4. Multi-Level Approval Workflow
+
 ```
 Creator submits → All admins get notification → Each admin approves/rejects
   → If all approve → status = APPROVED
@@ -359,11 +387,13 @@ Creator submits → All admins get notification → Each admin approves/rejects
 ```
 
 ### 4. Role-Based Access Control
+
 - `requireAuth(req, allowedRoles?)` gate on every protected route
 - `checkRoleChangePermission()` for admin role transfers
 - Permission matrix: COMMUNITY_HEAD > COMMUNITY_SUBHEAD > GOTRA_HEAD > FAMILY_HEAD > MEMBER
 
 ### 5. Notification Delivery with Escalation
+
 - **BROADCAST**: All enabled channels fire immediately
 - **ESCALATION**: In-app first; if unread after 10min → SMS; if unread after 40min → email
 - **DLQ**: Failed deliveries retry with exponential backoff (max 5 attempts)

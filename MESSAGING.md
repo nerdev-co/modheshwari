@@ -454,6 +454,39 @@ curl -X POST http://localhost:3001/api/messages \
 4. **XSS Prevention**: Messages are displayed as text, not HTML
 5. **Rate Limiting**: Consider adding rate limits to prevent spam
 
+## WebSocket Reliability
+
+### Message Durability
+
+Chat messages are persisted to PostgreSQL before being broadcast via Redis Pub/Sub. This ensures messages are not lost if:
+- The WebSocket server restarts
+- Redis connection drops
+- A client disconnects temporarily
+
+### Reconnection Reconciliation
+
+When a client reconnects, it can recover missed messages by sending a `sync` message with `lastSeenAt`:
+
+```json
+{
+  "type": "sync",
+  "lastSeenAt": "2026-08-10T10:00:00Z"
+}
+```
+
+The server responds with all messages created after `lastSeenAt` from conversations the user participates in. This handles:
+- Normal reconnect
+- WS server restart
+- Redis disconnect
+- Multiple browser tabs
+- Duplicate delivery (idempotent by message ID)
+
+### Known Limitations
+
+- Messages are delivered in creation order per conversation
+- The sync endpoint returns up to 200 missed messages per reconnect
+- Duplicate messages are possible if the client sends multiple sync requests; the client should deduplicate by `messageId`
+
 ## Performance Optimization
 
 1. **Pagination**: Messages are paginated (50 per request by default)

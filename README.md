@@ -35,7 +35,21 @@ flowchart LR
     B --> G[Elasticsearch]
     H[Prometheus / Grafana] --> B
     H --> C
+
+    subgraph Reliability Layer
+        D -->|atomic write| I[Outbox Events]
+        I -->|relay| F
+        I -->|relay| G
+    end
 ```
+
+### Reliability improvements
+
+- **Transactional outbox**: business mutations and outbox events commit atomically in PostgreSQL. A relay worker publishes pending events to Kafka and Elasticsearch with retry and backpressure.
+- **Kafka consumer idempotency**: Redis-backed deduplication prevents duplicate processing across consumer restarts.
+- **WebSocket message durability**: chat/notification messages are persisted to PostgreSQL before fan-out. Reconnecting clients recover missed messages via a sync endpoint.
+- **Elasticsearch derived index**: ES indexing is routed through the outbox relay. Postgres remains the authoritative source.
+- **Role-change audit**: every role change is recorded in an immutable audit log with anomaly counters for rate-limited and mass-demotion patterns.
 
 ## API docs
 

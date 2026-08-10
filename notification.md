@@ -264,39 +264,84 @@ API → broadcastNotification(strategy, priority)
 │  POST /api/notifications/:id/read                            │
 │  GET  /api/notifications/:id/delivery-status                 │
 └────────────────────┬─────────────────────────────────────────┘
-                     │
-                     ▼
-      ┌─────────────────────────────┐
-      │    Kafka Cluster            │
-      │  (Zookeeper + Broker)       │
-      └──┬──────────────────────────┘
-         │
-         ├─ notification.events
-         ├─ notification.email
-         ├─ notification.push
-         ├─ notification.sms
-         └─ notification.read
-                     │
-      ┌──────────────┴─────────────────────────┐
-      │        Notification Workers            │
-      │  (Consumer Groups)                     │
-      │                                        │
-      │  • Router (routes to channels)         │
-      │  • Email (Nodemailer + SMTP)           │
-      │  • Push (Firebase FCM)                 │
-      │  • SMS (Twilio)                        │
-      │  • Escalation (scheduler + canceller)  │
-      └────────────────────────────────────────┘
-                     │
-                     ▼
-      ┌─────────────────────────────┐
-      │   PostgreSQL Database       │
-      │   (Neon - Production)       │
-      │                             │
-      │  • Notification             │
-      │  • NotificationDelivery     │
-      │  • Profile (preferences)    │
-      └─────────────────────────────┘
+                      │
+                      ▼
+       ┌─────────────────────────────┐
+       │    Kafka Cluster            │
+       │  (Zookeeper + Broker)       │
+       └──┬──────────────────────────┘
+          │
+          ├─ notification.events
+          ├─ notification.email
+          ├─ notification.push
+          ├─ notification.sms
+          └─ notification.read
+                      │
+       ┌──────────────┴─────────────────────────┐
+       │        Notification Workers            │
+       │  (Consumer Groups)                     │
+       │                                        │
+       │  • Router (routes to channels)         │
+       │  • Email (Nodemailer + SMTP)           │
+       │  • Push (Firebase FCM)                 │
+       │  • SMS (Twilio)                        │
+       │  • Escalation (scheduler + canceller)  │
+       └────────────────────────────────────────┘
+                      │
+                      ▼
+       ┌─────────────────────────────┐
+       │   PostgreSQL Database       │
+       │   (Neon - Production)       │
+       │                             │
+       │  • Notification             │
+       │  • NotificationDelivery     │
+       │  • Profile (preferences)    │
+       └─────────────────────────────┘
+
+### Reliability Layer
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    REST API (Port 3001)                      │
+│                                                              │
+│  POST /api/notifications                                     │
+│  POST /api/notifications/:id/read                            │
+│  GET  /api/notifications/:id/delivery-status                 │
+└────────────────────┬─────────────────────────────────────────┘
+                      │
+                      ▼
+       ┌─────────────────────────────┐
+       │   PostgreSQL Database       │
+       │   (System of Record)        │
+       │                             │
+       │  • Notification             │
+       │  • NotificationDelivery     │
+       │  • OutboxEvent              │
+       └─────────────────────────────┘
+                      │
+                      ▼
+       ┌─────────────────────────────┐
+       │     Outbox Relay            │
+       │  (single instance, locked)  │
+       └──┬──────────────────────────┘
+          │
+          ├─ Kafka (notification.events)
+          ├─ Elasticsearch (indexing)
+          └─ Retry with backoff
+```
+
+### Message Flow with Outbox
+
+**Broadcast Strategy:**
+```
+1. API receives notification request
+2. Business mutation + outbox event commit atomically in Postgres
+3. API returns 202 Accepted immediately
+4. Outbox relay publishes to Kafka (notification.events)
+5. Router worker consumes message
+6. Publishes to all channel topics simultaneously
+7. Channel workers consume and deliver
+8. Update delivery status in database
 ```
 
 ### Message Flow

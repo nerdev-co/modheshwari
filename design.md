@@ -96,7 +96,32 @@ graph TB
     style External fill:#ffe8e8
 ```
 
----
+### 2.3 Reliability Architecture
+
+The system uses a transactional outbox pattern to ensure side effects (Kafka events, Elasticsearch indexing) are reliably propagated without breaking DB transaction atomicity.
+
+```
+Postgres Transaction
+  ├── business state change
+  └── outbox event
+       ↓
+  COMMIT
+       ↓
+Outbox Relay (single instance, Redis-locked)
+  ├── Kafka (notifications, escalations)
+  ├── Elasticsearch (derived index updates)
+  └── Retry with backoff on failure
+```
+
+**Key properties:**
+- Postgres is the sole system of record.
+- Outbox events and business data commit atomically.
+- The relay is the only process that publishes to Kafka/Elasticsearch.
+- Consumers use Redis-backed idempotency to tolerate duplicates.
+- WebSocket notifications are persisted to Postgres before Redis fan-out.
+- Reconnecting clients recover missed messages via a sync endpoint.
+
+---</p>
 
 ## 3. Requirements
 
