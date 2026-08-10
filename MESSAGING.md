@@ -484,8 +484,68 @@ The server responds with all messages created after `lastSeenAt` from conversati
 ### Known Limitations
 
 - Messages are delivered in creation order per conversation
-- The sync endpoint returns up to 200 missed messages per reconnect
+- The sync endpoint returns up to 500 missed messages per reconnect by default, paginated via `limit` + `cursor`
 - Duplicate messages are possible if the client sends multiple sync requests; the client should deduplicate by `messageId`
+
+## WebSocket Message Catalog
+
+### Client → Server
+
+```json
+{ "type": "chat", "conversationId": "...", "content": "hello" }
+{ "type": "typing", "conversationId": "...", "recipientIds": ["..."] }
+{ "type": "read", "messageIds": ["..."] }
+{ "type": "sync", "lastSeenAt": "2026-08-10T10:00:00Z", "limit": 200, "cursor": "msg-id" }
+```
+
+| Field | Type | Notes |
+|---|---|---|
+| `type` | `chat` `typing` `read` `sync` | Required |
+| `conversationId` | string | Required for `chat` and `typing` |
+| `content` | string | Required for `chat`, max 1 MB |
+| `recipientIds` | string[] | Required for `typing`, max 50 |
+| `messageIds` | string[] | Required for `read`, max 100 |
+| `lastSeenAt` | ISO 8601 | Optional for `sync`; defaults to 24h ago |
+| `limit` | number | Optional for `sync`; default 200, max 500 |
+| `cursor` | string | Optional for `sync`; last `messageId` from previous page |
+
+### Server → Client
+
+```json
+{ "type": "connected", "userId": "..." }
+{ "type": "chat", "messageId": "...", "conversationId": "...", "senderId": "...", "senderName": "...", "content": "...", "timestamp": "..." }
+{ "type": "typing", "conversationId": "...", "userId": "...", "timestamp": "..." }
+{ "type": "read", "messageIds": ["..."] }
+{ "type": "notification", "notification": { "eventId": "...", "message": "...", "type": "...", "timestamp": "..." } }
+{ "type": "sync", "messages": [...], "hasMore": false, "nextCursor": null }
+{ "type": "error", "message": "..." }
+{ "type": "ping" }
+```
+
+### Message Flow
+
+**Chat message:**
+1. Client sends `chat`
+2. Server persists to Postgres `Message` table
+3. Server fans out via Redis Pub/Sub to all WS instances
+4. Recipients receive `chat` event in real time
+
+**Reconnect recovery:**
+1. Client connects → server sends `connected`
+2. Server pushes unread notifications via `reconcileMissedNotifications`
+3. Client can send `sync` with `lastSeenAt` / `cursor` to recover missed chat messages
+4. Server responds with paginated `sync` result including `hasMore` and `nextCursor`
+
+**Duplicate handling:**
+- Kafka consumers deduplicate via Redis SET keyed by `_outboxId` with 24h TTL
+- WS clients should deduplicate chat messages by `messageId`
+
+### Connection Lifecycle
+
+- Heartbeat every 30s (`ping`)
+- Connection timeout after 60s without heartbeat
+- On close, server cleans up socket and heartbeat interval
+- On reconnect, client should resend `sync` with the latest `lastSeenAt` it processed
 
 ## Performance Optimization
 
