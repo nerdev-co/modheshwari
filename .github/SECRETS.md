@@ -14,9 +14,6 @@ Paste these into your repository Settings → Secrets → Actions. Use the exact
 - **ECS_TASK_ROLE_ARN** — task role ARN (optional if your app needs AWS permissions)
 
 Optional (only if used):
-- **AWS_S3_BUCKET** — S3 bucket name for backup uploads
-- **AWS_ACCESS_KEY_ID** — required if the backup workflow uploads to S3
-- **AWS_SECRET_ACCESS_KEY** — required if the backup workflow uploads to S3
 - **AWS_SESSION_TOKEN** — only if you use temporary AWS credentials
 - **SENDGRID_API_KEY**, **FIREBASE_PRIVATE_KEY**, etc. — any app secrets already in `.env.example`
 

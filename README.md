@@ -9,7 +9,7 @@ Modheshwari is a full-stack community management platform for organizing familie
 - Handle event creation, approval, registration, and status workflows
 - Process resource requests with multi-step approvals
 - Deliver in-app notifications and chat through a dedicated realtime service
-- Provide search, discovery, monitoring, and backup tooling for operational use
+- Provide search, discovery, and monitoring tooling for operational use
 
 ## Tech stack
 
@@ -18,7 +18,7 @@ Modheshwari is a full-stack community management platform for organizing familie
 - Frontend: Next.js 15, React 19, Tailwind CSS, Framer Motion
 - Backend: Elysia, Prisma ORM, PostgreSQL
 - Realtime: WebSocket service with Redis and Kafka
-- Infrastructure: Docker Compose, Nginx, GitHub Actions, Terraform, Prometheus/Grafana
+- Infrastructure: Docker Compose, Nginx, GitHub Actions, Prometheus/Grafana
 - Search/Observability: Elasticsearch, Prometheus, Alertmanager
 
 ## Architecture overview
@@ -64,7 +64,6 @@ The current API contract is documented in [openapi.yaml](openapi.yaml). Regenera
 - packages/db — Prisma schema, migrations, and seed data
 - packages/utils — shared auth, response, rate-limit, and pagination helpers
 - monitoring — Prometheus, Alertmanager, Grafana, and alert rules
-- infra/terraform — AWS infrastructure definitions
 
 ## Prerequisites
 
@@ -132,8 +131,6 @@ This repository intentionally ignores local environment files. Only [.env.exampl
 
 - Containerized deployment is defined in [docker-compose.yml](docker-compose.yml)
 - CI/CD automation is defined in [.github/workflows/deploy.yml](.github/workflows/deploy.yml)
-- Backup automation is defined in [.github/workflows/postgres-backup.yml](.github/workflows/postgres-backup.yml)
-- Infrastructure definitions are in [infra/terraform/main.tf](infra/terraform/main.tf)
 - Additional architecture context is available in [design.md](design.md) and [ARCHITECTURE_MINIMAP.md](ARCHITECTURE_MINIMAP.md)
 
 ## Release
