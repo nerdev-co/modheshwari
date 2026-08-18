@@ -119,6 +119,9 @@ jobs:
             git checkout main || true
             git reset --hard origin/main
 
+            # Runtime only needs compose/nginx/.env — drop repo docs from the working tree
+            rm -rf ~/modheshwari/docs
+
             # Login to GHCR
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
