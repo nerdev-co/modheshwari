@@ -94,7 +94,7 @@ export async function handleAdminSignup(
           userId: u.id,
           gotra: gotra ?? null,
           status: true,
-          bloodGroup: bloodGroup,
+          ...(bloodGroup ? { bloodGroup } : {}),
         },
       });
 
