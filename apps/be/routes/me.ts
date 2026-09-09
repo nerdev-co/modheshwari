@@ -104,6 +104,24 @@ export async function handleGetMe(req: Request): Promise<Response> {
       }
     }
 
+    if (!user) {
+      // Auto-create profile for users who signed up before profile was required
+      const created = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { id: true },
+      });
+      if (!created) return failure("User not found", "Not Found", 404);
+
+      await prisma.profile.create({
+        data: { userId, status: true },
+      });
+
+      user = await fetchUserWithFamilies(userId);
+      if (user) {
+        await redis.set(cacheKey, JSON.stringify(user), { EX: PROFILE_TTL });
+      }
+    }
+
     if (!user) return failure("User not found", "Not Found", 404);
 
     // --- Step 3: Transform output ---
