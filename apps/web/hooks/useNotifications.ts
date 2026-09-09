@@ -90,8 +90,18 @@ export default function useNotifications(): UseNotificationsHook {
 
     const connectWs = () => {
       const proto = window.location.protocol === "https:" ? "wss" : "ws";
-      const wsUrl = `${proto}://${window.location.host}`;
-      const ws = new WebSocket(wsUrl);
+      // In dev, Vite runs on 3000 and WS server on 3001.
+      // In production, both are on the same host.
+      const wsHost = import.meta.env.DEV
+        ? `${window.location.hostname}:3001`
+        : window.location.host;
+      const wsUrl = `${proto}://${wsHost}`;
+      let ws: WebSocket;
+      try {
+        ws = new WebSocket(wsUrl);
+      } catch {
+        return;
+      }
       wsRef.current = ws;
 
       ws.addEventListener("open", () => {
