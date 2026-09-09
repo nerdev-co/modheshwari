@@ -66,13 +66,7 @@ export default function FamilyTreeView() {
                 format: "graph",
             });
 
-            const response = await apiFetch(`${API_BASE}/family/tree?${params}`);
-
-            if (!response.ok) {
-                throw new Error("Failed to fetch family tree");
-            }
-
-            const data = await response.json();
+            const data = await apiFetch(`${API_BASE}/family/tree?${params}`);
             const tree = data?.data?.tree;
             if (!tree) {
                 setTreeData({ nodes: [], edges: [] });
@@ -159,14 +153,10 @@ export default function FamilyTreeView() {
         setError(null);
 
         try {
-            const response = await apiFetch(`${API_BASE}/family/tree/relations`, {
+            await apiFetch(`${API_BASE}/family/tree/relations`, {
                 method: "POST",
                 body: JSON.stringify(relationshipForm),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to create relationship");
-            }
 
             setRelationshipForm({
                 targetUserId: "",
