@@ -42,6 +42,7 @@ export default {
         "text-primary": "var(--text-primary)",
         "text-secondary": "var(--text-secondary)",
         "text-muted": "var(--text-muted)",
+        "jewel-deep": "var(--text-primary)",
         emerald: "var(--emerald)",
         saffron: "var(--saffron)",
         ruby: "var(--ruby)",
@@ -60,6 +61,8 @@ export default {
         soft: "0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05)",
         medium: "0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04)",
         elevated: "0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04)",
+        jewel: "0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06)",
+        "jewel-lg": "0 4px 12px -2px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.04)",
       },
       animation: {
         "fade-in": "fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
