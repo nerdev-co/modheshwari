@@ -4,6 +4,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { Card } from "@repo/ui/card";
+import { Input } from "@repo/ui/input";
 
 import { API_BASE } from "../../../lib/config";
 import { apiFetch } from "../../../lib/api";
@@ -120,40 +122,36 @@ export default function MedicalRecordsPage() {
 
         <form onSubmit={handleCreate} className="mb-8 space-y-4">
           <Field label="Blood Type">
-            <input
+            <Input
               value={form.bloodType}
               onChange={(e) => updateField("bloodType", e.target.value)}
-              className="w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
               placeholder="e.g. O+"
               aria-label="Blood Type"
             />
           </Field>
 
           <Field label="Allergies">
-            <input
+            <Input
               value={form.allergies}
               onChange={(e) => updateField("allergies", e.target.value)}
-              className="w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
               placeholder="e.g. peanuts, dust"
               aria-label="Allergies"
             />
           </Field>
 
           <Field label="Conditions">
-            <input
+            <Input
               value={form.conditions}
               onChange={(e) => updateField("conditions", e.target.value)}
-              className="w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
               placeholder="e.g. asthma"
               aria-label="Conditions"
             />
           </Field>
 
           <Field label="Medications">
-            <input
+            <Input
               value={form.medications}
               onChange={(e) => updateField("medications", e.target.value)}
-              className="w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
               placeholder="e.g. cetirizine"
               aria-label="Medications"
             />
@@ -186,14 +184,14 @@ export default function MedicalRecordsPage() {
         ) : (
           <ul className="space-y-4">
             {records.map((r) => (
-              <li key={r.id} className="rounded-xl border border-jewel-400/20 bg-jewel-50/60 p-4">
+              <li key={r.id}>
                 <Row label="Blood" value={r.bloodType} />
                 <Row label="Allergies" value={r.allergies} />
                 <Row label="Conditions" value={r.conditions} />
                 <Row label="Medications" value={r.medications} />
                 {r.notes && <Row label="Notes" value={r.notes} />}
 
-                <div className="mt-3 text-xs text-jewel-400">
+                <div className="mt-3 text-xs text-jewel-500">
                   {new Date(r.createdAt).toLocaleString()}
                 </div>
               </li>
