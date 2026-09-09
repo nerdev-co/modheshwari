@@ -30,15 +30,6 @@ interface Approval {
 }
 
 /**
- * Performs get token operation.
- * @returns {string} Description of return value
- */
-function getToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem("token");
-}
-
-/**
  * Performs get status color operation.
  * @param {string} status - Description of status
  * @returns {string} Description of return value
@@ -94,24 +85,19 @@ export default function ResourceRequestsPage(): React.JSX.Element {
   }, [fetchRequests]);
 
   async function handleCreate(): Promise<void> {
-    const token = getToken();
-
     try {
-      const res = await fetch(`${API_BASE}/resource-requests`, {
+      const data = await apiFetch(`${API_BASE}/resource-requests`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
         body: JSON.stringify({ resource }),
+        throwOnError: false,
       });
 
-      if (res.ok) {
+      if (data.status === "success") {
         setResource("");
+        toast("Request created successfully", { variant: "success" });
         void fetchRequests();
       } else {
-        const js = await res.json();
-        toast(js.message || "Failed to create request", { variant: "error" });
+        toast(data.message || "Failed to create request", { variant: "error" });
       }
     } catch {
       toast("Network error", { variant: "error" });
@@ -122,23 +108,21 @@ export default function ResourceRequestsPage(): React.JSX.Element {
     id: string,
     action: "approve" | "reject" | "changes",
   ): Promise<void> {
-    const token = getToken();
     try {
-      const res = await fetch(
+      const data = await apiFetch(
         `${API_BASE}/resource-requests/${id}/review`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
           body: JSON.stringify({ action }),
+          throwOnError: false,
         },
       );
-      if (res.ok) void fetchRequests();
-      else {
-        const js = await res.json();
-        toast(js.message || "Failed to review", { variant: "error" });
+
+      if (data.status === "success") {
+        toast("Review submitted", { variant: "success" });
+        void fetchRequests();
+      } else {
+        toast(data.message || "Failed to review", { variant: "error" });
       }
     } catch {
       toast("Network error", { variant: "error" });
