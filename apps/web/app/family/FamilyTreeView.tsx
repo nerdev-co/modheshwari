@@ -76,7 +76,12 @@ export default function FamilyTreeView() {
             }
 
             const data = await response.json();
-            setTreeData(data.data.tree);
+            const tree = data?.data?.tree;
+            if (!tree) {
+                setTreeData({ nodes: [], edges: [] });
+                return;
+            }
+            setTreeData(tree);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
         } finally {
