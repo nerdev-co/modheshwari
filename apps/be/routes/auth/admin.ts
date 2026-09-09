@@ -6,7 +6,7 @@
 import prisma from "@modheshwari/db";
 import { hashPassword, comparePassword } from "@modheshwari/utils/hash";
 import { signJWT, signRefreshJWT } from "@modheshwari/utils/jwt";
-import { failure } from "@modheshwari/utils/response";
+import { success, failure } from "@modheshwari/utils/response";
 import type { Role as PrismaRole } from "@prisma/client";
 
 import { logger } from "../../lib/logger";
@@ -110,13 +110,17 @@ export async function handleAdminSignup(
     headers.append("Set-Cookie", `refreshToken=${refreshToken}; HttpOnly; Path=/; SameSite=Strict; Max-Age=604800; Secure`);
     return new Response(
       JSON.stringify({
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
+        status: "success",
+        message: "Signup successful",
+        data: {
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+          },
+          token,
         },
-        token,
       }),
       { status: 201, headers }
     );
@@ -173,18 +177,23 @@ export async function handleAdminLogin(
     headers.append("Set-Cookie", `refreshToken=${refreshToken}; HttpOnly; Path=/; SameSite=Strict; Max-Age=604800; Secure`);
     return new Response(
       JSON.stringify({
-        token,
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
+        status: "success",
+        message: "Login successful",
+        data: {
+          token,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+          },
         },
       }),
       { status: 200, headers }
     );
   } catch (err) {
-    logger.error("Admin Login Error:", err);
+    logger.error("Login Error:", err);
     return failure("Internal server error", "Unexpected Error", 500);
   }
+}
 }

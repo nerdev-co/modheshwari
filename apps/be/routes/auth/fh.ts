@@ -8,7 +8,7 @@ import { randomUUID } from "crypto";
 import prisma from "@modheshwari/db";
 import { comparePassword, hashPassword } from "@modheshwari/utils/hash";
 import { signJWT, signRefreshJWT } from "@modheshwari/utils/jwt";
-import { failure } from "@modheshwari/utils/response";
+import { success, failure } from "@modheshwari/utils/response";
 import type { Role as PrismaRole } from "@prisma/client";
 
 import { logger } from "../../lib/logger";
@@ -93,12 +93,16 @@ export async function handleFHLogin(
     headers.append("Set-Cookie", `refreshToken=${refreshToken}; HttpOnly; Path=/; SameSite=Strict; Max-Age=604800; Secure`);
     return new Response(
       JSON.stringify({
-        token,
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
+        status: "success",
+        message: "Login successful",
+        data: {
+          token,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+          },
         },
       }),
       { status: 200, headers }
@@ -173,7 +177,7 @@ export async function handleFHSignup(
     // --- Step 3: Hash password securely ---
     const hashedPassword = await hashPassword(password);
 
-    // --- Step 4-6: Create user + family + link as FamilyMember atomically{transaction} ---
+    // --- Step 4-6: Create user + family + link as FamilyHead atomically ---
     const { user, family } = await prisma.$transaction(async (tx) => {
       // --- Step 4: Create Family Head user ---
       const u = await tx.user.create({
@@ -186,7 +190,15 @@ export async function handleFHSignup(
         },
       });
 
-      // --- Step 5: Create Family entry ---
+      // --- Step 5: Create Profile ---
+      await tx.profile.create({
+        data: {
+          userId: u.id,
+          status: true,
+        },
+      });
+
+      // --- Step 6: Create Family entry ---
       const f = await tx.family.create({
         data: {
           name: familyName,
@@ -195,7 +207,7 @@ export async function handleFHSignup(
         },
       });
 
-      // --- Step 6: Link Family Head as FamilyMember ---
+      // --- Step 7: Link Family Head as FamilyMember ---
       await tx.familyMember.create({
         data: {
           familyId: f.id,
@@ -217,18 +229,22 @@ export async function handleFHSignup(
     );
     return new Response(
       JSON.stringify({
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
+        status: "success",
+        message: "Signup successful",
+        data: {
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+          },
+          family: {
+            id: family.id,
+            name: family.name,
+            uniqueId: family.uniqueId,
+          },
+          token,
         },
-        family: {
-          id: family.id,
-          name: family.name,
-          uniqueId: family.uniqueId,
-        },
-        token,
       }),
       { status: 201, headers }
     );
