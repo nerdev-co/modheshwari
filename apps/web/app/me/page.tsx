@@ -7,6 +7,7 @@ import { Button } from "@repo/ui/button";
 import { formatBloodGroup } from "@modheshwari/utils/format";
 
 import { useUser } from "../../lib/UserContext";
+import { useLocale } from "../../lib/LocaleContext";
 
 /**
  * Performs  profile field operation.
@@ -43,6 +44,7 @@ function ProfileField({
 export default function MePage() {
   const navigate = useNavigate();
   const { user, loading, logout } = useUser();
+  const { t } = useLocale();
 
   if (loading) {
     return (
@@ -103,7 +105,7 @@ export default function MePage() {
           </div>
           <div className="flex flex-col gap-2">
             <Button onClick={() => navigate("/me/edit")}>
-              Edit profile
+              {t("profile.editProfile")}
             </Button>
             <Button
               variant="secondary"
@@ -112,7 +114,7 @@ export default function MePage() {
                 navigate("/signin");
               }}
             >
-              Sign out
+              {t("profile.signOut")}
             </Button>
           </div>
         </section>
@@ -120,26 +122,26 @@ export default function MePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <section className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6">
             <h2 className="text-base font-display font-bold text-jewel-900 mb-4 flex items-center gap-2">
-              <span>Personal Details</span>
-              <span className="text-xs text-jewel-500 font-normal">Profile</span>
+              <span>{t("profile.personalDetails")}</span>
+              <span className="text-xs text-jewel-500 font-normal">{t("profile.profileLabel")}</span>
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              <ProfileField label="Profession" value={user.profile?.profession} />
-              <ProfileField label="Gotra" value={user.profile?.gotra} />
-              <ProfileField label="Blood Group" value={formatBloodGroup(user.profile?.bloodGroup)} />
-              <ProfileField label="Location" value={user.profile?.location} />
-              <ProfileField label="Phone" value={user.profile?.phone} />
-              <ProfileField label="Address" value={user.profile?.address} />
+              <ProfileField label={t("profile.profession")} value={user.profile?.profession} />
+              <ProfileField label={t("profile.gotra")} value={user.profile?.gotra} />
+              <ProfileField label={t("profile.bloodGroup")} value={formatBloodGroup(user.profile?.bloodGroup)} />
+              <ProfileField label={t("profile.location")} value={user.profile?.location} />
+              <ProfileField label={t("profile.phone")} value={user.profile?.phone} />
+              <ProfileField label={t("profile.address")} value={user.profile?.address} />
             </div>
           </section>
 
           <section className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6">
             <h2 className="text-base font-display font-bold text-jewel-900 mb-4 flex items-center gap-2">
-              <span>Family Memberships</span>
-              <span className="text-xs text-jewel-500 font-normal">Families</span>
+              <span>{t("profile.familyMemberships")}</span>
+              <span className="text-xs text-jewel-500 font-normal">{t("profile.familiesLabel")}</span>
             </h2>
             {!Array.isArray(user.families) || user.families.length === 0 ? (
-              <div className="text-jewel-400 text-sm">No families linked.</div>
+              <div className="text-jewel-400 text-sm">{t("profile.noFamilies")}</div>
             ) : (
               <ul className="space-y-3">
                 {user.families.map((fm) => (
@@ -165,10 +167,10 @@ export default function MePage() {
 
         <section className="mt-8 bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6">
           <h2 className="text-base font-display font-bold text-jewel-900 mb-4 flex items-center gap-2">
-            <span>Activity & Notifications</span>
-            <span className="text-xs text-jewel-500 font-normal">Recent</span>
+            <span>{t("profile.activity")}</span>
+            <span className="text-xs text-jewel-500 font-normal">{t("profile.recentLabel")}</span>
           </h2>
-          <div className="text-jewel-400 text-sm">No recent activity.</div>
+          <div className="text-jewel-400 text-sm">{t("profile.noActivity")}</div>
         </section>
       </div>
     </DreamySunsetBackground>
