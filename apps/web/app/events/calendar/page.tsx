@@ -362,7 +362,7 @@ export default function EventsCalendar() {
 
                   {selectedDate &&
                     (eventsByDay.get(selectedDate.toISOString().slice(0, 10)) || []).length === 0 && (
-                      <div className="text-sm text-jewel-400">{t("events.calendar.noEventsOnDay")}</div>
+                      <div className="text-sm text-jewel-500">{t("events.calendar.noEventsOnDay")}</div>
                     )}
                 </div>
               </div>
@@ -370,7 +370,7 @@ export default function EventsCalendar() {
           </div>
 
           {loading && (
-            <div className="mt-4 text-sm text-jewel-400">{t("events.calendar.loadingEvents")}</div>
+            <div className="mt-4 text-sm text-jewel-500">{t("events.calendar.loadingEvents")}</div>
           )}
         </div>
       </div>

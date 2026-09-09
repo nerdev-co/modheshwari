@@ -226,7 +226,7 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
           {loadingData ? (
             <div className="flex flex-col items-center justify-center gap-4 py-20">
               <Loader2 className="w-8 h-8 text-jewel-gold animate-spin" />
-              <span className="text-sm text-jewel-400">{t("common.loading")}</span>
+              <span className="text-sm text-jewel-500">{t("common.loading")}</span>
             </div>
           ) : requests.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20">
@@ -234,7 +234,7 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
                 <Package className="w-8 h-8 text-jewel-400" />
               </div>
               <p className="text-jewel-500 text-sm mb-2">{t("resources.noRequests")}</p>
-              <p className="text-jewel-400 text-xs">
+              <p className="text-jewel-500 text-xs">
                 {t("resources.noRequestsDesc")}
               </p>
             </div>

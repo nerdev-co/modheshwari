@@ -133,7 +133,7 @@ export default function NearbyPage() {
 
         {/* Empty */}
         {!error && users.length === 0 && (
-          <section className="mt-6 border border-jewel-400/20 rounded-xl p-6 text-sm text-jewel-400 bg-jewel-50/60">
+          <section className="mt-6 border border-jewel-400/20 rounded-xl p-6 text-sm text-jewel-500 bg-jewel-50/60">
             {t("nearby.noMembers")}
           </section>
         )}

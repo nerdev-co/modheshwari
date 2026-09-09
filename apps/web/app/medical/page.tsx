@@ -183,7 +183,7 @@ export default function Medical() {
           </div>
 
           {medicalList.length === 0 ? (
-            <div className="text-center text-jewel-400 py-10 text-sm">
+            <div className="text-center text-jewel-500 py-10 text-sm">
               {searchQuery
                 ? t("medical.noResultsFound")
                 : t("medical.noResults")}

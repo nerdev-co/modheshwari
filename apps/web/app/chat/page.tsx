@@ -469,7 +469,7 @@ export default function ChatPage() {
                                 className="flex-1 overflow-auto px-4 md:px-6 py-6 space-y-3"
                             >
                                 {!selected ? (
-                                    <div className="h-full flex items-center justify-center text-jewel-400">
+                                    <div className="h-full flex items-center justify-center text-jewel-500">
                                         {t("chat.pickChat")}
                                     </div>
                                 ) : (

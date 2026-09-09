@@ -144,7 +144,7 @@ export default function MePage() {
               <span className="text-xs text-jewel-500 font-normal">{t("profile.familiesLabel")}</span>
             </h2>
             {!Array.isArray(user.families) || user.families.length === 0 ? (
-              <div className="text-jewel-400 text-sm">{t("profile.noFamilies")}</div>
+              <div className="text-jewel-500 text-sm">{t("profile.noFamilies")}</div>
             ) : (
               <ul className="space-y-3">
                 {user.families.map((fm) => (
@@ -158,7 +158,7 @@ export default function MePage() {
                     <span className="text-xs text-jewel-500">
                       {fm.role.replace(/_/g, " ")}
                     </span>
-                    <span className="text-xs text-jewel-400">
+                    <span className="text-xs text-jewel-500">
                       Joined: {new Date(fm.joinedAt).toLocaleDateString()}
                     </span>
                   </li>
@@ -173,7 +173,7 @@ export default function MePage() {
             <span>{t("profile.activity")}</span>
             <span className="text-xs text-jewel-500 font-normal">{t("profile.recentLabel")}</span>
           </h2>
-          <div className="text-jewel-400 text-sm">{t("profile.noActivity")}</div>
+          <div className="text-jewel-500 text-sm">{t("profile.noActivity")}</div>
         </section>
       </div>
     </DreamySunsetBackground>

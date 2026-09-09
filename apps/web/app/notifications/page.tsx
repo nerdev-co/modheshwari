@@ -438,9 +438,9 @@ export default function NotificationsPage(): React.ReactElement {
 
                     {/* Content */}
                     {loading ? (
-                        <p className="text-center py-12 text-jewel-400">Loading...</p>
+                        <p className="text-center py-12 text-jewel-500">Loading...</p>
                     ) : filteredNotifications.length === 0 ? (
-                        <p className="text-center py-12 text-jewel-400">No notifications</p>
+                        <p className="text-center py-12 text-jewel-500">No notifications</p>
                     ) : (
                         <ul>
                             {filteredNotifications.map((n) => {

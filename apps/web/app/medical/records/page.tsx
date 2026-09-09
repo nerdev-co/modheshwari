@@ -184,9 +184,9 @@ export default function MedicalRecordsPage() {
         <h2 className="text-lg font-display font-bold text-jewel-900 mb-3">Your Records</h2>
 
         {loadingData ? (
-          <p className="text-sm text-jewel-400">Loading...</p>
+          <p className="text-sm text-jewel-500">Loading...</p>
         ) : records.length === 0 ? (
-          <p className="text-sm text-jewel-400">No records yet.</p>
+          <p className="text-sm text-jewel-500">No records yet.</p>
         ) : (
           <ul className="space-y-4">
             {records.map((r) => (
