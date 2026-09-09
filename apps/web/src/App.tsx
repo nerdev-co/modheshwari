@@ -29,6 +29,7 @@ import Contact from "../app/contact/page";
 import Spec from "../app/spec/page";
 import Privacy from "../app/privacy/page";
 import NotAuthenticated from "../app/notAuthenticated/page";
+import NotFound from "../app/notFound/page";
 
 export default function App() {
   return (
@@ -69,6 +70,7 @@ export default function App() {
             <Route path="/spec" element={<Spec />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/notAuthenticated" element={<NotAuthenticated />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
       </LocaleProvider>
