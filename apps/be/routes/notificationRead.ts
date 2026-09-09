@@ -1,43 +1,28 @@
 /**
  * Notification Read Tracking API
- * 
+ *
  * Handles marking notifications as read and publishing read events
  * to Kafka to trigger escalation cancellation.
  */
 
 import prisma from "@modheshwari/db";
-import { verifyJWT } from "@modheshwari/utils/jwt";
+import { success, failure } from "@modheshwari/utils/response";
 
 import { createOutboxEvent, createOutboxEvents } from "../lib/outbox";
 import { TOPICS } from "../kafka/config";
+import { requireAuth } from "./authMiddleware";
+import { logger } from "../lib/logger";
 
-  /**
-   * Mark a notification as read
+/**
+ * Mark a notification as read
  * POST /api/notifications/:id/read
  */
 export async function handleMarkAsRead(req: Request, id: string): Promise<Response> {
   try {
-    const authHeader = req.headers.get("authorization");
-    
-    // Validate Authorization header format
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Missing or invalid Bearer token" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
+    const auth = requireAuth(req);
+    if (!auth.ok) return auth.response;
 
-    const token = authHeader.slice(7); // Remove "Bearer " prefix
-    const payload = verifyJWT(token);
-
-    if (!payload || typeof payload === "string") {
-      return new Response(JSON.stringify({ error: "Invalid token" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    const userId = payload.userId as string;
+    const userId = auth.payload.userId as string;
     const notificationId = id;
 
     // Mark read + outbox event in a single transaction so the notification
@@ -69,36 +54,22 @@ export async function handleMarkAsRead(req: Request, id: string): Promise<Respon
       return updated;
     });
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        notification: {
-          id: notification.id,
-          read: notification.read,
-          readAt: notification.readAt,
-        },
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return success("Notification marked as read", {
+      id: notification.id,
+      read: notification.read,
+      readAt: notification.readAt,
+    });
   } catch (error) {
-    // Check if error is Prisma record-not-found
-    const isNotFound = 
-      error && 
-      typeof error === "object" && 
-      "code" in error && 
+    const isNotFound =
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
       error.code === "P2025";
-    
-    return new Response(
-      JSON.stringify({
-        error: error instanceof Error ? error.message : "Failed to mark notification as read",
-      }),
-      {
-        status: isNotFound ? 404 : 500,
-        headers: { "Content-Type": "application/json" },
-      }
+
+    return failure(
+      error instanceof Error ? error.message : "Failed to mark notification as read",
+      null,
+      isNotFound ? 404 : 500,
     );
   }
 }
@@ -109,33 +80,15 @@ export async function handleMarkAsRead(req: Request, id: string): Promise<Respon
  */
 export async function handleMarkMultipleAsRead(req: Request): Promise<Response> {
   try {
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Missing or invalid Bearer token" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
+    const auth = requireAuth(req);
+    if (!auth.ok) return auth.response;
 
-    const token = authHeader.slice(7);
-    const payload = verifyJWT(token);
-
-    if (!payload || typeof payload === "string") {
-      return new Response(JSON.stringify({ error: "Invalid token" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    const userId = payload.userId as string;
+    const userId = auth.payload.userId as string;
     const body = await req.json();
     const { notificationIds } = body as { notificationIds: string[] };
 
     if (!Array.isArray(notificationIds)) {
-      return new Response(JSON.stringify({ error: "notificationIds must be an array" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+      return failure("notificationIds must be an array", null, 400);
     }
 
     // Mark read + outbox events in a single transaction
@@ -179,27 +132,14 @@ export async function handleMarkMultipleAsRead(req: Request): Promise<Response> 
       return updated;
     });
 
-    const updatedIds = updatedNotifications.map(n => n.id);
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        updatedCount: updatedIds.length,
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return success("Notifications marked as read", {
+      updatedCount: updatedNotifications.length,
+    });
   } catch (error) {
-    return new Response(
-      JSON.stringify({
-        error: error instanceof Error ? error.message : "Failed to mark notifications as read",
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
+    return failure(
+      error instanceof Error ? error.message : "Failed to mark notifications as read",
+      null,
+      500,
     );
   }
 }
@@ -210,25 +150,10 @@ export async function handleMarkMultipleAsRead(req: Request): Promise<Response> 
  */
 export async function handleMarkAllAsRead(req: Request): Promise<Response> {
   try {
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Missing or invalid Bearer token" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
+    const auth = requireAuth(req);
+    if (!auth.ok) return auth.response;
 
-    const token = authHeader.slice(7);
-    const payload = verifyJWT(token);
-
-    if (!payload || typeof payload === "string") {
-      return new Response(JSON.stringify({ error: "Invalid token" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    const userId = payload.userId as string;
+    const userId = auth.payload.userId as string;
 
     // Get all unread, mark read, and write outbox events in one transaction
     const unreadNotifications = await prisma.$transaction(async (tx) => {
@@ -269,26 +194,11 @@ export async function handleMarkAllAsRead(req: Request): Promise<Response> {
       return unread;
     });
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        updatedCount: unreadNotifications.length,
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return success("All notifications marked as read", {
+      updatedCount: unreadNotifications.length,
+    });
   } catch {
-    return new Response(
-      JSON.stringify({
-        error: "Failed to mark all notifications as read",
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return failure("Failed to mark all notifications as read", null, 500);
   }
 }
 
@@ -298,25 +208,10 @@ export async function handleMarkAllAsRead(req: Request): Promise<Response> {
  */
 export async function handleGetDeliveryStatus(req: Request, id: string): Promise<Response> {
   try {
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Missing or invalid Bearer token" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
+    const auth = requireAuth(req);
+    if (!auth.ok) return auth.response;
 
-    const token = authHeader.slice(7);
-    const payload = verifyJWT(token);
-
-    if (!payload || typeof payload === "string") {
-      return new Response(JSON.stringify({ error: "Invalid token" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    const userId = payload.userId as string;
+    const userId = auth.payload.userId as string;
     const notificationId = id;
 
     // Get notification with deliveries
@@ -346,39 +241,25 @@ export async function handleGetDeliveryStatus(req: Request, id: string): Promise
     });
 
     if (!notification) {
-      return new Response(JSON.stringify({ error: "Notification not found" }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      });
+      return failure("Notification not found", null, 404);
     }
 
-    return new Response(
-      JSON.stringify({
-        notification: {
-          id: notification.id,
-          read: notification.read,
-          readAt: notification.readAt,
-          deliveryStrategy: notification.deliveryStrategy,
-          priority: notification.priority,
-        },
-        deliveries: notification.deliveries,
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return success("Delivery status retrieved", {
+      notification: {
+        id: notification.id,
+        read: notification.read,
+        readAt: notification.readAt,
+        deliveryStrategy: notification.deliveryStrategy,
+        priority: notification.priority,
+      },
+      deliveries: notification.deliveries,
+    });
   } catch (error) {
-    console.error("Error fetching delivery status:");
-    return new Response(
-      JSON.stringify({
-        error: error instanceof Error ? error.message : "Failed to fetch delivery status",
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
+    logger.error("Error fetching delivery status", error instanceof Error ? error.message : String(error));
+    return failure(
+      error instanceof Error ? error.message : "Failed to fetch delivery status",
+      null,
+      500,
     );
   }
 }
-
