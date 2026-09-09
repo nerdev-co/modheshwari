@@ -1,5 +1,5 @@
 import type { ServerWebSocket } from "bun";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@modheshwari/db";
 import prisma from "@modheshwari/db";
 
 import type { WSData, IncomingMessage, ChatMessage } from "./types";

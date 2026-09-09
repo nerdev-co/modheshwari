@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@modheshwari/config": "*",
+    "@modheshwari/db": "*",
     "@modheshwari/redis": "*",
-    "@prisma/client": "^6",
     "ws": "^8.19.0"
   },
   "scripts": {

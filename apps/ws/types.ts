@@ -1,5 +1,5 @@
 import type { ServerWebSocket } from "bun";
-import { NotificationChannel } from "@prisma/client";
+import type { NotificationChannel } from "@modheshwari/db";
 
 export type WSData = {
     userId: string;

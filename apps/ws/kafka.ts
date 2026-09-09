@@ -1,5 +1,5 @@
 import { Kafka, type EachMessagePayload } from "kafkajs";
-import { NotificationChannel } from "@prisma/client";
+import { NotificationChannel } from "@modheshwari/db";
 
 import type { NotificationEvent } from "./types";
 import { KAFKA_BROKER, NOTIFICATION_TOPIC, WS_CONSUMER_GROUP } from "./config";
