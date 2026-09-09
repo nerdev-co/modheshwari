@@ -5,6 +5,7 @@ import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 
 import { API_BASE } from "../../../lib/config";
+import { apiFetch } from "../../../lib/api";
 
 type MedicalRecord = {
   id: string;
@@ -53,9 +54,7 @@ export default function MedicalRecordsPage() {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${API_BASE}/medical-records`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      const res = await apiFetch(`${API_BASE}/medical-records`, {
         signal,
       });
       if (!res.ok) throw new Error("Failed to load records");
@@ -81,13 +80,8 @@ export default function MedicalRecordsPage() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${API_BASE}/medical-records`, {
+      const res = await apiFetch(`${API_BASE}/medical-records`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
         body: JSON.stringify(form),
       });
       if (!res.ok) {

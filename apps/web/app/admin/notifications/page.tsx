@@ -7,6 +7,7 @@ import { Button } from "@repo/ui/button";
 import { useToast } from "@repo/ui/toast";
 
 import { API_BASE } from "../../../lib/config";
+import { apiFetch } from "../../../lib/api";
 
 const CHANNELS = ["IN_APP", "EMAIL", "SMS", "PUSH"] as const;
 const PRIORITIES = ["low", "normal", "high", "urgent"] as const;
@@ -73,13 +74,8 @@ export default function AdminNotifications() {
         setSending(true);
         setResult(null);
         try {
-            const token = localStorage.getItem("token");
-            const res = await fetch(`${API_BASE}/notifications`, {
+            const res = await apiFetch(`${API_BASE}/notifications`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-                },
                 body: JSON.stringify({
                     message,
                     subject,

@@ -39,10 +39,7 @@ const fetcher = /**
  * @returns {Promise<any>} Description of return value
  */
 async (url: string) => {
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  const res = await fetch(url, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-  });
+  const res = await apiFetch(url);
   if (!res.ok) throw new Error("Failed to fetch");
   return res.json();
 };

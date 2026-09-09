@@ -6,6 +6,7 @@ import "swagger-ui-react/swagger-ui.css";
 import { FileCode, Webhook, Copy, ExternalLink } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { apiFetch } from "../../lib/api";
 
 type SpecType = "openapi" | "asyncapi";
 
@@ -22,7 +23,7 @@ export default function SpecPage() {
     setSpecType(type);
     if (type === "asyncapi" && !asyncApiSpec) {
       try {
-        const res = await fetch("/api/asyncapi");
+        const res = await apiFetch("/api/asyncapi");
         const yamlText = await res.text();
         setAsyncApiSpec(yamlText);
       } catch (err) {

@@ -6,6 +6,7 @@ import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 
 import { API_BASE } from "../../lib/config";
+import { apiFetch } from "../../lib/api";
 
 type Conversation = {
     id: string;
@@ -75,10 +76,7 @@ export default function ChatPage() {
     }, []);
 
     const fetchChats = useCallback(async () => {
-        const token = getToken();
-        const res = await fetch(`${API_BASE}/chat`, {
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-        });
+        const res = await apiFetch(`${API_BASE}/chat`);
         if (!res.ok) return;
         const js = await res.json();
         setPersonal(js.data.personal || []);
@@ -185,12 +183,8 @@ export default function ChatPage() {
     async function loadConversation(conv: Conversation) {
         setSelected(conv);
         setMessages([]);
-        const token = getToken();
-        const res = await fetch(
+        const res = await apiFetch(
             `${API_BASE}/messages/conversations/${conv.id}/messages?limit=50`,
-            {
-                headers: token ? { Authorization: `Bearer ${token}` } : {},
-            },
         );
         if (!res.ok) return;
         const js = await res.json();

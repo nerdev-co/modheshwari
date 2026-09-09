@@ -9,6 +9,7 @@ import { useToast } from "@repo/ui/toast";
 import useNotifications from "../../hooks/useNotifications";
 import { useUser } from "../../lib/UserContext";
 import { API_BASE } from "../../lib/config";
+import { apiFetch } from "../../lib/api";
 
 /**
  * Single notification item returned from backend.
@@ -162,12 +163,8 @@ export default function NotificationsPage(): React.ReactElement {
 
             if (targetRole !== "ALL") body.targetRole = targetRole;
 
-            const res = await fetch(`${API_BASE}/notifications`, {
+            const res = await apiFetch(`${API_BASE}/notifications`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
                 body: JSON.stringify(body),
             });
 

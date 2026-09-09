@@ -7,6 +7,7 @@ import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 
 import { API_BASE } from "../../lib/config";
+import { apiFetch } from "../../lib/api";
 
 interface GraphData {
     nodes: Array<{
@@ -65,11 +66,7 @@ export default function FamilyTreeView() {
                 format: "graph",
             });
 
-            const response = await fetch(`${API_BASE}/family/tree?${params}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            });
+            const response = await apiFetch(`${API_BASE}/family/tree?${params}`);
 
             if (!response.ok) {
                 throw new Error("Failed to fetch family tree");
@@ -162,12 +159,8 @@ export default function FamilyTreeView() {
         setError(null);
 
         try {
-            const response = await fetch(`${API_BASE}/family/tree/relations`, {
+            const response = await apiFetch(`${API_BASE}/family/tree/relations`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
                 body: JSON.stringify(relationshipForm),
             });
 

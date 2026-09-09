@@ -8,6 +8,7 @@ import { formatBloodGroup } from "@modheshwari/utils/format";
 
 import { useDebouncedValue } from "../../hooks/useDebouncedValue";
 import { API_BASE } from "../../lib/config";
+import { apiFetch } from "../../lib/api";
 
 interface SearchResult {
   id?: string;
@@ -107,10 +108,8 @@ export default function SearchInput({
 
     setLoading(true);
 
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    fetch(`${base}?q=${encodeURIComponent(query)}`, {
+    apiFetch(`${base}?q=${encodeURIComponent(query)}`, {
       signal: controller.signal,
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
     })
       .then(async (res) => {
         if (!res.ok) throw new Error("Search failed");

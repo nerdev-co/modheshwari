@@ -10,6 +10,7 @@ import { Button } from "@repo/ui/button";
 import { useToast } from "@repo/ui/toast";
 
 import { API_BASE } from "../../lib/config";
+import { apiFetch } from "../../lib/api";
 
 /**
  * Type for a single family member.
@@ -63,12 +64,9 @@ export default function FamilyPageContent() {
 
             setLoading(true);
             try {
-                const res = await fetch(
+                const res = await apiFetch(
                     `${API_BASE}/family/members${all ? "?all=true" : ""}`,
-                    {
-                        headers: { Authorization: `Bearer ${token}` },
-                        signal,
-                    },
+                    { signal },
                 );
 
                 if (res.status === 401) {
@@ -94,12 +92,8 @@ export default function FamilyPageContent() {
         if (!token) return;
 
         try {
-            const res = await fetch(`${API_BASE}/users/${userId}/status`, {
+            const res = await apiFetch(`${API_BASE}/users/${userId}/status`, {
                 method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
                 body: JSON.stringify({ status: !currentStatus }),
             });
 
