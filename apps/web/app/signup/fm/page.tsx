@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@repo/ui/button";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Card } from "@repo/ui/card";
+import { Input } from "@repo/ui/input";
 import { useToast } from "@repo/ui/toast";
 
 import { API_BASE } from "../../../lib/config";
@@ -156,10 +157,9 @@ function Input({
     return (
         <div>
             <label className="block text-xs font-medium text-jewel-700 mb-1">{label}</label>
-            <input
+            <Input
                 {...props}
                 required={props.required !== false}
-                className="w-full px-4 py-3 rounded-lg border border-jewel-400/30 bg-jewel-50/50 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
             />
         </div>
     );

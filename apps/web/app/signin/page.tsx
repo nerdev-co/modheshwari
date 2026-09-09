@@ -8,6 +8,7 @@ import { Mail, Lock, Loader2, ArrowRight } from "lucide-react";
 import { useToast } from "@repo/ui/toast";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { Input } from "@repo/ui/input";
 
 import { apiPost } from "../../lib/api";
 import { API_BASE } from "../../lib/config";
@@ -132,8 +133,8 @@ export default function SigninPage() {
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
-                <input
-                  className="w-full pl-11 pr-4 py-3 rounded-lg border border-jewel-400/30 bg-jewel-50/50 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
+                <Input
+                  className="pl-11 pr-4 py-3 rounded-lg"
                   placeholder="your.email@example.com"
                   type="email"
                   aria-label="Email address"
@@ -150,8 +151,8 @@ export default function SigninPage() {
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
-                <input
-                  className="w-full pl-11 pr-4 py-3 rounded-lg border border-jewel-400/30 bg-jewel-50/50 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
+                <Input
+                  className="pl-11 pr-4 py-3 rounded-lg"
                   placeholder="Enter your password"
                   type="password"
                   aria-label="Password"

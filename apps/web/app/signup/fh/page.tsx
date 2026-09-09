@@ -15,6 +15,7 @@ import {
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
+import { Input } from "@repo/ui/input";
 import { useToast } from "@repo/ui/toast";
 
 import { API_BASE } from "../../../lib/config";
@@ -99,8 +100,8 @@ export default function SignupPage() {
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
-                <input
-                  className="w-full pl-11 pr-4 py-3 rounded-lg border border-jewel-400/30 bg-jewel-50/50 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
+                <Input
+                  className="pl-11 pr-4 py-3 rounded-lg"
                   placeholder={t("signup.fh.fullNamePlaceholder")}
                   type="text"
                   value={form.name}
@@ -116,8 +117,8 @@ export default function SignupPage() {
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
-                <input
-                  className="w-full pl-11 pr-4 py-3 rounded-lg border border-jewel-400/30 bg-jewel-50/50 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
+                <Input
+                  className="pl-11 pr-4 py-3 rounded-lg"
                   placeholder={t("signup.fh.emailPlaceholder")}
                   type="email"
                   value={form.email}
@@ -133,8 +134,8 @@ export default function SignupPage() {
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
-                <input
-                  className="w-full pl-11 pr-4 py-3 rounded-lg border border-jewel-400/30 bg-jewel-50/50 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
+                <Input
+                  className="pl-11 pr-4 py-3 rounded-lg"
                   placeholder={t("signup.fh.passwordPlaceholder")}
                   type="password"
                   value={form.password}
@@ -152,8 +153,8 @@ export default function SignupPage() {
               </label>
               <div className="relative">
                 <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
-                <input
-                  className="w-full pl-11 pr-4 py-3 rounded-lg border border-jewel-400/30 bg-jewel-50/50 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
+                <Input
+                  className="pl-11 pr-4 py-3 rounded-lg"
                   placeholder={t("signup.fh.familyNamePlaceholder")}
                   type="text"
                   value={form.familyName}

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Search, Loader2, X, Filter } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@repo/ui/button";
+import { Input } from "@repo/ui/input";
 import { formatBloodGroup } from "@modheshwari/utils/format";
 
 import { useDebouncedValue } from "../../hooks/useDebouncedValue";
@@ -156,12 +157,12 @@ export default function SearchInput({
       <div className="relative">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
 
-        <input
+        <Input
           ref={inputRef}
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder={placeholder}
-          className="w-full pl-12 pr-16 py-4 rounded-xl border border-jewel-400/30 bg-jewel-50/50 backdrop-blur-xl text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent shadow-sm transition-all"
+          className="pl-12 pr-16 py-4 rounded-xl backdrop-blur-xl shadow-sm"
           aria-label="Search"
         />
 
