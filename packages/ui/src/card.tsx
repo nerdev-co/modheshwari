@@ -1,36 +1,17 @@
-import { type JSX } from "react";
+"use client";
 
-/**
- * Card component that renders a linked card with title and content.
- * @function Card
- * @param {string} className - Optional CSS class name for styling
- * @param {string} title - The title text to display in the card heading
- * @param {React.ReactNode} children - The content to display in the card body
- * @param {string} href - The URL to navigate to when card is clicked
- * @returns {JSX.Element} A link element styled as a card
- */
-export function Card({
-  className,
-  title,
-  children,
-  href,
-}: {
-  className?: string;
-  title: string;
+import React from "react";
+
+interface CardProps {
   children: React.ReactNode;
-  href: string;
-}): JSX.Element {
+  className?: string;
+  elevated?: boolean;
+}
+
+export function Card({ children, className = "", elevated = false }: CardProps) {
   return (
-    <a
-      className={className}
-      href={href}
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      <h2>
-        {title} <span>-&gt;</span>
-      </h2>
-      <p>{children}</p>
-    </a>
+    <div className={`${elevated ? "card-elevated" : "card"} ${className}`}>
+      {children}
+    </div>
   );
 }

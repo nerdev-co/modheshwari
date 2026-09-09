@@ -4,6 +4,8 @@ import React, { useCallback, useMemo, useState } from "react";
 import { Bug, HelpCircle, Lightbulb, MessageSquare, Send } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { Card } from "@repo/ui/card";
+import { Input } from "@repo/ui/input";
 import { useLocale } from "../../lib/LocaleContext";
 
 type ContactType = "question" | "bug" | "feature" | "feedback";
@@ -110,7 +112,7 @@ export default function ContactPage() {
                 </div>
 
                 {/* Form Card */}
-                <div className="bg-jewel-50/80 backdrop-blur-xl rounded-3xl p-8 border border-jewel-400/20 shadow-jewel">
+                <Card className="p-8 rounded-3xl">
                     {submitted ? (
                         <div className="py-20 text-center">
                             <div className="w-14 h-14 mx-auto rounded-full bg-jewel-emerald/10 flex items-center justify-center">
@@ -168,20 +170,8 @@ export default function ContactPage() {
                             </Button>
                         </div>
                     )}
-                </div>
+                </Card>
             </section>
         </DreamySunsetBackground>
-    );
-}
-
-/**
- * @param {React.InputHTMLAttributes<HTMLInputElement>} props - Description of props
- */
-function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
-    return (
-        <input
-            {...props}
-            className="w-full rounded-xl bg-jewel-50/50 border border-jewel-400/30 px-4 py-3 text-sm text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
-        />
     );
 }
