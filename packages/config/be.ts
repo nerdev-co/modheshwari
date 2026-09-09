@@ -11,7 +11,7 @@ export const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 
 export const KAFKA_BROKER = process.env.KAFKA_BROKER || "localhost:9092";
 
-export const JWT_SECRET = process.env.JWT_SECRET || "changeme";
+export const JWT_SECRET = process.env.JWT_SECRET || "";
 
 export const OUTBOX_BATCH_SIZE = Number(process.env.OUTBOX_BATCH_SIZE || "50");
 export const OUTBOX_POLL_INTERVAL_MS = Number(process.env.OUTBOX_POLL_INTERVAL_MS || "1000");
