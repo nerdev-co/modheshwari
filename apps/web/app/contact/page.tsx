@@ -129,18 +129,21 @@ export default function ContactPage() {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <Input
                                     name="name"
+                                    aria-label={t("contact.namePlaceholder")}
                                     placeholder={t("contact.namePlaceholder")}
                                     value={formData.name}
                                     onChange={handleChange}
                                 />
                                 <Input
                                     name="email"
+                                    aria-label={t("contact.emailPlaceholder")}
                                     placeholder={t("contact.emailPlaceholder")}
                                     value={formData.email}
                                     onChange={handleChange}
                                 />
                                 <Input
                                     name="subject"
+                                    aria-label={t("contact.subjectPlaceholder")}
                                     placeholder={t("contact.subjectPlaceholder")}
                                     value={formData.subject}
                                     onChange={handleChange}
@@ -150,6 +153,7 @@ export default function ContactPage() {
                             <textarea
                                 name="message"
                                 rows={6}
+                                aria-label={t("contact.messagePlaceholder")}
                                 placeholder={t("contact.messagePlaceholder")}
                                 value={formData.message}
                                 onChange={handleChange}

@@ -41,7 +41,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button className="p-2 rounded-xl text-text-secondary hover:bg-surface-muted transition-colors">
+      <button aria-label="Toggle theme" className="p-2 rounded-xl text-text-secondary hover:bg-surface-muted transition-colors">
         <Monitor className="w-4 h-4" />
       </button>
     );
@@ -50,8 +50,8 @@ export function ThemeToggle() {
   return (
     <button
       onClick={cycleTheme}
+      aria-label={`Theme: ${theme}`}
       className="p-2 rounded-xl text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-all duration-fast active:scale-[0.95]"
-      title={`Theme: ${theme}`}
     >
       {theme === "light" && <Sun className="w-4 h-4" />}
       {theme === "dark" && <Moon className="w-4 h-4" />}

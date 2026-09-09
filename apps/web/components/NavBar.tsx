@@ -139,6 +139,7 @@ export default function NavBar() {
             <>
               <Link
                 to="/notifications"
+                aria-label={t("nav.notifications")}
                 className="md:hidden relative p-2.5 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all"
               >
                 <Bell className="h-[18px] w-[18px]" />
@@ -152,10 +153,10 @@ export default function NavBar() {
               <div className="relative group">
                 <button
                   onClick={() => navigate("/me")}
+                  aria-label={t("nav.profile")}
                   className="h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-jewel-900
                     hover:scale-[1.05] transition-transform duration-fast"
                   style={{ background: roleColors[user.role] || "#a8a29e" }}
-                  title={t("nav.profile")}
                 >
                   {initials}
                 </button>
@@ -209,6 +210,7 @@ export default function NavBar() {
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             className="md:hidden p-2.5 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all"
           >
             {mobileMenuOpen ? <X className="h-[18px] w-[18px]" /> : <Menu className="h-[18px] w-[18px]" />}

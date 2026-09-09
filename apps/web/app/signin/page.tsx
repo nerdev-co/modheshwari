@@ -140,6 +140,7 @@ export default function SigninPage() {
                   className="w-full pl-11 pr-4 py-3 rounded-lg border border-jewel-400/30 bg-jewel-50/50 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
                   placeholder="your.email@example.com"
                   type="email"
+                  aria-label="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -157,6 +158,7 @@ export default function SigninPage() {
                   className="w-full pl-11 pr-4 py-3 rounded-lg border border-jewel-400/30 bg-jewel-50/50 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
                   placeholder="Enter your password"
                   type="password"
+                  aria-label="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required

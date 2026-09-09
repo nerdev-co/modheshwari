@@ -129,6 +129,7 @@ export default function MedicalRecordsPage() {
               onChange={(e) => updateField("bloodType", e.target.value)}
               className="w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
               placeholder="e.g. O+"
+              aria-label="Blood Type"
             />
           </Field>
 
@@ -138,6 +139,7 @@ export default function MedicalRecordsPage() {
               onChange={(e) => updateField("allergies", e.target.value)}
               className="w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
               placeholder="e.g. peanuts, dust"
+              aria-label="Allergies"
             />
           </Field>
 
@@ -147,6 +149,7 @@ export default function MedicalRecordsPage() {
               onChange={(e) => updateField("conditions", e.target.value)}
               className="w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
               placeholder="e.g. asthma"
+              aria-label="Conditions"
             />
           </Field>
 
@@ -156,6 +159,7 @@ export default function MedicalRecordsPage() {
               onChange={(e) => updateField("medications", e.target.value)}
               className="w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
               placeholder="e.g. cetirizine"
+              aria-label="Medications"
             />
           </Field>
 
@@ -165,6 +169,7 @@ export default function MedicalRecordsPage() {
               onChange={(e) => updateField("notes", e.target.value)}
               className="w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 min-h-[100px] resize-none"
               placeholder="Anything important..."
+              aria-label="Notes"
             />
           </Field>
 
