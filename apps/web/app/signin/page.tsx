@@ -63,7 +63,6 @@ export default function SigninPage() {
         toast(msg, { variant: "error" });
       }
     } catch (err) {
-      console.error("Login error:", err);
       const msg =
         "Network error: " + (err instanceof Error ? err.message : String(err));
       setAuthError(msg);

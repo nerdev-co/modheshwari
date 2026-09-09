@@ -45,8 +45,7 @@ export default function MemberSignupPage() {
             } else {
                 toast(data.message || "Signup failed", { variant: "error" });
             }
-        } catch (err) {
-            console.error(err);
+        } catch {
             toast("Something went wrong", { variant: "error" });
         } finally {
             setLoading(false);

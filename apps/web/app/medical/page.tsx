@@ -56,8 +56,7 @@ export default function Medical() {
         setMedicalList([]);
         toast(data.message || "No users found", { variant: "info" });
       }
-    } catch (err) {
-      console.error("Failed to fetch medical info:", err);
+    } catch {
       setMedicalList([]);
       toast("Failed to search medical records", { variant: "error" });
     } finally {

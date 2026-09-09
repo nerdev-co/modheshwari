@@ -74,7 +74,6 @@ export default function MedicalRecordsPage() {
       setRecords(json.data?.items ?? []);
     } catch (e) {
       if (e instanceof DOMException && e.name === "AbortError") return;
-      console.error(e);
       setError("Could not load medical records.");
     } finally {
       setLoadingData(false);
@@ -101,8 +100,7 @@ export default function MedicalRecordsPage() {
 
       setForm(EMPTY_FORM);
       await loadRecords();
-    } catch (e) {
-      console.error(e);
+    } catch {
       setError("Could not create record.");
     } finally {
       setSubmitting(false);

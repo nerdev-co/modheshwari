@@ -75,7 +75,6 @@ export default function NearbyPage() {
         }
       } catch (err) {
         if (err instanceof DOMException && err.name === "AbortError") return;
-        console.error(err);
         setError(
           err instanceof Error ? err.message : "Failed to fetch nearby users",
         );

@@ -102,8 +102,7 @@ export default function NotificationsPage(): React.ReactElement {
         setLoading(true);
         try {
             await refresh();
-        } catch (err) {
-            console.error(err);
+        } catch {
             setError("Failed to load notifications.");
         } finally {
             setLoading(false);
@@ -182,8 +181,7 @@ export default function NotificationsPage(): React.ReactElement {
 
             await fetchNotifications();
             toast("Broadcast sent", { variant: "success" });
-        } catch (err) {
-            console.error("Broadcast error", err);
+        } catch {
             toast("Network error", { variant: "error" });
         } finally {
             setBroadcasting(false);

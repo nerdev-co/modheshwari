@@ -106,8 +106,7 @@ export default function FamilyPageContent() {
                         : m,
                 ),
             );
-        } catch (err) {
-            console.error("Error toggling status:", err);
+        } catch {
             toast("Failed to update member status.", { variant: "error" });
         }
     };

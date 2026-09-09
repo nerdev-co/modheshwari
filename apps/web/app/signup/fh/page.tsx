@@ -57,8 +57,7 @@ export default function SignupPage() {
       } else {
         toast(data.message || "Signup failed", { variant: "error" });
       }
-    } catch (err) {
-      console.error("Signup error:", err);
+    } catch {
       toast("An error occurred during signup", { variant: "error" });
     } finally {
       setLoading(false);

@@ -76,8 +76,8 @@ export default function useNotifications(): UseNotificationsHook {
       const fetched: Notification[] = js?.data?.notifications ?? [];
       setNotifications((prev) => mergePersisted(prev, fetched));
       setUnreadCount(fetched.filter((n) => !n.read).length);
-    } catch (err) {
-      console.error("Failed to fetch notifications", err);
+    } catch {
+      // error handled by caller
     }
   }, []);
 

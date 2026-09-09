@@ -73,8 +73,7 @@ export default function EditProfilePage() {
       } else {
         toast(data.message || "Failed to update profile.", { variant: "error" });
       }
-    } catch (err) {
-      console.error("Failed to update profile", err);
+    } catch {
       toast("An error occurred while updating your profile.", { variant: "error" });
     } finally {
       setSaving(false);
