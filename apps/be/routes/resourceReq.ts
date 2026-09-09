@@ -135,11 +135,19 @@ export async function handleCreateResourceRequest(
 
         /* -------- Transaction -------- */
 
+        // Look up or create a Resource by name so resourceId is a valid FK
+        const resourceName = body.resource.trim();
+        const resource = await prisma.resource.upsert({
+            where: { name_type: { name: resourceName, type: "GENERAL" } },
+            update: {},
+            create: { name: resourceName, type: "GENERAL", description: resourceName },
+        });
+
         const created = await prisma.$transaction(async (tx) => {
             const rr = await tx.resourceRequest.create({
                 data: {
                     userId,
-                    resourceId: body.resource,
+                    resourceId: resource.id,
                     status: "PENDING",
                 },
             });
