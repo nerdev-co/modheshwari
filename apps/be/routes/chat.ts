@@ -52,23 +52,24 @@ export async function handleGetChat(req: Request) {
       const memberIds = familyMembers.map((m) => m.userId);
 
       if (memberIds.length > 0) {
-        // Try to find an existing conversation that contains every family member
-        const existing = await prisma.conversation.findFirst({
-          where: {
-            participants: { hasEvery: memberIds },
-          },
-          include: { messages: { take: 1, orderBy: { createdAt: "desc" } } },
-        });
-
-        if (existing) {
-          familyChat = existing;
-        } else {
-          // Create a family conversation
-          const created = await prisma.conversation.create({
-            data: { participants: memberIds },
+        // Wrap findFirst + create in a transaction to reduce (but not eliminate)
+        // the race window for duplicate conversations.
+        // A unique constraint on participants would fully prevent this.
+        familyChat = await prisma.$transaction(async (tx) => {
+          const existing = await tx.conversation.findFirst({
+            where: {
+              participants: { hasEvery: memberIds },
+            },
+            include: { messages: { take: 1, orderBy: { createdAt: "desc" } } },
           });
-          familyChat = created;
-        }
+
+          if (existing) return existing;
+
+          return tx.conversation.create({
+            data: { participants: memberIds },
+            include: { messages: { take: 1, orderBy: { createdAt: "desc" } } },
+          });
+        });
       }
     }
 
