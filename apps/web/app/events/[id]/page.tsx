@@ -287,7 +287,7 @@ export default function EventDetailsPage() {
                     </Button>
 
                     {/* Event Card */}
-                    <Card className="shadow-jewel p-6 md:p-8">
+                    <div className="p-6 md:p-8">
                         {/* Status & Registration Count */}
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                             {getStatusBadge(event.status)}
@@ -410,7 +410,7 @@ export default function EventDetailsPage() {
                                 <strong>{t("events.detail.cancelledLabel")}</strong> {t("events.detail.cancelledMessage")}
                             </div>
                         )}
-                    </Card>
+                    </div>
 
                     {/* Approval Status */}
                     {event.approvals && event.approvals.length > 0 && (

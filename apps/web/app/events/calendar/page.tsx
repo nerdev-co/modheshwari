@@ -302,7 +302,7 @@ export default function EventsCalendar() {
             </div>
 
             <aside className="mt-4 lg:mt-0 lg:w-80 lg:flex-shrink-0">
-              <Card className="bg-jewel-50/80 p-4">
+              <div className="bg-jewel-50/80 p-4 rounded-2xl border border-border">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-display font-bold text-jewel-900">
                     {selectedDate
@@ -358,7 +358,7 @@ export default function EventsCalendar() {
                       <div className="text-sm text-jewel-500">{t("events.calendar.noEventsOnDay")}</div>
                     )}
                 </div>
-              </Card>
+              </div>
             </aside>
           </div>
 
