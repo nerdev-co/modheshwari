@@ -2,10 +2,8 @@
 
 import React, { forwardRef } from "react";
 
-import colors from "./colors";
-
 export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
-export type ButtonSize = "sm" | "md";
+export type ButtonSize = "sm" | "md" | "lg";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -27,55 +25,43 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const base =
-      "rounded-xl font-semibold transition-all duration-300 inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[0.98]";
+      "inline-flex items-center justify-center gap-2 font-medium rounded-xl transition-all duration-fast active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
 
     const sizeClasses: Record<ButtonSize, string> = {
-      sm: "px-4 py-2 text-sm",
-      md: "px-6 py-3 text-base",
+      sm: "px-3.5 py-1.5 text-sm",
+      md: "px-5 py-2.5 text-sm",
+      lg: "px-6 py-3 text-base",
     };
 
     const variantClasses: Record<ButtonVariant, string> = {
       primary: `
-        bg-gradient-to-r from-[${colors.brand500}] to-[${colors.brand600}]
-        text-jewel-deep border border-[${colors.brand600}]
-        focus:ring-[${colors.brand500}]
-        shadow-jewel hover:shadow-xl
-        hover:scale-[1.02]
+        bg-accent text-jewel-900 font-semibold
+        hover:bg-accent-hover
+        focus-visible:ring-accent
       `,
       secondary: `
-        border border-jewel-400/30
-        bg-jewel-50/60 backdrop-blur-sm
-        text-jewel-800
-        hover:bg-jewel-100 hover:border-jewel-gold/40
-        focus:ring-[${colors.brand500}]
-        shadow-soft hover:shadow-jewel
+        bg-transparent text-text-primary font-medium
+        border border-border
+        hover:bg-surface-muted hover:border-text-muted
+        focus-visible:ring-accent
       `,
       ghost: `
-        bg-transparent 
-        text-jewel-700 
-        hover:bg-jewel-100 hover:text-jewel-gold
-        focus:ring-[${colors.brand500}]
-        border border-transparent
+        bg-transparent text-text-secondary font-medium
+        hover:bg-surface-muted hover:text-text-primary
+        focus-visible:ring-accent
       `,
       danger: `
-        bg-gradient-to-r from-[${colors.danger500}] to-[${colors.danger600}]
-        text-white
-        hover:opacity-90
-        focus:ring-[${colors.danger500}]
-        shadow-md hover:shadow-lg
-        border border-[${colors.danger600}]
+        bg-ruby-500 text-white font-semibold
+        hover:bg-ruby-600
+        focus-visible:ring-ruby-500
       `,
     };
-
-    const disabledClasses = disabled
-      ? "opacity-60 cursor-not-allowed pointer-events-none hover:scale-100"
-      : "";
 
     return (
       <button
         ref={ref}
         disabled={disabled}
-        className={`${base} ${sizeClasses[size]} ${variantClasses[variant]} ${disabledClasses} ${className}`.trim()}
+        className={`${base} ${sizeClasses[size]} ${variantClasses[variant]} ${className}`.trim()}
         {...rest}
       >
         {children}

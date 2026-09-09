@@ -14,37 +14,12 @@ interface ConfirmDialogProps {
   onCancel: () => void;
 }
 
-const VARIANT_BUTTON: Record<string, string> = {
-  danger:
-    "bg-gradient-to-r from-jewel-ruby to-jewel-ruby/80 text-white hover:opacity-90 focus:ring-jewel-ruby",
-  warning:
-    "bg-gradient-to-r from-jewel-gold to-jewel-gold/80 text-jewel-deep hover:opacity-90 focus:ring-jewel-gold",
-  info: "bg-gradient-to-r from-jewel-gold to-jewel-600 text-jewel-deep hover:from-jewel-goldLight hover:to-jewel-500 focus:ring-jewel-gold",
+const VARIANT_STYLES: Record<string, string> = {
+  danger: "bg-ruby-500 text-white hover:bg-ruby-600 focus:ring-ruby-500",
+  warning: "bg-accent text-jewel-900 hover:bg-accent-hover focus:ring-accent",
+  info: "bg-accent text-jewel-900 hover:bg-accent-hover focus:ring-accent",
 };
 
-/**
- * Performs  confirm dialog operation.
- * @param {ConfirmDialogProps} {
- *   open,
- *   title,
- *   description,
- *   confirmLabel = "Confirm",
- *   cancelLabel = "Cancel",
- *   variant = "danger",
- *   onConfirm,
- *   onCancel,
- * } - Description of {
- *   open,
- *   title,
- *   description,
- *   confirmLabel = "Confirm",
- *   cancelLabel = "Cancel",
- *   variant = "danger",
- *   onConfirm,
- *   onCancel,
- * }
- * @returns {any} Description of return value
- */
 export function ConfirmDialog({
   open,
   title,
@@ -88,38 +63,37 @@ export function ConfirmDialog({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
           className="fixed inset-0 z-[10000] flex items-center justify-center p-4"
         >
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={onCancel}
           />
 
-          {/* Dialog */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 8 }}
+            initial={{ opacity: 0, scale: 0.96, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 8 }}
-            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            exit={{ opacity: 0, scale: 0.96, y: 8 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             role="alertdialog"
             aria-modal="true"
             aria-labelledby="confirm-title"
             aria-describedby="confirm-desc"
-            className="relative z-10 w-full max-w-md rounded-2xl border border-jewel-200 bg-jewel-50 p-6 shadow-xl dark:border-jewel-700 dark:bg-jewel-900"
+            className="relative z-10 w-full max-w-md rounded-2xl border border-border bg-surface p-6 shadow-elevated"
           >
             <h2
               id="confirm-title"
-              className="text-lg font-bold text-jewel-900 dark:text-jewel-50"
+              className="text-lg font-semibold text-text-primary"
             >
               {title}
             </h2>
             <p
               id="confirm-desc"
-              className="mt-2 text-sm text-jewel-600 dark:text-jewel-300"
+              className="mt-2 text-sm text-text-secondary leading-relaxed"
             >
               {description}
             </p>
@@ -128,13 +102,13 @@ export function ConfirmDialog({
               <button
                 ref={cancelRef}
                 onClick={onCancel}
-                className="rounded-xl border border-jewel-200 bg-jewel-50 px-4 py-2 text-sm font-medium text-jewel-700 transition-colors hover:bg-jewel-100 dark:border-jewel-600 dark:bg-jewel-800 dark:text-jewel-200 dark:hover:bg-jewel-700 focus:outline-none focus:ring-2 focus:ring-jewel-400 focus:ring-offset-2"
+                className="px-4 py-2 text-sm font-medium text-text-secondary rounded-xl border border-border hover:bg-surface-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
               >
                 {cancelLabel}
               </button>
               <button
                 onClick={onConfirm}
-                className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${VARIANT_BUTTON[variant]}`}
+                className={`px-4 py-2 text-sm font-semibold rounded-xl transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98] ${VARIANT_STYLES[variant]}`}
               >
                 {confirmLabel}
               </button>
