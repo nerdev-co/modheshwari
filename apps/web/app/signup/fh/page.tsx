@@ -85,7 +85,7 @@ export default function SignupPage() {
             >
               <Users className="w-8 h-8" />
             </motion.div>
-            <h1 className="text-3xl font-display font-bold bg-gradient-to-r from-jewel-900 to-jewel-700 bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl font-display font-bold text-text-primary mb-2">
               {t("signup.fh.heading")}
             </h1>
             <p className="text-sm text-jewel-600">

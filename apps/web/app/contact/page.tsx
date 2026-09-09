@@ -77,7 +77,7 @@ export default function ContactPage() {
                     <span className="inline-block px-4 py-1.5 rounded-full bg-jewel-100/60 border border-jewel-400/20 text-sm text-jewel-600">
                         {t("contact.badge")}
                     </span>
-                    <h1 className="text-5xl font-display font-bold tracking-tight bg-gradient-to-r from-jewel-900 to-jewel-700 bg-clip-text text-transparent">
+                    <h1 className="text-5xl font-display font-bold tracking-tight text-text-primary">
                         {t("contact.heading")}
                     </h1>
                     <p className="text-jewel-600 max-w-xl mx-auto">

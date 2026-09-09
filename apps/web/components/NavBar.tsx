@@ -133,7 +133,7 @@ export default function NavBar() {
 
   return (
     <>
-      <div className="h-16" />
+      <div className="h-[60px]" />
 
       <motion.nav
         initial={{ y: -16, opacity: 0 }}

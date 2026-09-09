@@ -61,7 +61,7 @@ export default function MemberSignupPage() {
                     ) : (
                         <>
                             <div className="mb-8 text-center">
-                                <h1 className="text-3xl font-display font-bold bg-gradient-to-r from-jewel-900 to-jewel-700 bg-clip-text text-transparent tracking-tight">
+                                <h1 className="text-3xl font-display font-bold text-text-primary tracking-tight">
                                     {t("signup.fm.heading")}
                                 </h1>
                                 <p className="text-sm text-jewel-600 mt-2">

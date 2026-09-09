@@ -33,7 +33,7 @@ export default function SignupLandingPage() {
             <div className="inline-flex items-center justify-center h-16 w-16 rounded-xl bg-gradient-to-br from-jewel-gold to-jewel-500 text-jewel-deep text-2xl font-bold shadow-lg shadow-jewel-gold/25 mb-4">
               <Users className="w-8 h-8" />
             </div>
-            <h1 className="text-3xl sm:text-4xl font-display font-bold bg-gradient-to-r from-jewel-900 to-jewel-700 bg-clip-text text-transparent mb-3">
+            <h1 className="text-3xl sm:text-4xl font-display font-bold text-text-primary mb-3">
               Choose your signup path
             </h1>
             <p className="text-sm sm:text-base text-jewel-600">
