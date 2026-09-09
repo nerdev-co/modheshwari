@@ -23,6 +23,7 @@ import { useToast } from "@repo/ui/toast";
 
 import apiFetch from "../../../lib/api";
 import { API_BASE } from "../../../lib/config";
+import { useLocale } from "../../../lib/LocaleContext";
 
 interface EventDetails {
     id: string;
@@ -68,6 +69,7 @@ interface EventDetails {
  * @returns {React.JSX.Element} Description of return value
  */
 export default function EventDetailsPage() {
+    const { t } = useLocale();
     const navigate = useNavigate();
     const params = useParams();
     const { toast } = useToast();
@@ -152,7 +154,7 @@ export default function EventDetailsPage() {
             fetchEvent();
         } catch (error: unknown) {
             const msg = error instanceof Error ? error.message : String(error);
-            toast(msg || "Failed to register for event", { variant: "error" });
+            toast(msg || t("events.detail.toastRegisterFailed"), { variant: "error" });
         } finally {
             setRegistering(false);
         }
@@ -170,7 +172,7 @@ export default function EventDetailsPage() {
             fetchEvent();
         } catch (error: unknown) {
             const msg = error instanceof Error ? error.message : String(error);
-            toast(msg || "Failed to unregister from event", { variant: "error" });
+            toast(msg || t("events.detail.toastUnregisterFailed"), { variant: "error" });
         } finally {
             setRegistering(false);
         }
@@ -181,22 +183,22 @@ export default function EventDetailsPage() {
             APPROVED: {
                 icon: CheckCircle,
                 color: "bg-jewel-emerald/15 text-jewel-emerald border-jewel-emerald/30",
-                label: "Approved",
+                label: t("events.detail.statusApproved"),
             },
             PENDING: {
                 icon: Clock,
                 color: "bg-jewel-gold/15 text-jewel-gold border-jewel-gold/30",
-                label: "Pending Approval",
+                label: t("events.detail.statusPending"),
             },
             REJECTED: {
                 icon: XCircle,
                 color: "bg-jewel-ruby/15 text-jewel-ruby border-jewel-ruby/30",
-                label: "Rejected",
+                label: t("events.detail.statusRejected"),
             },
             CANCELLED: {
                 icon: XCircle,
                 color: "bg-jewel-400/15 text-jewel-600 border-jewel-400/30",
-                label: "Cancelled",
+                label: t("events.detail.statusCancelled"),
             },
         };
 
@@ -229,7 +231,7 @@ export default function EventDetailsPage() {
     };
 
     const handleModeration = async (status: "APPROVED" | "REJECTED") => {
-        if (!token) return toast("You must be signed in as an admin to moderate.", { variant: "warning" });
+        if (!token) return toast(t("events.detail.toastAdminRequired"), { variant: "warning" });
 
         setModerating(true);
         try {
@@ -240,10 +242,10 @@ export default function EventDetailsPage() {
 
             setModerationRemarks("");
             await fetchEvent();
-            toast(`Moderation recorded: ${status}`, { variant: "success" });
+            toast(t("events.detail.toastModerationRecorded", { status }), { variant: "success" });
         } catch (err: unknown) {
             const msg = err instanceof Error ? err.message : String(err);
-            toast(msg || "Moderation failed", { variant: "error" });
+            toast(msg || t("events.detail.toastModerationFailed"), { variant: "error" });
         } finally {
             setModerating(false);
         }
@@ -263,9 +265,9 @@ export default function EventDetailsPage() {
         return (
             <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
                 <div className="text-center">
-                    <h2 className="text-2xl font-display font-bold text-jewel-900 mb-2">Event not found</h2>
+                    <h2 className="text-2xl font-display font-bold text-jewel-900 mb-2">{t("events.detail.notFound")}</h2>
                     <Button variant="ghost" onClick={() => navigate("/events")}>
-                        Back to Events
+                        {t("events.detail.backToEvents")}
                     </Button>
                 </div>
             </DreamySunsetBackground>
@@ -284,7 +286,7 @@ export default function EventDetailsPage() {
                         className="inline-flex items-center gap-2 mb-6"
                     >
                         <ArrowLeft className="w-4 h-4" />
-                        Back to Events
+                        {t("events.detail.backToEvents")}
                     </Button>
 
                     {/* Event Card */}
@@ -301,7 +303,7 @@ export default function EventDetailsPage() {
                                 <span className="font-semibold text-jewel-800">
                                     {event._count.registrations}
                                 </span>
-                                <span className="text-sm">registered</span>
+                                <span className="text-sm">{t("events.detail.registered")}</span>
                             </span>
                         </div>
 
@@ -322,7 +324,7 @@ export default function EventDetailsPage() {
                             <div className="flex items-start gap-3 p-4 bg-jewel-100/40 rounded-xl border border-jewel-400/20">
                                 <Calendar className="w-5 h-5 text-jewel-gold flex-shrink-0 mt-0.5" />
                                 <div>
-                                    <p className="text-xs text-jewel-400 mb-1">Date & Time</p>
+                                    <p className="text-xs text-jewel-400 mb-1">{t("events.detail.dateTime")}</p>
                                     <p className="text-sm font-medium text-jewel-800">
                                         {formatDate(event.date)}
                                     </p>
@@ -333,7 +335,7 @@ export default function EventDetailsPage() {
                                 <div className="flex items-start gap-3 p-4 bg-jewel-100/40 rounded-xl border border-jewel-400/20">
                                     <MapPin className="w-5 h-5 text-jewel-gold flex-shrink-0 mt-0.5" />
                                     <div>
-                                        <p className="text-xs text-jewel-400 mb-1">Venue</p>
+                                        <p className="text-xs text-jewel-400 mb-1">{t("events.detail.venue")}</p>
                                         <p className="text-sm font-medium text-jewel-800">{event.venue}</p>
                                     </div>
                                 </div>
@@ -342,7 +344,7 @@ export default function EventDetailsPage() {
 
                         {/* Organizer */}
                         <div className="p-5 bg-jewel-100/40 rounded-xl border border-jewel-400/20 mb-8">
-                            <p className="text-xs text-jewel-400 mb-2">Organized by</p>
+                            <p className="text-xs text-jewel-400 mb-2">{t("events.detail.organizedBy")}</p>
                             <div className="flex items-center gap-3">
                                 <div className="w-11 h-11 rounded-xl bg-jewel-200/60 border border-jewel-400/20 flex items-center justify-center text-jewel-800 font-bold">
                                     {event.createdBy.name.charAt(0).toUpperCase()}
@@ -367,12 +369,12 @@ export default function EventDetailsPage() {
                                         {registering ? (
                                             <span className="flex items-center justify-center gap-2">
                                                 <Loader className="w-5 h-5 animate-spin" />
-                                                Unregistering...
+                                                {t("events.detail.unregistering")}
                                             </span>
                                         ) : (
                                             <span className="flex items-center justify-center gap-2">
                                                 <UserX className="w-5 h-5" />
-                                                Unregister
+                                                {t("events.detail.unregister")}
                                             </span>
                                         )}
                                     </Button>
@@ -385,12 +387,12 @@ export default function EventDetailsPage() {
                                         {registering ? (
                                             <span className="flex items-center justify-center gap-2">
                                                 <Loader className="w-5 h-5 animate-spin" />
-                                                Registering...
+                                                {t("events.detail.registering")}
                                             </span>
                                         ) : (
                                             <span className="flex items-center justify-center gap-2">
                                                 <UserCheck className="w-5 h-5" />
-                                                Register for Event
+                                                {t("events.detail.registerForEvent")}
                                             </span>
                                         )}
                                     </Button>
@@ -400,21 +402,19 @@ export default function EventDetailsPage() {
 
                         {event.status === "PENDING" && (
                             <div className="p-4 rounded-xl bg-jewel-gold/10 border border-jewel-gold/30 text-jewel-700 text-sm">
-                                <strong>Pending Approval:</strong> This event is awaiting
-                                approval from community admins.
+                                <strong>{t("events.detail.pendingApprovalLabel")}</strong> {t("events.detail.pendingApprovalMessage")}
                             </div>
                         )}
 
                         {event.status === "REJECTED" && (
                             <div className="p-4 rounded-xl bg-jewel-ruby/10 border border-jewel-ruby/30 text-jewel-ruby text-sm">
-                                <strong>Rejected:</strong> This event was not approved by the
-                                admins.
+                                <strong>{t("events.detail.rejectedLabel")}</strong> {t("events.detail.rejectedMessage")}
                             </div>
                         )}
 
                         {event.status === "CANCELLED" && (
                             <div className="p-4 rounded-xl bg-jewel-400/10 border border-jewel-400/30 text-jewel-600 text-sm">
-                                <strong>Cancelled:</strong> This event has been cancelled.
+                                <strong>{t("events.detail.cancelledLabel")}</strong> {t("events.detail.cancelledMessage")}
                             </div>
                         )}
                     </motion.div>
@@ -427,7 +427,7 @@ export default function EventDetailsPage() {
                             transition={{ delay: 0.2 }}
                             className="mt-6 rounded-2xl bg-jewel-50/60 backdrop-blur-xl border border-jewel-400/20 p-6"
                         >
-                            <h2 className="text-xl font-display font-bold text-jewel-900 mb-4">Approval Status</h2>
+                            <h2 className="text-xl font-display font-bold text-jewel-900 mb-4">{t("events.detail.approvalStatus")}</h2>
                             <div className="space-y-3">
                                 {event.approvals.map((approval) => (
                                     <div
@@ -464,16 +464,15 @@ export default function EventDetailsPage() {
                             transition={{ delay: 0.25 }}
                             className="mt-6 bg-jewel-100/60 backdrop-blur-xl border border-jewel-400/20 rounded-2xl p-6"
                         >
-                            <h2 className="text-lg font-display font-bold text-jewel-900 mb-3">Moderation</h2>
+                            <h2 className="text-lg font-display font-bold text-jewel-900 mb-3">{t("events.detail.moderation")}</h2>
                             <p className="text-sm text-jewel-500 mb-4">
-                                You can approve or reject this event, or suggest changes. Your
-                                action will be recorded.
+                                {t("events.detail.moderationDescription")}
                             </p>
 
                             <textarea
                                 value={moderationRemarks}
                                 onChange={(e) => setModerationRemarks(e.target.value)}
-                                placeholder="Optional remarks / suggested changes"
+                                placeholder={t("events.detail.moderationPlaceholder")}
                                 className="w-full min-h-[90px] p-4 rounded-xl bg-jewel-50/50 border border-jewel-400/30 text-sm text-jewel-800 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent mb-4 resize-none"
                             />
 
@@ -485,11 +484,11 @@ export default function EventDetailsPage() {
                                 >
                                     {moderating ? (
                                         <span className="flex items-center justify-center gap-2">
-                                            <Loader className="w-4 h-4 animate-spin" /> Approving...
+                                            <Loader className="w-4 h-4 animate-spin" /> {t("events.detail.approving")}
                                         </span>
                                     ) : (
                                         <span className="flex items-center justify-center gap-2">
-                                            <CheckCircle className="w-4 h-4" /> Approve
+                                            <CheckCircle className="w-4 h-4" /> {t("events.detail.approve")}
                                         </span>
                                     )}
                                 </Button>
@@ -502,11 +501,11 @@ export default function EventDetailsPage() {
                                 >
                                     {moderating ? (
                                         <span className="flex items-center justify-center gap-2">
-                                            <Loader className="w-4 h-4 animate-spin" /> Rejecting...
+                                            <Loader className="w-4 h-4 animate-spin" /> {t("events.detail.rejecting")}
                                         </span>
                                     ) : (
                                         <span className="flex items-center justify-center gap-2">
-                                            <XCircle className="w-4 h-4" /> Reject
+                                            <XCircle className="w-4 h-4" /> {t("events.detail.reject")}
                                         </span>
                                     )}
                                 </Button>
@@ -514,10 +513,10 @@ export default function EventDetailsPage() {
                                 <Button
                                     variant="secondary"
                                     onClick={() => {
-                                        toast("Event editing coming soon. Contact an admin for changes.", { variant: "info" });
+                                        toast(t("events.detail.toastComingSoon"), { variant: "info" });
                                     }}
                                 >
-                                    Suggest Changes
+                                    {t("events.detail.suggestChanges")}
                                 </Button>
                             </div>
                         </motion.div>

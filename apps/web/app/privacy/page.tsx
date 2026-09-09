@@ -1,46 +1,51 @@
+"use client";
+
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
+import { useLocale } from "../../lib/LocaleContext";
 
 /**
  * Performs  privacy operation.
  * @returns {React.JSX.Element} Description of return value
  */
 export default function Privacy() {
+  const { t } = useLocale();
+
   return (
     <DreamySunsetBackground className="px-6 py-10">
       <div className="max-w-4xl mx-auto">
         <div className="mb-12">
           <h1 className="text-4xl sm:text-5xl font-display font-bold text-jewel-900 mb-4">
-            Privacy Policy
+            {t("privacy.title")}
           </h1>
           <p className="text-jewel-gold font-medium">
-            Last updated: 2026-02-02
+            {t("privacy.lastUpdated")}
           </p>
         </div>
 
         <div className="bg-jewel-50/80 backdrop-blur-xl rounded-2xl p-8 border border-jewel-400/20 shadow-jewel mb-8">
           <p className="text-jewel-700 text-lg leading-relaxed">
-            We take your privacy seriously. This document describes that all of your information will be visible only to you, your family, and higher-level admins. Not a single thing can be accessed by anyone else.
+            {t("privacy.intro")}
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           <div className="bg-jewel-50/80 backdrop-blur-xl rounded-2xl p-6 border border-jewel-400/20 shadow-jewel">
-            <h2 className="text-xl font-display font-bold text-jewel-900 mb-3">Security Tips</h2>
+            <h2 className="text-xl font-display font-bold text-jewel-900 mb-3">{t("privacy.securityTips")}</h2>
             <ul className="space-y-2 text-jewel-700">
-              <li>Use strong passwords</li>
-              <li>Never share your password with anyone</li>
-              <li>Change your password regularly</li>
-              <li>Log out after each session</li>
+              <li>{t("privacy.useStrongPasswords")}</li>
+              <li>{t("privacy.neverSharePassword")}</li>
+              <li>{t("privacy.changePasswordRegularly")}</li>
+              <li>{t("privacy.logOutAfterSession")}</li>
             </ul>
           </div>
 
           <div className="bg-jewel-50/80 backdrop-blur-xl rounded-2xl p-6 border border-jewel-400/20 shadow-jewel">
-            <h2 className="text-xl font-display font-bold text-jewel-900 mb-3">Before Requests</h2>
+            <h2 className="text-xl font-display font-bold text-jewel-900 mb-3">{t("privacy.beforeRequests")}</h2>
             <ul className="space-y-2 text-jewel-700">
-              <li>Discuss with your family</li>
-              <li>Speak with your peers</li>
-              <li>Consider community impact</li>
-              <li>Review guidelines carefully</li>
+              <li>{t("privacy.discussWithFamily")}</li>
+              <li>{t("privacy.speakWithPeers")}</li>
+              <li>{t("privacy.considerCommunityImpact")}</li>
+              <li>{t("privacy.reviewGuidelines")}</li>
             </ul>
           </div>
         </div>
@@ -48,9 +53,9 @@ export default function Privacy() {
         <div className="bg-jewel-gold/10 rounded-2xl p-8 border-2 border-jewel-gold/30">
           <div className="flex items-start gap-4">
             <div>
-              <h3 className="text-xl font-display font-bold text-jewel-900 mb-2">Important</h3>
+              <h3 className="text-xl font-display font-bold text-jewel-900 mb-2">{t("privacy.important")}</h3>
               <p className="text-jewel-700">
-                <strong>Do not share your passwords</strong> with anyone, including family members or administrators. Your password is personal and should remain confidential at all times.
+                {t("privacy.importantMessage")}
               </p>
             </div>
           </div>
@@ -58,7 +63,7 @@ export default function Privacy() {
 
         <div className="mt-12 pt-8 border-t border-jewel-400/20 text-center">
           <p className="text-jewel-500 text-sm">
-            For questions about our privacy policy, please contact us at support@modheshwari.com
+            {t("privacy.contactText")}
           </p>
         </div>
       </div>

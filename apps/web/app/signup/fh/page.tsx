@@ -17,6 +17,7 @@ import { Button } from "@repo/ui/button";
 import { useToast } from "@repo/ui/toast";
 
 import { API_BASE } from "../../../lib/config";
+import { useLocale } from "../../../lib/LocaleContext";
 
 /**
  * Performs  signup page operation.
@@ -25,6 +26,7 @@ import { API_BASE } from "../../../lib/config";
 export default function SignupPage() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLocale();
 
   const [form, setForm] = useState({
     name: "",
@@ -52,13 +54,13 @@ export default function SignupPage() {
       const data = await res.json();
 
       if (data.status === "success") {
-        toast("Signup successful!", { variant: "success" });
+        toast(t("signup.fh.signupSuccess"), { variant: "success" });
         navigate("/me");
       } else {
-        toast(data.message || "Signup failed", { variant: "error" });
+        toast(data.message || t("signup.fh.signupFailed"), { variant: "error" });
       }
     } catch {
-      toast("An error occurred during signup", { variant: "error" });
+      toast(t("signup.fh.signupError"), { variant: "error" });
     } finally {
       setLoading(false);
     }
@@ -86,23 +88,23 @@ export default function SignupPage() {
               <Users className="w-8 h-8" />
             </motion.div>
             <h1 className="text-3xl font-display font-bold bg-gradient-to-r from-jewel-900 to-jewel-700 bg-clip-text text-transparent mb-2">
-              Become a Family Head
+              {t("signup.fh.heading")}
             </h1>
             <p className="text-sm text-jewel-600">
-              Create your family account and start managing
+              {t("signup.fh.subtitle")}
             </p>
           </div>
 
           <div className="space-y-5">
             <div>
               <label className="block text-xs font-medium text-jewel-700 mb-2">
-                Full Name
+                {t("signup.fh.fullNameLabel")}
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
                 <input
                   className="w-full pl-11 pr-4 py-3 rounded-lg border border-jewel-400/30 bg-jewel-50/50 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
-                  placeholder="Enter your full name"
+                  placeholder={t("signup.fh.fullNamePlaceholder")}
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -113,13 +115,13 @@ export default function SignupPage() {
 
             <div>
               <label className="block text-xs font-medium text-jewel-700 mb-2">
-                Email Address
+                {t("signup.fh.emailLabel")}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
                 <input
                   className="w-full pl-11 pr-4 py-3 rounded-lg border border-jewel-400/30 bg-jewel-50/50 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
-                  placeholder="your.email@example.com"
+                  placeholder={t("signup.fh.emailPlaceholder")}
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -130,13 +132,13 @@ export default function SignupPage() {
 
             <div>
               <label className="block text-xs font-medium text-jewel-700 mb-2">
-                Password
+                {t("signup.fh.passwordLabel")}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
                 <input
                   className="w-full pl-11 pr-4 py-3 rounded-lg border border-jewel-400/30 bg-jewel-50/50 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
-                  placeholder="Create a secure password"
+                  placeholder={t("signup.fh.passwordPlaceholder")}
                   type="password"
                   value={form.password}
                   onChange={(e) =>
@@ -149,13 +151,13 @@ export default function SignupPage() {
 
             <div>
               <label className="block text-xs font-medium text-jewel-700 mb-2">
-                Family Name
+                {t("signup.fh.familyNameLabel")}
               </label>
               <div className="relative">
                 <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
                 <input
                   className="w-full pl-11 pr-4 py-3 rounded-lg border border-jewel-400/30 bg-jewel-50/50 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
-                  placeholder="Your family name"
+                  placeholder={t("signup.fh.familyNamePlaceholder")}
                   type="text"
                   value={form.familyName}
                   onChange={(e) =>
@@ -179,11 +181,11 @@ export default function SignupPage() {
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Creating Account...
+                  {t("signup.fh.creatingAccount")}
                 </span>
               ) : (
                 <span className="flex items-center justify-center gap-2">
-                  Create Family Account
+                  {t("signup.fh.createFamilyAccount")}
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </span>
               )}
@@ -192,12 +194,12 @@ export default function SignupPage() {
 
           <div className="mt-6 pt-6 border-t border-jewel-400/20">
             <p className="text-center text-sm text-jewel-600">
-              Already have an account?{" "}
+              {t("signup.fh.alreadyHaveAccount")}{" "}
               <a
                 href="/signin"
                 className="text-jewel-gold hover:text-jewel-500 font-medium transition-colors"
               >
-                Sign In
+                {t("signup.fh.signIn")}
               </a>
             </p>
           </div>
@@ -212,9 +214,7 @@ export default function SignupPage() {
           <div className="flex items-start gap-3">
             <Shield className="w-5 h-5 text-jewel-gold flex-shrink-0 mt-0.5" />
             <p className="text-xs text-jewel-600 leading-relaxed">
-              As a Family Head, you&apos;ll be responsible for managing your
-              family members, handling invitations, and maintaining family
-              records securely.
+              {t("signup.fh.description")}
             </p>
           </div>
         </motion.div>
@@ -226,9 +226,9 @@ export default function SignupPage() {
           className="mt-4 space-y-2"
         >
           {[
-            "Full control over family member management",
-            "Secure access with role-based permissions",
-            "Track family events and medical records",
+            t("signup.fh.feature1"),
+            t("signup.fh.feature2"),
+            t("signup.fh.feature3"),
           ].map((feature, idx) => (
             <div
               key={idx}
@@ -247,7 +247,7 @@ export default function SignupPage() {
           className="mt-6 text-center"
         >
           <p className="text-xs text-jewel-500">
-            🔒 Secure signup powered by Modheshwari
+            {t("signup.fh.secureSignup")}
           </p>
         </motion.div>
       </motion.main>

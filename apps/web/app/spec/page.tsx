@@ -7,6 +7,7 @@ import { FileCode, Webhook, Copy, ExternalLink } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { apiFetch } from "../../lib/api";
+import { useLocale } from "../../lib/LocaleContext";
 
 type SpecType = "openapi" | "asyncapi";
 
@@ -18,6 +19,7 @@ export default function SpecPage() {
   const [specType, setSpecType] = useState<SpecType>("openapi");
   const [asyncApiSpec, setAsyncApiSpec] = useState<string>("");
   const [copied, setCopied] = useState(false);
+  const { t } = useLocale();
 
   const handleSpecChange = async (type: SpecType) => {
     setSpecType(type);
@@ -43,10 +45,10 @@ export default function SpecPage() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-display font-bold tracking-tight text-jewel-900">
-            API Documentation
+            {t("spec.title")}
           </h1>
           <p className="text-sm text-jewel-500 mt-1">
-            Browse REST and WebSocket API specifications
+            {t("spec.description")}
           </p>
         </div>
 
@@ -62,7 +64,7 @@ export default function SpecPage() {
               }`}
             >
               <FileCode className="w-4 h-4" />
-              OpenAPI (REST)
+              {t("spec.openapiTab")}
             </Button>
             <Button
               variant="ghost"
@@ -74,7 +76,7 @@ export default function SpecPage() {
               }`}
             >
               <Webhook className="w-4 h-4" />
-              AsyncAPI (WebSocket)
+              {t("spec.asyncapiTab")}
             </Button>
           </div>
         </div>
@@ -98,11 +100,10 @@ export default function SpecPage() {
                   </div>
                   <div className="flex-1">
                     <h2 className="text-xl font-display font-bold text-jewel-900 mb-2">
-                      AsyncAPI Specification
+                      {t("spec.asyncapiTitle")}
                     </h2>
                     <p className="text-sm text-jewel-500 mb-4">
-                      This specification describes the WebSocket API for real-time messaging.
-                      For the best visualization experience, copy the spec and paste it into AsyncAPI Studio.
+                      {t("spec.asyncapiDesc")}
                     </p>
                     <a
                       href="https://studio.asyncapi.com/"
@@ -111,7 +112,7 @@ export default function SpecPage() {
                     >
                       <Button>
                         <ExternalLink className="w-4 h-4" />
-                        Open AsyncAPI Studio
+                        {t("spec.openStudio")}
                       </Button>
                     </a>
                   </div>
@@ -121,10 +122,10 @@ export default function SpecPage() {
               {asyncApiSpec ? (
                 <div className="bg-jewel-50/80 border border-jewel-400/20 rounded-2xl p-6 shadow-jewel">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-display font-bold text-jewel-900">YAML Specification</h3>
+                    <h3 className="text-lg font-display font-bold text-jewel-900">{t("spec.yamlTitle")}</h3>
                     <Button variant="secondary" onClick={handleCopy}>
                       <Copy className="w-4 h-4" />
-                      {copied ? "Copied!" : "Copy"}
+                      {copied ? t("spec.copied") : t("spec.copy")}
                     </Button>
                   </div>
                   <pre className="bg-jewel-900 text-jewel-100 p-6 rounded-xl overflow-auto max-h-[70vh] text-sm font-mono border border-jewel-700">
@@ -134,7 +135,7 @@ export default function SpecPage() {
               ) : (
                 <div className="bg-jewel-50/80 border border-jewel-400/20 rounded-2xl p-12 shadow-jewel">
                   <div className="flex items-center justify-center">
-                    <div className="text-jewel-400">Loading AsyncAPI spec...</div>
+                    <div className="text-jewel-400">{t("spec.loadingSpec")}</div>
                   </div>
                 </div>
               )}

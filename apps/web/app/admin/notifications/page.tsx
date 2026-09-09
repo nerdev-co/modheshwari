@@ -8,6 +8,7 @@ import { useToast } from "@repo/ui/toast";
 
 import { API_BASE } from "../../../lib/config";
 import { apiFetch } from "../../../lib/api";
+import { useLocale } from "../../../lib/LocaleContext";
 
 const CHANNELS = ["IN_APP", "EMAIL", "SMS", "PUSH"] as const;
 const PRIORITIES = ["low", "normal", "high", "urgent"] as const;
@@ -26,6 +27,7 @@ const ROLES = [
 export default function AdminNotifications() {
     const navigate = useNavigate();
     const { toast } = useToast();
+    const { t } = useLocale();
     const [authorized, setAuthorized] = useState(false);
 
     useEffect(() => {
@@ -89,13 +91,13 @@ export default function AdminNotifications() {
             if (res.ok) {
                 setMessage("");
                 setSubject("");
-                toast("Notification sent", { variant: "success" });
+                toast(t("admin.notifications.notificationSent"), { variant: "success" });
             } else {
-                toast(json.error || "Failed to send", { variant: "error" });
+                toast(json.error || t("admin.notifications.failedToSend"), { variant: "error" });
             }
         } catch (err) {
             const msg = err instanceof Error ? err.message : String(err);
-            toast(msg || "Failed to send", { variant: "error" });
+            toast(msg || t("admin.notifications.failedToSend"), { variant: "error" });
         } finally {
             setSending(false);
         }
@@ -106,10 +108,10 @@ export default function AdminNotifications() {
     return (
         <DreamySunsetBackground className="px-6 py-10">
             <div className="max-w-3xl mx-auto bg-jewel-50/80 backdrop-blur-xl p-6 rounded-3xl border border-jewel-400/20 shadow-jewel">
-                <h1 className="text-xl font-display font-bold text-jewel-900 mb-4">Compose Notification</h1>
+                <h1 className="text-xl font-display font-bold text-jewel-900 mb-4">{t("admin.notifications.heading")}</h1>
 
                 <div className="mb-3">
-                    <label className="text-sm text-jewel-500">Subject (optional)</label>
+                    <label className="text-sm text-jewel-500">{t("admin.notifications.subjectLabel")}</label>
                     <input
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
@@ -118,7 +120,7 @@ export default function AdminNotifications() {
                 </div>
 
                 <div className="mb-3">
-                    <label className="text-sm text-jewel-500">Message</label>
+                    <label className="text-sm text-jewel-500">{t("admin.notifications.messageLabel")}</label>
                     <textarea
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
@@ -129,7 +131,7 @@ export default function AdminNotifications() {
 
                 <div className="mb-3 flex gap-4">
                     <div>
-                        <div className="text-sm text-jewel-500 mb-1">Channels</div>
+                        <div className="text-sm text-jewel-500 mb-1">{t("admin.notifications.channelsLabel")}</div>
                         <div className="flex gap-2">
                             {CHANNELS.map((ch) => (
                                 <label key={ch} className="inline-flex items-center gap-2">
@@ -146,7 +148,7 @@ export default function AdminNotifications() {
                     </div>
 
                     <div>
-                        <div className="text-sm text-jewel-500 mb-1">Priority</div>
+                        <div className="text-sm text-jewel-500 mb-1">{t("admin.notifications.priorityLabel")}</div>
                         <select
                             value={priority}
                             onChange={(e) => setPriority(e.target.value)}
@@ -161,13 +163,13 @@ export default function AdminNotifications() {
                     </div>
 
                     <div>
-                        <div className="text-sm text-jewel-500 mb-1">Target Role (optional)</div>
+                        <div className="text-sm text-jewel-500 mb-1">{t("admin.notifications.targetRoleLabel")}</div>
                         <select
                             value={targetRole}
                             onChange={(e) => setTargetRole(e.target.value || undefined)}
                             className="p-2 rounded-xl bg-jewel-50/50 border border-jewel-400/30 text-jewel-900"
                         >
-                            <option value="">All (scope applies)</option>
+                            <option value="">{t("admin.notifications.targetRoleAll")}</option>
                             {ROLES.map((r) => (
                                 <option key={r} value={r}>
                                     {r}
@@ -179,13 +181,13 @@ export default function AdminNotifications() {
 
                 <div className="flex gap-2">
                     <Button variant="secondary" onClick={() => setPreviewOpen(true)}>
-                        Preview
+                        {t("admin.notifications.preview")}
                     </Button>
                     <Button
                         onClick={send}
                         disabled={sending || !message.trim()}
                     >
-                        {sending ? "Sending..." : "Send"}
+                        {sending ? t("admin.notifications.sending") : t("admin.notifications.send")}
                     </Button>
                 </div>
 
@@ -198,7 +200,7 @@ export default function AdminNotifications() {
                 {previewOpen && (
                     <div className="fixed inset-0 flex items-center justify-center bg-jewel-900/30 backdrop-blur-sm">
                         <div className="bg-jewel-50 p-6 rounded-3xl border border-jewel-400/20 shadow-jewel w-[min(800px,95%)]">
-                            <h2 className="text-lg font-display font-bold text-jewel-900 mb-2">Preview</h2>
+                            <h2 className="text-lg font-display font-bold text-jewel-900 mb-2">{t("admin.notifications.preview")}</h2>
                             {subject && <div className="font-bold text-jewel-900 mb-1">{subject}</div>}
                             <div className="mb-4 text-jewel-800">{message}</div>
                             <div className="text-sm text-jewel-500 mb-4">
@@ -206,7 +208,7 @@ export default function AdminNotifications() {
                             </div>
                             <div className="flex gap-2 justify-end">
                                 <Button variant="secondary" onClick={() => setPreviewOpen(false)}>
-                                    Close
+                                    {t("admin.notifications.close")}
                                 </Button>
                                 <Button
                                     onClick={() => {
@@ -214,7 +216,7 @@ export default function AdminNotifications() {
                                         send();
                                     }}
                                 >
-                                    Send
+                                    {t("admin.notifications.send")}
                                 </Button>
                             </div>
                         </div>

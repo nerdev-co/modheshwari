@@ -6,6 +6,7 @@ import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { useToast } from "@repo/ui/toast";
 
 import { API_BASE } from "../../../lib/config";
+import { useLocale } from "../../../lib/LocaleContext";
 
 /**
  * Performs  member signup page operation.
@@ -13,6 +14,7 @@ import { API_BASE } from "../../../lib/config";
  */
 export default function MemberSignupPage() {
     const { toast } = useToast();
+    const { t } = useLocale();
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -43,10 +45,10 @@ export default function MemberSignupPage() {
             if (data.status === "success") {
                 setSubmitted(true);
             } else {
-                toast(data.message || "Signup failed", { variant: "error" });
+                toast(data.message || t("signup.fm.signupFailed"), { variant: "error" });
             }
         } catch {
-            toast("Something went wrong", { variant: "error" });
+            toast(t("signup.fm.somethingWentWrong"), { variant: "error" });
         } finally {
             setLoading(false);
         }
@@ -62,33 +64,33 @@ export default function MemberSignupPage() {
                         <>
                             <div className="mb-8 text-center">
                                 <h1 className="text-3xl font-display font-bold bg-gradient-to-r from-jewel-900 to-jewel-700 bg-clip-text text-transparent tracking-tight">
-                                    Join a Family
+                                    {t("signup.fm.heading")}
                                 </h1>
                                 <p className="text-sm text-jewel-600 mt-2">
-                                    Your request will be sent to the family head for approval
+                                    {t("signup.fm.subtitle")}
                                 </p>
                             </div>
 
                             <form onSubmit={handleSubmit} className="space-y-5">
                                 <Input
-                                    label="Full Name"
-                                    placeholder="Your full name"
+                                    label={t("signup.fm.fullNameLabel")}
+                                    placeholder={t("signup.fm.fullNamePlaceholder")}
                                     value={form.name}
                                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                                 />
 
                                 <Input
-                                    label="Email"
+                                    label={t("signup.fm.emailLabel")}
                                     type="email"
-                                    placeholder="you@example.com"
+                                    placeholder={t("signup.fm.emailPlaceholder")}
                                     value={form.email}
                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                                 />
 
                                 <Input
-                                    label="Password"
+                                    label={t("signup.fm.passwordLabel")}
                                     type="password"
-                                    placeholder="••••••••"
+                                    placeholder={t("signup.fm.passwordPlaceholder")}
                                     value={form.password}
                                     onChange={(e) =>
                                         setForm({ ...form, password: e.target.value })
@@ -96,8 +98,8 @@ export default function MemberSignupPage() {
                                 />
 
                                 <Input
-                                    label="Family ID"
-                                    placeholder="Provided by family head"
+                                    label={t("signup.fm.familyIdLabel")}
+                                    placeholder={t("signup.fm.familyIdPlaceholder")}
                                     value={form.familyId}
                                     onChange={(e) =>
                                         setForm({ ...form, familyId: e.target.value })
@@ -105,8 +107,8 @@ export default function MemberSignupPage() {
                                 />
 
                                 <Input
-                                    label="Relation (optional)"
-                                    placeholder="Son, Daughter, Relative…"
+                                    label={t("signup.fm.relationLabel")}
+                                    placeholder={t("signup.fm.relationPlaceholder")}
                                     value={form.relationWithFamilyHead}
                                     onChange={(e) =>
                                         setForm({
@@ -121,14 +123,14 @@ export default function MemberSignupPage() {
                                     disabled={loading}
                                     className="w-full mt-4"
                                 >
-                                    {loading ? "Submitting Request…" : "Request to Join"}
+                                    {loading ? t("signup.fm.submittingRequest") : t("signup.fm.requestToJoin")}
                                 </Button>
                             </form>
 
                             <p className="text-xs text-jewel-500 text-center mt-6">
-                                Already approved?{" "}
+                                {t("signup.fm.alreadyApproved")}{" "}
                                 <a href="/signin" className="text-jewel-gold hover:text-jewel-500 font-medium transition-colors">
-                                    Sign in
+                                    {t("signup.fm.signIn")}
                                 </a>
                             </p>
                         </>
@@ -173,16 +175,17 @@ function Input({
  * @returns {React.JSX.Element} Description of return value
  */
 function SuccessState() {
+    const { t } = useLocale();
     return (
         <div className="py-14 text-center">
             <div className="w-14 h-14 mx-auto rounded-full bg-jewel-emerald/10 flex items-center justify-center mb-4">
                 <span className="text-jewel-emerald text-2xl">✓</span>
             </div>
-            <h2 className="text-2xl font-display font-bold text-jewel-900">Request Sent</h2>
+            <h2 className="text-2xl font-display font-bold text-jewel-900">{t("signup.fm.requestSentHeading")}</h2>
             <p className="text-sm text-jewel-600 mt-2">
-                The family head will review your request.
+                {t("signup.fm.requestSentDescription")}
                 <br />
-                You&apos;ll be able to sign in once approved.
+                {t("signup.fm.requestSentSubtext")}
             </p>
         </div>
     );

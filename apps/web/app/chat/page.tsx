@@ -7,6 +7,7 @@ import { Button } from "@repo/ui/button";
 
 import { API_BASE } from "../../lib/config";
 import { apiFetch } from "../../lib/api";
+import { useLocale } from "../../lib/LocaleContext";
 
 type Conversation = {
     id: string;
@@ -32,6 +33,7 @@ type Message = {
  * @returns {React.JSX.Element} Description of return value
  */
 export default function ChatPage() {
+    const { t } = useLocale();
     const [personal, setPersonal] = useState<Conversation[]>([]);
     const [familyChat, setFamilyChat] = useState<Conversation | null>(null);
     const [selected, setSelected] = useState<Conversation | null>(null);
@@ -352,9 +354,9 @@ export default function ChatPage() {
                         {/* Sidebar */}
                         <div className="md:col-span-1 border-b md:border-b-0 md:border-r border-jewel-400/20 bg-jewel-100/40">
                             <div className="p-5">
-                                <h3 className="text-lg font-display font-bold text-jewel-900 tracking-tight">Chats</h3>
+                                <h3 className="text-lg font-display font-bold text-jewel-900 tracking-tight">{t("chat.title")}</h3>
                                 <p className="text-xs text-jewel-500 mt-1">
-                                    Personal + Family conversations
+                                    {t("chat.subtitle")}
                                 </p>
                             </div>
 
@@ -362,7 +364,7 @@ export default function ChatPage() {
                                 {personal.map((c) => {
                                     const title =
                                         c.participants?.map((p) => p.name || p.id).join(", ") ||
-                                        "Conversation";
+                                        t("chat.conversation");
                                     const isActive = selected?.id === c.id;
 
                                     return (
@@ -384,7 +386,7 @@ export default function ChatPage() {
                                                         {title}
                                                     </div>
                                                     <div className="text-xs text-jewel-500 truncate mt-1">
-                                                        {c.lastMessage || "No messages yet"}
+                                                        {c.lastMessage || t("chat.noMessagesYet")}
                                                     </div>
                                                 </div>
                                                 {!!c.unreadCount && c.unreadCount > 0 && (
@@ -413,10 +415,10 @@ export default function ChatPage() {
                                          <div className="flex items-center justify-between gap-3">
                                              <div className="min-w-0">
                                                  <div className="font-medium text-jewel-900 truncate">
-                                                     Family Chat
+                                                     {t("chat.familyChat")}
                                                  </div>
                                                  <div className="text-xs text-jewel-500 truncate mt-1">
-                                                     {familyChat.lastMessage || "No messages yet"}
+                                                     {familyChat.lastMessage || t("chat.noMessagesYet")}
                                                  </div>
                                              </div>
                                              {!!familyChat.unreadCount && familyChat.unreadCount > 0 && (
@@ -439,24 +441,24 @@ export default function ChatPage() {
                                         <div>
                                             <div className="text-base font-semibold text-jewel-900">
                                                 {selected === familyChat
-                                                    ? "Family Chat"
+                                                    ? t("chat.familyChat")
                                                     : selected.participants
                                                         ?.map((p) => p.name || p.id)
                                                         .join(", ")}
                                             </div>
                                             <div className="text-xs text-jewel-500 mt-1">
                                                 {Object.entries(typingUsers).some(([, v]) => v)
-                                                    ? "Someone is typing..."
-                                                    : "Online"}
+                                                    ? t("chat.someoneTyping")
+                                                    : t("chat.online")}
                                             </div>
                                         </div>
                                         <div className="text-xs text-jewel-500">
-                                            {messages.length} messages
+                                            {t("chat.messageCount", { count: messages.length })}
                                         </div>
                                     </div>
                                 ) : (
                                     <div className="text-jewel-600 font-medium">
-                                        Select a conversation
+                                        {t("chat.selectConversation")}
                                     </div>
                                 )}
                             </div>
@@ -468,7 +470,7 @@ export default function ChatPage() {
                             >
                                 {!selected ? (
                                     <div className="h-full flex items-center justify-center text-jewel-400">
-                                        Pick a chat from the left
+                                        {t("chat.pickChat")}
                                     </div>
                                 ) : (
                                     messages.map((m) => {
@@ -499,10 +501,10 @@ export default function ChatPage() {
                                                         {m.clientId && (
                                                             <div className="text-[11px] text-jewel-400">
                                                                 {m.status === "sending"
-                                                                    ? "sending…"
+                                                                    ? t("chat.sending")
                                                                     : m.status === "failed"
-                                                                        ? "failed"
-                                                                        : "sent"}
+                                                                        ? t("chat.failed")
+                                                                        : t("chat.sent")}
                                                             </div>
                                                         )}
                                                     </div>
@@ -518,7 +520,7 @@ export default function ChatPage() {
                                                                 onClick={() => retryMessage(m)}
                                                                 className="text-xs px-2 py-0.5 text-jewel-ruby hover:text-jewel-ruby underline h-auto"
                                                             >
-                                                                Retry
+                                                                {t("chat.retry")}
                                                             </Button>
                                                         )}
                                                     </div>
@@ -534,7 +536,7 @@ export default function ChatPage() {
                                 <div className="px-6 pb-2 text-xs text-jewel-400">
                                     {Object.entries(typingUsers)
                                         .filter(([, v]) => v)
-                                        .map(([k]) => `${k} typing...`)
+                                        .map(([k]) => `${k} ${t("chat.typing")}`)
                                         .join(" ")}
                                 </div>
                             )}
@@ -546,7 +548,7 @@ export default function ChatPage() {
                                         <input
                                             value={input}
                                             onChange={(e) => onInputChange(e.target.value)}
-                                            placeholder="Type a message..."
+                                            placeholder={t("chat.typeMessage")}
                                             className="flex-1 px-4 py-3 rounded-2xl bg-white/60 border border-jewel-400/30 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
                                             onKeyDown={(e) => {
                                                 if (e.key === "Enter") sendMessage();
@@ -555,7 +557,7 @@ export default function ChatPage() {
                                         <Button
                                             onClick={sendMessage}
                                         >
-                                            Send
+                                            {t("chat.send")}
                                         </Button>
                                     </div>
                                 </div>

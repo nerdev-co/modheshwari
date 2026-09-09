@@ -8,12 +8,14 @@ import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 
 import apiFetch from "../../../lib/api";
+import { useLocale } from "../../../lib/LocaleContext";
 
 /**
  * Performs  create event page operation.
  * @returns {React.JSX.Element} Description of return value
  */
 export default function CreateEventPage() {
+  const { t } = useLocale();
   const navigate = useNavigate();
   const [hydrated, setHydrated] = useState(false);
   const [token, setToken] = useState<string | null>(null);
@@ -71,21 +73,20 @@ export default function CreateEventPage() {
       <div className="max-w-2xl mx-auto">
         <Button variant="ghost" onClick={() => navigate(-1)}>
           <ArrowLeft className="w-4 h-4" />
-          Back
+          {t("events.create.back")}
         </Button>
 
         <div className="mb-8">
-          <h1 className="text-3xl font-display font-bold text-jewel-900 tracking-tight">Create Event</h1>
+          <h1 className="text-3xl font-display font-bold text-jewel-900 tracking-tight">{t("events.create.title")}</h1>
           <p className="text-sm text-jewel-500 mt-1">
-            Create a new community event. It will require admin approval before
-            being published.
+            {t("events.create.description")}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-jewel-700 mb-2">
-              Event Name *
+              {t("events.create.nameLabel")}
             </label>
             <div className="relative">
               <FileText className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
@@ -96,7 +97,7 @@ export default function CreateEventPage() {
                 required
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Annual Community Gathering"
+                placeholder={t("events.create.namePlaceholder")}
                 className="w-full pl-11 pr-4 py-3 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
               />
             </div>
@@ -104,7 +105,7 @@ export default function CreateEventPage() {
 
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-jewel-700 mb-2">
-              Description
+              {t("events.create.descriptionLabel")}
             </label>
             <textarea
               id="description"
@@ -112,14 +113,14 @@ export default function CreateEventPage() {
               rows={4}
               value={formData.description}
               onChange={handleChange}
-              placeholder="Tell us about your event..."
+              placeholder={t("events.create.descriptionPlaceholder")}
               className="w-full px-4 py-3 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all resize-none"
             />
           </div>
 
           <div>
             <label htmlFor="date" className="block text-sm font-medium text-jewel-700 mb-2">
-              Date & Time *
+              {t("events.create.dateLabel")}
             </label>
             <div className="relative">
               <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
@@ -137,7 +138,7 @@ export default function CreateEventPage() {
 
           <div>
             <label htmlFor="venue" className="block text-sm font-medium text-jewel-700 mb-2">
-              Venue
+              {t("events.create.venueLabel")}
             </label>
             <div className="relative">
               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
@@ -147,7 +148,7 @@ export default function CreateEventPage() {
                 name="venue"
                 value={formData.venue}
                 onChange={handleChange}
-                placeholder="Community Hall, Main Street"
+                placeholder={t("events.create.venuePlaceholder")}
                 className="w-full pl-11 pr-4 py-3 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
               />
             </div>
@@ -161,8 +162,7 @@ export default function CreateEventPage() {
 
           <div className="p-4 bg-jewel-gold/10 border border-jewel-gold/30 rounded-xl">
             <p className="text-sm text-jewel-700">
-              <strong>Note:</strong> Your event will be sent for approval to
-              community admins. You&apos;ll be notified once it&apos;s reviewed.
+              <strong>{t("events.create.note")}</strong> {t("events.create.noteDescription")}
             </p>
           </div>
 
@@ -173,7 +173,7 @@ export default function CreateEventPage() {
               onClick={() => navigate(-1)}
               className="flex-1"
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               type="submit"
@@ -183,10 +183,10 @@ export default function CreateEventPage() {
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <Loader className="w-4 h-4 animate-spin" />
-                  Creating...
+                  {t("events.create.creating")}
                 </span>
               ) : (
-                "Create Event"
+                t("events.create.createEvent")
               )}
             </Button>
           </div>

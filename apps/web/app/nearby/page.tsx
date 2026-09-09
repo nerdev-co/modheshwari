@@ -7,6 +7,7 @@ import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 
 import apiFetch from "../../lib/api";
 import { API_BASE } from "../../lib/config";
+import { useLocale } from "../../lib/LocaleContext";
 
 interface NearbyUser {
   id: string;
@@ -37,6 +38,7 @@ function Meta({ label, value }: { label: string; value: string }) {
  */
 export default function NearbyPage() {
   const navigate = useNavigate();
+  const { t } = useLocale();
   const [users, setUsers] = useState<NearbyUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -90,7 +92,7 @@ export default function NearbyPage() {
   if (loading) {
     return (
       <DreamySunsetBackground className="flex items-center justify-center min-h-screen">
-        <LoaderFour text="Finding nearby members..." />
+        <LoaderFour text={t("nearby.findingMembers")} />
       </DreamySunsetBackground>
     );
   }
@@ -100,14 +102,14 @@ export default function NearbyPage() {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <section className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6">
-          <h1 className="text-2xl font-display font-bold text-jewel-900">Nearby Members</h1>
+          <h1 className="text-2xl font-display font-bold text-jewel-900">{t("nearby.title")}</h1>
           <p className="text-sm text-jewel-500 mt-1">
-            People around you based on location
+            {t("nearby.description")}
           </p>
 
           <div className="mt-6">
             <div className="flex justify-between text-sm mb-1">
-              <span className="text-jewel-500">Search radius</span>
+              <span className="text-jewel-500">{t("nearby.searchRadius")}</span>
               <span className="font-medium text-jewel-800">{radiusKm} km</span>
             </div>
 
@@ -132,7 +134,7 @@ export default function NearbyPage() {
         {/* Empty */}
         {!error && users.length === 0 && (
           <section className="mt-6 border border-jewel-400/20 rounded-xl p-6 text-sm text-jewel-400 bg-jewel-50/60">
-            No nearby members found.
+            {t("nearby.noMembers")}
           </section>
         )}
 
@@ -159,8 +161,8 @@ export default function NearbyPage() {
                   <h2 className="font-display font-semibold text-jewel-900">{u.name}</h2>
 
                   <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
-                    <Meta label="Distance" value={`${u.distanceKm} km`} />
-                    {u.phone && <Meta label="Phone" value={u.phone} />}
+                    <Meta label={t("nearby.distance")} value={`${u.distanceKm} km`} />
+                    {u.phone && <Meta label={t("nearby.phone")} value={u.phone} />}
                   </div>
                 </div>
               </div>

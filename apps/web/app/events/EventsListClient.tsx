@@ -20,6 +20,7 @@ import { useToast } from "@repo/ui/toast";
 
 import { API_BASE } from "../../lib/config";
 import apiFetch from "../../lib/api";
+import { useLocale } from "../../lib/LocaleContext";
 
 type Event = {
   id: string;
@@ -50,6 +51,7 @@ async (url: string) => {
  * @returns {any} Description of return value
  */
 export default function EventsListClient() {
+  const { t } = useLocale();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [hydrated, setHydrated] = useState(false);
@@ -104,9 +106,9 @@ export default function EventsListClient() {
     status: "APPROVED" | "REJECTED",
   ) => {
     e.stopPropagation();
-    if (!token || !isAdmin) return toast("Not authorized", { variant: "warning" });
+    if (!token || !isAdmin) return toast(t("events.list.toastNotAuthorized"), { variant: "warning" });
 
-    const remarks = window.prompt("Optional remarks / suggested changes:", "") || undefined;
+    const remarks = window.prompt(t("events.list.moderationPrompt"), "") || undefined;
     setModeratingId(id);
     try {
       await apiFetch(`${API_BASE}/events/${id}/approve`, {
@@ -114,10 +116,10 @@ export default function EventsListClient() {
         body: JSON.stringify({ status, remarks }),
       });
       mutate(key);
-      toast(`Moderation recorded: ${status}`, { variant: "success" });
+      toast(t("events.list.toastModerationRecorded", { status }), { variant: "success" });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      toast(msg || "Moderation failed", { variant: "error" });
+      toast(msg || t("events.list.toastModerationFailed"), { variant: "error" });
     } finally {
       setModeratingId(null);
     }
@@ -125,10 +127,10 @@ export default function EventsListClient() {
 
   const getStatusConfig = (status: string) => {
     const map: Record<string, { label: string; classes: string }> = {
-      APPROVED: { label: "Approved", classes: "bg-jewel-emerald/15 text-jewel-emerald border-jewel-emerald/30" },
-      PENDING: { label: "Pending", classes: "bg-jewel-gold/15 text-jewel-gold border-jewel-gold/30" },
-      REJECTED: { label: "Rejected", classes: "bg-jewel-ruby/15 text-jewel-ruby border-jewel-ruby/30" },
-      CANCELLED: { label: "Cancelled", classes: "bg-jewel-400/15 text-jewel-600 border-jewel-400/30" },
+      APPROVED: { label: t("events.list.statusApproved"), classes: "bg-jewel-emerald/15 text-jewel-emerald border-jewel-emerald/30" },
+      PENDING: { label: t("events.list.statusPending"), classes: "bg-jewel-gold/15 text-jewel-gold border-jewel-gold/30" },
+      REJECTED: { label: t("events.list.statusRejected"), classes: "bg-jewel-ruby/15 text-jewel-ruby border-jewel-ruby/30" },
+      CANCELLED: { label: t("events.list.statusCancelled"), classes: "bg-jewel-400/15 text-jewel-600 border-jewel-400/30" },
     };
     return map[status] || { label: status, classes: "bg-jewel-400/15 text-jewel-600 border-jewel-400/30" };
   };
@@ -141,8 +143,8 @@ export default function EventsListClient() {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-display font-bold text-jewel-900 tracking-tight">Events</h1>
-            <p className="text-sm text-jewel-500 mt-1">Browse and register for community events</p>
+            <h1 className="text-3xl font-display font-bold text-jewel-900 tracking-tight">{t("events.list.title")}</h1>
+            <p className="text-sm text-jewel-500 mt-1">{t("events.list.description")}</p>
           </div>
           <div className="flex items-center gap-3">
             <Button
@@ -150,17 +152,17 @@ export default function EventsListClient() {
               onClick={() => navigate("/events/calendar")}
             >
               <Calendar className="w-4 h-4" />
-              Calendar
+              {t("events.list.calendar")}
             </Button>
             <Button onClick={() => navigate("/events/create")}>
               <Plus className="w-4 h-4" />
-              Create
+              {t("events.list.create")}
             </Button>
           </div>
         </div>
 
         <div className="flex gap-2 mb-6">
-          {[{ label: "Approved", value: "approved" as const }, { label: "Pending", value: "pending" as const }, { label: "All", value: "all" as const }].map((f) => (
+          {[{ label: t("events.list.filterApproved"), value: "approved" as const }, { label: t("events.list.filterPending"), value: "pending" as const }, { label: t("events.list.filterAll"), value: "all" as const }].map((f) => (
             <Button
               key={f.value}
               variant="secondary"
@@ -182,11 +184,11 @@ export default function EventsListClient() {
         ) : events.length === 0 ? (
           <div className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-12 text-center">
             <Calendar className="w-16 h-16 text-jewel-400 mx-auto mb-4" />
-            <h3 className="text-xl font-display font-bold text-jewel-900 mb-2">No events found</h3>
-            <p className="text-sm text-jewel-500 mb-6">{filter === "approved" ? "No approved events at the moment. Check back later!" : "Try adjusting your filters or create a new event."}</p>
+            <h3 className="text-xl font-display font-bold text-jewel-900 mb-2">{t("events.list.noEvents")}</h3>
+            <p className="text-sm text-jewel-500 mb-6">{filter === "approved" ? t("events.list.noApprovedEvents") : t("events.list.adjustFilters")}</p>
             <Button onClick={() => navigate("/events/create")}>
               <Plus className="w-4 h-4" />
-              Create New Event
+              {t("events.list.createNewEvent")}
             </Button>
           </div>
         ) : (
@@ -222,7 +224,7 @@ export default function EventsListClient() {
                   <div className="mt-4 pt-4 border-t border-jewel-400/20 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-jewel-gold/15 border border-jewel-gold/25 flex items-center justify-center text-jewel-deep font-bold">{initial}</div>
-                      <p className="text-xs text-jewel-500">Organized by <span className="text-jewel-700 font-medium">{event.createdBy.name}</span></p>
+                      <p className="text-xs text-jewel-500">{t("events.list.organizedBy")} <span className="text-jewel-700 font-medium">{event.createdBy.name}</span></p>
                     </div>
                     <div className="flex items-center gap-2">
                       {isAdmin && (

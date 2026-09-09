@@ -4,6 +4,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { Bug, HelpCircle, Lightbulb, MessageSquare, Send } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { useLocale } from "../../lib/LocaleContext";
 
 type ContactType = "question" | "bug" | "feature" | "feedback";
 
@@ -28,6 +29,7 @@ const INITIAL_FORM_STATE: ContactFormState = {
  * @returns {React.JSX.Element} Description of return value
  */
 export default function ContactPage() {
+    const { t } = useLocale();
     const [formData, setFormData] = useState(INITIAL_FORM_STATE);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
@@ -60,10 +62,10 @@ export default function ContactPage() {
     };
 
     const contactTypes = [
-        { value: "question" as const, label: "Question", icon: HelpCircle },
-        { value: "bug" as const, label: "Bug", icon: Bug },
-        { value: "feature" as const, label: "Feature", icon: Lightbulb },
-        { value: "feedback" as const, label: "Feedback", icon: MessageSquare },
+        { value: "question" as const, label: t("contact.typeQuestion"), icon: HelpCircle },
+        { value: "bug" as const, label: t("contact.typeBug"), icon: Bug },
+        { value: "feature" as const, label: t("contact.typeFeature"), icon: Lightbulb },
+        { value: "feedback" as const, label: t("contact.typeFeedback"), icon: MessageSquare },
     ];
 
     return (
@@ -72,13 +74,13 @@ export default function ContactPage() {
                 {/* Header */}
                 <div className="text-center mb-14 space-y-4">
                     <span className="inline-block px-4 py-1.5 rounded-full bg-jewel-100/60 border border-jewel-400/20 text-sm text-jewel-600">
-                        We&apos;re listening
+                        {t("contact.badge")}
                     </span>
                     <h1 className="text-5xl font-display font-bold tracking-tight bg-gradient-to-r from-jewel-900 to-jewel-700 bg-clip-text text-transparent">
-                        Contact Support
+                        {t("contact.heading")}
                     </h1>
                     <p className="text-jewel-600 max-w-xl mx-auto">
-                        Questions, bugs, feature requests, or feedback — send it straight to us.
+                        {t("contact.subtitle")}
                     </p>
                 </div>
 
@@ -116,10 +118,10 @@ export default function ContactPage() {
                                 <Send className="w-7 h-7 text-jewel-emerald" />
                             </div>
                             <h2 className="mt-6 text-2xl font-display font-bold text-jewel-900">
-                                Message sent successfully
+                                {t("contact.successHeading")}
                             </h2>
                             <p className="text-jewel-600 mt-2">
-                                Our team will get back to you shortly.
+                                {t("contact.successDescription")}
                             </p>
                         </div>
                     ) : (
@@ -127,19 +129,19 @@ export default function ContactPage() {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <Input
                                     name="name"
-                                    placeholder="Your name"
+                                    placeholder={t("contact.namePlaceholder")}
                                     value={formData.name}
                                     onChange={handleChange}
                                 />
                                 <Input
                                     name="email"
-                                    placeholder="Email address"
+                                    placeholder={t("contact.emailPlaceholder")}
                                     value={formData.email}
                                     onChange={handleChange}
                                 />
                                 <Input
                                     name="subject"
-                                    placeholder="Subject"
+                                    placeholder={t("contact.subjectPlaceholder")}
                                     value={formData.subject}
                                     onChange={handleChange}
                                 />
@@ -148,7 +150,7 @@ export default function ContactPage() {
                             <textarea
                                 name="message"
                                 rows={6}
-                                placeholder="Write your message..."
+                                placeholder={t("contact.messagePlaceholder")}
                                 value={formData.message}
                                 onChange={handleChange}
                                 className="w-full rounded-xl bg-jewel-50/50 border border-jewel-400/30 px-4 py-3 text-sm text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all resize-none"
@@ -159,7 +161,7 @@ export default function ContactPage() {
                                 disabled={!isFormValid || isSubmitting}
                                 className="w-full"
                             >
-                                {isSubmitting ? "Sending…" : "Send Message"}
+                                {isSubmitting ? t("contact.sending") : t("contact.sendMessage")}
                             </Button>
                         </div>
                     )}

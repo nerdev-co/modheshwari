@@ -9,6 +9,7 @@ import { Button } from "@repo/ui/button";
 import apiFetch from "../../../lib/api";
 import { API_BASE } from "../../../lib/config";
 import { useUser } from "../../../lib/UserContext";
+import { useLocale } from "../../../lib/LocaleContext";
 
 type EventItem = {
   id: string;
@@ -42,6 +43,7 @@ function endOfMonth(d: Date) {
  * @returns {any} Description of return value
  */
 export default function EventsCalendar() {
+  const { t } = useLocale();
   const { user, loading: authLoading } = useUser();
   const [current, setCurrent] = useState(() => startOfMonth(new Date()));
   const [events, setEvents] = useState<EventItem[]>([]);
@@ -118,7 +120,7 @@ export default function EventsCalendar() {
     return () => controller.abort();
   }, [base, current]);
 
-  if (authLoading) return <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center"><p className="text-jewel-500">Loading...</p></DreamySunsetBackground>;
+  if (authLoading) return <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center"><p className="text-jewel-500">{t("events.calendar.loading")}</p></DreamySunsetBackground>;
   if (!user) return null;
 
   const firstDayIndex = monthStart.getDay();
@@ -162,6 +164,8 @@ export default function EventsCalendar() {
     }
   });
 
+  const dayKeys = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
+
   return (
     <DreamySunsetBackground className="px-6 py-10">
       <div className="max-w-6xl mx-auto">
@@ -172,10 +176,10 @@ export default function EventsCalendar() {
               <CalIcon className="w-6 h-6 text-jewel-gold" />
               <div>
                 <h1 className="text-2xl md:text-3xl font-display font-bold text-jewel-900">
-                  Events Calendar
+                  {t("events.calendar.title")}
                 </h1>
                 <p className="text-sm text-jewel-500">
-                  Browse upcoming community events by date
+                  {t("events.calendar.description")}
                 </p>
               </div>
             </div>
@@ -221,8 +225,8 @@ export default function EventsCalendar() {
           <div className="lg:flex lg:gap-6">
             <div className="flex-1 min-w-0">
               <div className="grid grid-cols-7 gap-2 text-xs font-semibold tracking-wide text-jewel-500 mb-3">
-                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-                  <div key={d} className="text-center">{d}</div>
+                {dayKeys.map((d) => (
+                  <div key={d} className="text-center">{t(`events.calendar.${d}`)}</div>
                 ))}
               </div>
 
@@ -269,7 +273,9 @@ export default function EventsCalendar() {
                       {dayEvents.length > 0 && (
                         <div className="absolute top-2 left-2">
                           <div className="text-[11px] px-2 py-0.5 rounded-full bg-jewel-gold/15 text-jewel-gold border border-jewel-gold/25">
-                            {dayEvents.length} event{dayEvents.length > 1 ? "s" : ""}
+                            {dayEvents.length === 1
+                              ? t("events.calendar.eventCount_one", { count: dayEvents.length })
+                              : t("events.calendar.eventCount_other", { count: dayEvents.length })}
                           </div>
                         </div>
                       )}
@@ -291,7 +297,7 @@ export default function EventsCalendar() {
                         <div className="mt-auto space-y-1">
                           {dayEvents.length > 1 && (
                             <div className="text-[11px] text-jewel-400">
-                              +{dayEvents.length - 1} more
+                              {t("events.calendar.moreCount", { count: dayEvents.length - 1 })}
                             </div>
                           )}
                         </div>
@@ -313,7 +319,7 @@ export default function EventsCalendar() {
                           month: "short",
                           day: "numeric",
                         })
-                      : "Upcoming events"}
+                      : t("events.calendar.upcomingEvents")}
                   </h3>
                   <Button
                     variant="ghost"
@@ -321,7 +327,7 @@ export default function EventsCalendar() {
                     onClick={() => navigate("/events")}
                     className="text-xs text-jewel-gold hover:text-jewel-500 hover:underline"
                   >
-                    View all
+                    {t("events.calendar.viewAll")}
                   </Button>
                 </div>
 
@@ -348,7 +354,7 @@ export default function EventsCalendar() {
                           variant="secondary"
                           onClick={() => navigate(`/events/${ev.id}`)}
                         >
-                          Open
+                          {t("events.calendar.open")}
                         </Button>
                       </div>
                     </div>
@@ -356,7 +362,7 @@ export default function EventsCalendar() {
 
                   {selectedDate &&
                     (eventsByDay.get(selectedDate.toISOString().slice(0, 10)) || []).length === 0 && (
-                      <div className="text-sm text-jewel-400">No events on this day</div>
+                      <div className="text-sm text-jewel-400">{t("events.calendar.noEventsOnDay")}</div>
                     )}
                 </div>
               </div>
@@ -364,7 +370,7 @@ export default function EventsCalendar() {
           </div>
 
           {loading && (
-            <div className="mt-4 text-sm text-jewel-400">Loading events...</div>
+            <div className="mt-4 text-sm text-jewel-400">{t("events.calendar.loadingEvents")}</div>
           )}
         </div>
       </div>
