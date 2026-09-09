@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 import { useUser } from "../lib/UserContext";
-import { ROLE_COLORS } from "../lib/constants";
+import { ROLE_COLORS, ROLE_COLORS_CSS } from "../lib/constants";
 import Tooltip from "./Tooltip";
 import useNotifications from "../hooks/useNotifications";
 import { ThemeToggle } from "./ThemeToggle";
@@ -149,7 +149,7 @@ export default function NavBar() {
                   aria-label={t("nav.profile")}
                   className="h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-jewel-900
                     hover:scale-[1.05] transition-transform duration-fast"
-                  style={{ background: ROLE_COLORS[user.role] || "#a8a29e" }}
+                  style={{ background: ROLE_COLORS_CSS[user.role] || "var(--jewel-400)" }}
                 >
                   {initials}
                 </button>

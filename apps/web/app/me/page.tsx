@@ -8,7 +8,7 @@ import { Card } from "@repo/ui/card";
 import { formatBloodGroup } from "@modheshwari/utils/format";
 
 import { useUser } from "../../lib/UserContext";
-import { ROLE_COLORS } from "../../lib/constants";
+import { ROLE_COLORS, ROLE_COLORS_CSS } from "../../lib/constants";
 import { useLocale } from "../../lib/LocaleContext";
 
 /**
@@ -78,7 +78,7 @@ export default function MePage() {
         <section className="flex items-center gap-6 py-8 border-b border-jewel-400/20 mb-8">
           <div
             className="h-20 w-20 rounded-full flex items-center justify-center text-2xl font-bold text-jewel-deep shadow-lg"
-            style={{ background: ROLE_COLORS[user.role] || "#78716c" }}
+            style={{ background: ROLE_COLORS_CSS[user.role] || "var(--jewel-400)" }}
           >
             {initials}
           </div>
