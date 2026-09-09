@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 
 import { API_BASE } from "../../../lib/config";
 import { apiFetch } from "../../../lib/api";
+import { useUser } from "../../../lib/UserContext";
 
 type MedicalRecord = {
   id: string;
@@ -39,11 +41,20 @@ const EMPTY_FORM: FormState = {
  * @returns {any} Description of return value
  */
 export default function MedicalRecordsPage() {
+  const { user, loading } = useUser();
+  const navigate = useNavigate();
   const [records, setRecords] = useState<MedicalRecord[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!loading && !user) navigate("/signin");
+  }, [user, loading, navigate]);
+
+  if (loading) return <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center"><p className="text-jewel-500">Loading...</p></DreamySunsetBackground>;
+  if (!user) return null;
 
   const hasAnyFormValue = useMemo(() => {
     return Object.values(form).some((v) => v.trim().length > 0);
@@ -51,7 +62,7 @@ export default function MedicalRecordsPage() {
 
   const loadRecords = useCallback(async (signal?: AbortSignal) => {
     setError(null);
-    setLoading(true);
+    setLoadingData(true);
 
     try {
       const res = await apiFetch(`${API_BASE}/medical-records`, {
@@ -66,7 +77,7 @@ export default function MedicalRecordsPage() {
       console.error(e);
       setError("Could not load medical records.");
     } finally {
-      setLoading(false);
+      setLoadingData(false);
     }
   }, []);
 
@@ -169,7 +180,7 @@ export default function MedicalRecordsPage() {
 
         <h2 className="text-lg font-display font-bold text-jewel-900 mb-3">Your Records</h2>
 
-        {loading ? (
+        {loadingData ? (
           <p className="text-sm text-jewel-400">Loading...</p>
         ) : records.length === 0 ? (
           <p className="text-sm text-jewel-400">No records yet.</p>

@@ -1,19 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 
 import SearchInput from "./SearchInput";
+import { useUser } from "../../lib/UserContext";
 
 /**
  * Performs  search page operation.
  * @returns {React.JSX.Element} Description of return value
  */
 export default function SearchPage() {
+  const { user, loading } = useUser();
+  const navigate = useNavigate();
   const [focusTrigger, setFocusTrigger] = useState(0);
   const [isMac, setIsMac] = useState(false);
+
+  useEffect(() => {
+    if (!loading && !user) navigate("/signin");
+  }, [user, loading, navigate]);
 
   useEffect(() => {
     setIsMac(navigator.platform.toUpperCase().indexOf("MAC") >= 0);
@@ -29,6 +37,9 @@ export default function SearchPage() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, []);
+
+  if (loading) return <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center"><p className="text-jewel-500">Loading...</p></DreamySunsetBackground>;
+  if (!user) return null;
 
   return (
     <DreamySunsetBackground className="px-6 py-10">

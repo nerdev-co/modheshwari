@@ -8,6 +8,7 @@ import { Button } from "@repo/ui/button";
 
 import apiFetch from "../../../lib/api";
 import { API_BASE } from "../../../lib/config";
+import { useUser } from "../../../lib/UserContext";
 
 type EventItem = {
   id: string;
@@ -41,6 +42,7 @@ function endOfMonth(d: Date) {
  * @returns {any} Description of return value
  */
 export default function EventsCalendar() {
+  const { user, loading: authLoading } = useUser();
   const [current, setCurrent] = useState(() => startOfMonth(new Date()));
   const [events, setEvents] = useState<EventItem[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -50,6 +52,10 @@ export default function EventsCalendar() {
   const navigate = useNavigate();
 
   const lastItemsRef = React.useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!authLoading && !user) navigate("/signin");
+  }, [user, authLoading, navigate]);
 
   const monthStart = startOfMonth(current);
   const monthEnd = endOfMonth(current);
@@ -111,6 +117,9 @@ export default function EventsCalendar() {
     load();
     return () => controller.abort();
   }, [base, current]);
+
+  if (authLoading) return <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center"><p className="text-jewel-500">Loading...</p></DreamySunsetBackground>;
+  if (!user) return null;
 
   const firstDayIndex = monthStart.getDay();
   const daysInMonth = monthEnd.getDate();

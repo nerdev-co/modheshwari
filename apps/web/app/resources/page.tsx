@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Package, Plus, Check, X, Loader2, AlertCircle } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
@@ -52,16 +53,17 @@ function getStatusColor(status: string): string {
  * Performs  resource requests page operation.
  * @returns {React.JSX.Element} Description of return value
  */
-export default function ResourceRequestsPage(): React.JSX.Element {
+export default function ResourceRequestsPage(): React.JSX.Element | null {
   const { toast } = useToast();
-  const { user: me } = useUser();
+  const { user: me, loading } = useUser();
+  const navigate = useNavigate();
   const { t } = useLocale();
   const [resource, setResource] = useState("");
   const [requests, setRequests] = useState<ResourceRequest[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
 
   const fetchRequests = useCallback(async (signal?: AbortSignal) => {
-    setLoading(true);
+    setLoadingData(true);
     try {
       const res = await apiFetch(`${API_BASE}/resource-requests`, {
         throwOnError: false,
@@ -76,7 +78,7 @@ export default function ResourceRequestsPage(): React.JSX.Element {
     } catch {
       setRequests([]);
     } finally {
-      setLoading(false);
+      setLoadingData(false);
     }
   }, []);
 
@@ -85,6 +87,13 @@ export default function ResourceRequestsPage(): React.JSX.Element {
     void fetchRequests(controller.signal);
     return () => controller.abort();
   }, [fetchRequests]);
+
+  useEffect(() => {
+    if (!loading && !me) navigate("/signin");
+  }, [me, loading, navigate]);
+
+  if (loading) return <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center"><p className="text-jewel-500">Loading...</p></DreamySunsetBackground>;
+  if (!me) return null;
 
   async function handleCreate(): Promise<void> {
     try {
@@ -214,7 +223,7 @@ export default function ResourceRequestsPage(): React.JSX.Element {
             </h2>
           </div>
 
-          {loading ? (
+          {loadingData ? (
             <div className="flex flex-col items-center justify-center gap-4 py-20">
               <Loader2 className="w-8 h-8 text-jewel-gold animate-spin" />
               <span className="text-sm text-jewel-400">{t("common.loading")}</span>
