@@ -1,14 +1,17 @@
 import type { RedisClientType } from 'redis';
+import { createClient } from 'redis';
 
 import { REDIS_URL } from './config';
 import { pushToUser } from './utils';
 import { logger } from './logger';
-import getRedisClient from '@modheshwari/redis';
 
 let sub: RedisClientType | null = null;
 
 /**
  * Performs start redis subscriber operation.
+ * Creates a DEDICATED Redis client for subscriptions so the shared
+ * client pool is not put into pub/sub mode (which blocks all other
+ * Redis commands).
  * @param {string} url - Description of url
  * @returns {Promise<void>} Description of return value
  */
@@ -18,8 +21,11 @@ export async function startRedisSubscriber(url = REDIS_URL) {
     return;
   }
 
-  sub = await getRedisClient(url);
-  // getRedisClient manages error handlers
+  sub = createClient({ url });
+  sub.on('error', (err: Error) => {
+    logger.error('Redis subscriber error', err.message);
+  });
+  await sub.connect();
 
   // subscribe to pattern inapp:* for user-specific channels
   await sub.pSubscribe('inapp:*', (message: string, _channel: string) => {
