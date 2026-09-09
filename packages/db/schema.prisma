@@ -106,6 +106,7 @@ model FamilyMember {
   user     User     @relation(fields: [userId], references: [id])
 
   @@unique([familyId, userId, role])
+  @@index([userId])
 }
 
 model UserRelation {
@@ -179,6 +180,10 @@ model Payment {
   Notification Notification[]
   event        Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
   user         User           @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([eventId])
+  @@index([status])
 }
 
 model Resource {
