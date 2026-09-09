@@ -10,6 +10,7 @@ import { useToast } from "@repo/ui/toast";
 import { API_BASE } from "../../lib/config";
 import apiFetch from "../../lib/api";
 import { useUser } from "../../lib/UserContext";
+import { useLocale } from "../../lib/LocaleContext";
 
 interface ResourceRequest {
   id: string;
@@ -54,6 +55,7 @@ function getStatusColor(status: string): string {
 export default function ResourceRequestsPage(): React.JSX.Element {
   const { toast } = useToast();
   const { user: me } = useUser();
+  const { t } = useLocale();
   const [resource, setResource] = useState("");
   const [requests, setRequests] = useState<ResourceRequest[]>([]);
   const [loading, setLoading] = useState(false);
@@ -148,11 +150,11 @@ export default function ResourceRequestsPage(): React.JSX.Element {
               <Package className="w-6 h-6 text-jewel-gold" />
             </div>
             <h1 className="text-4xl font-display font-bold text-jewel-900">
-              Resource Requests
+              {t("resources.title")}
             </h1>
           </div>
           <p className="text-jewel-500">
-            Request, track, and review shared resources
+            {t("resources.description")}
           </p>
         </motion.div>
 
@@ -165,7 +167,7 @@ export default function ResourceRequestsPage(): React.JSX.Element {
         >
           <h2 className="text-lg font-display font-bold text-jewel-900 mb-4 flex items-center gap-2">
             <Plus className="w-5 h-5 text-jewel-gold" />
-            Create New Request
+            {t("resources.createTitle")}
           </h2>
 
           <div className="flex gap-3">
@@ -174,7 +176,7 @@ export default function ResourceRequestsPage(): React.JSX.Element {
               <input
                 value={resource}
                 onChange={(e) => setResource(e.target.value)}
-                placeholder="What resource do you need?"
+                placeholder={t("resources.createPlaceholder")}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && resource.trim()) {
                     e.preventDefault();
@@ -188,7 +190,7 @@ export default function ResourceRequestsPage(): React.JSX.Element {
               onClick={handleCreate}
               disabled={!resource.trim()}
             >
-              Create
+              {t("resources.create")}
             </Button>
           </div>
         </motion.section>
@@ -203,7 +205,7 @@ export default function ResourceRequestsPage(): React.JSX.Element {
           <div className="px-6 py-4 border-b border-jewel-400/20">
             <h2 className="text-lg font-display font-bold text-jewel-900 flex items-center gap-2">
               <Package className="w-5 h-5 text-jewel-gold" />
-              Your Requests
+              {t("resources.yourRequests")}
               {!loading && requests.length > 0 && (
                 <span className="ml-2 px-2 py-0.5 bg-jewel-400/10 text-jewel-600 text-xs rounded-full">
                   {requests.length}
@@ -215,16 +217,16 @@ export default function ResourceRequestsPage(): React.JSX.Element {
           {loading ? (
             <div className="flex flex-col items-center justify-center gap-4 py-20">
               <Loader2 className="w-8 h-8 text-jewel-gold animate-spin" />
-              <span className="text-sm text-jewel-400">Loading requests...</span>
+              <span className="text-sm text-jewel-400">{t("common.loading")}</span>
             </div>
           ) : requests.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-jewel-100/60 mb-4">
                 <Package className="w-8 h-8 text-jewel-400" />
               </div>
-              <p className="text-jewel-500 text-sm mb-2">No requests found</p>
+              <p className="text-jewel-500 text-sm mb-2">{t("resources.noRequests")}</p>
               <p className="text-jewel-400 text-xs">
-                Create your first request to get started
+                {t("resources.noRequestsDesc")}
               </p>
             </div>
           ) : (
@@ -232,10 +234,10 @@ export default function ResourceRequestsPage(): React.JSX.Element {
               <table className="w-full">
                 <thead>
                   <tr className="text-sm text-jewel-500 uppercase tracking-wider">
-                    <th className="px-6 py-4 text-left font-medium">Resource</th>
-                    <th className="px-6 py-4 text-left font-medium">Status</th>
-                    <th className="px-6 py-4 text-left font-medium">Approvals</th>
-                    <th className="px-6 py-4 text-left font-medium">Actions</th>
+                    <th className="px-6 py-4 text-left font-medium">{t("resources.resource")}</th>
+                    <th className="px-6 py-4 text-left font-medium">{t("resources.status")}</th>
+                    <th className="px-6 py-4 text-left font-medium">{t("resources.approvals")}</th>
+                    <th className="px-6 py-4 text-left font-medium">{t("resources.actions")}</th>
                   </tr>
                 </thead>
 
@@ -300,7 +302,7 @@ export default function ResourceRequestsPage(): React.JSX.Element {
                           </div>
                         ) : (
                           <span className="text-xs text-jewel-400">
-                            No approvals yet
+                            {t("resources.noApprovals")}
                           </span>
                         )}
                       </td>
@@ -315,7 +317,7 @@ export default function ResourceRequestsPage(): React.JSX.Element {
                               className="flex items-center gap-1"
                             >
                               <Check className="w-3 h-3" />
-                              Approve
+                              {t("resources.approve")}
                             </Button>
                             <Button
                               variant="danger"
@@ -324,7 +326,7 @@ export default function ResourceRequestsPage(): React.JSX.Element {
                               className="flex items-center gap-1"
                             >
                               <X className="w-3 h-3" />
-                              Reject
+                              {t("resources.reject")}
                             </Button>
                             <Button
                               variant="secondary"
@@ -333,12 +335,12 @@ export default function ResourceRequestsPage(): React.JSX.Element {
                               className="flex items-center gap-1"
                             >
                               <AlertCircle className="w-3 h-3" />
-                              Changes
+                              {t("resources.changes")}
                             </Button>
                           </div>
                         ) : (
                           <span className="text-xs text-jewel-400 italic">
-                            Awaiting review
+                            {t("resources.awaitingReview")}
                           </span>
                         )}
                       </td>

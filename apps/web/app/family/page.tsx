@@ -8,6 +8,7 @@ import { Button } from "@repo/ui/button";
 
 import FamilyPageContent from "./FamilyPageContent";
 import FamilyTreeView from "./FamilyTreeView";
+import { useLocale } from "../../lib/LocaleContext";
 
 /**
  * Performs  family page operation.
@@ -15,12 +16,13 @@ import FamilyTreeView from "./FamilyTreeView";
  */
 export default function FamilyPage(): React.ReactElement {
   const [activeTab, setActiveTab] = useState<"list" | "tree">("list");
+  const { t } = useLocale();
 
   return (
     <DreamySunsetBackground className="px-6 py-10">
       <div className="mb-8">
-        <h1 className="text-4xl font-display font-bold text-jewel-900 tracking-tight">Family Management</h1>
-        <p className="text-jewel-500 mt-2">View your family members and relationships</p>
+        <h1 className="text-4xl font-display font-bold text-jewel-900 tracking-tight">{t("family.title")}</h1>
+        <p className="text-jewel-500 mt-2">{t("family.description")}</p>
       </div>
 
       <div className="mb-6">
@@ -35,7 +37,7 @@ export default function FamilyPage(): React.ReactElement {
             }`}
           >
             <List className="w-4 h-4" />
-            List View
+            {t("family.listView")}
           </Button>
           <Button
             variant="secondary"
@@ -47,7 +49,7 @@ export default function FamilyPage(): React.ReactElement {
             }`}
           >
             <Network className="w-4 h-4" />
-            Tree View
+            {t("family.treeView")}
           </Button>
         </div>
       </div>
