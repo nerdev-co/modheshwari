@@ -67,16 +67,18 @@ export default function EditProfilePage() {
         body: JSON.stringify(formData),
       });
 
-      if (data.status === "success") {
+      if (data?.status === "success") {
         toast(t("edit.updateSuccess"), { variant: "success" });
         const updated = data.data;
         if (updated) updateProfile(updated);
         navigate("/me");
       } else {
-        toast(data.message || t("edit.updateFailed"), { variant: "error" });
+        const msg = data?.message || t("edit.updateFailed");
+        toast(msg, { variant: "error" });
       }
-    } catch {
-      toast(t("edit.updateError"), { variant: "error" });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : t("edit.updateError");
+      toast(msg, { variant: "error" });
     } finally {
       setSaving(false);
     }
