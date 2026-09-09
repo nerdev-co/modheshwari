@@ -7,6 +7,7 @@ import { Button } from "@repo/ui/button";
 import { formatBloodGroup } from "@modheshwari/utils/format";
 
 import { useUser } from "../../lib/UserContext";
+import { ROLE_COLORS } from "../../lib/constants";
 import { useLocale } from "../../lib/LocaleContext";
 
 /**
@@ -66,14 +67,6 @@ export default function MePage() {
     .join("")
     .toUpperCase();
 
-  const roleColors: Record<string, string> = {
-    COMMUNITY_HEAD: "bg-jewel-gold",
-    COMMUNITY_SUBHEAD: "bg-jewel-600",
-    GOTRA_HEAD: "bg-jewel-emerald",
-    FAMILY_HEAD: "bg-jewel-500",
-    MEMBER: "bg-jewel-400",
-  };
-
   const statusChip = user.status ? (
     <span className="inline-flex items-center px-2 py-1 text-xs font-semibold rounded bg-jewel-emerald/20 text-jewel-emerald border border-jewel-emerald/30">
       Active
@@ -90,7 +83,7 @@ export default function MePage() {
         <section className="flex items-center gap-6 py-8 border-b border-jewel-400/20 mb-8">
           <div
             className="h-20 w-20 rounded-full flex items-center justify-center text-2xl font-bold text-jewel-deep shadow-lg"
-            style={{ background: roleColors[user.role] || "#78716c" }}
+            style={{ background: ROLE_COLORS[user.role] || "#78716c" }}
           >
             {initials}
           </div>
@@ -99,7 +92,7 @@ export default function MePage() {
               <h1 className="text-2xl font-display font-semibold text-jewel-900">
                 {user.name}
               </h1>
-              <span className={`px-2 py-1 rounded text-xs font-semibold text-jewel-deep ${roleColors[user.role] || "bg-jewel-400"}`}>
+              <span className={`px-2 py-1 rounded text-xs font-semibold text-jewel-deep ${ROLE_COLORS[user.role] || "bg-jewel-400"}`}>
                 {user.role ? user.role.replace(/_/g, " ") : "Unknown"}
               </span>
               {statusChip}

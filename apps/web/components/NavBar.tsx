@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 
 import { useUser } from "../lib/UserContext";
+import { ROLE_COLORS } from "../lib/constants";
 import Tooltip from "./Tooltip";
 import useNotifications from "../hooks/useNotifications";
 import { ThemeToggle } from "./ThemeToggle";
@@ -67,14 +68,6 @@ export default function NavBar() {
       .slice(0, 2)
       .join("")
       .toUpperCase() ?? "U";
-
-  const roleColors: Record<string, string> = {
-    COMMUNITY_HEAD: "bg-accent",
-    COMMUNITY_SUBHEAD: "bg-jewel-500",
-    GOTRA_HEAD: "bg-emerald",
-    FAMILY_HEAD: "bg-jewel-400",
-    MEMBER: "bg-jewel-300",
-  };
 
   return (
     <>
@@ -156,7 +149,7 @@ export default function NavBar() {
                   aria-label={t("nav.profile")}
                   className="h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-jewel-900
                     hover:scale-[1.05] transition-transform duration-fast"
-                  style={{ background: roleColors[user.role] || "#a8a29e" }}
+                  style={{ background: ROLE_COLORS[user.role] || "#a8a29e" }}
                 >
                   {initials}
                 </button>
@@ -172,7 +165,7 @@ export default function NavBar() {
                       {user.email}
                     </div>
                     <div className="flex items-center gap-2 mt-2">
-                      <span className={`px-2 py-0.5 rounded-lg text-[10px] font-semibold text-jewel-900 ${roleColors[user.role] || "bg-jewel-400"}`}>
+                      <span className={`px-2 py-0.5 rounded-lg text-[10px] font-semibold text-jewel-900 ${ROLE_COLORS[user.role] || "bg-jewel-400"}`}>
                         {user.role ? user.role.replace(/_/g, " ") : "Unknown"}
                       </span>
                       {user.status ? (
