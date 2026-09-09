@@ -111,7 +111,7 @@ export default function NavBar() {
     <Link to={href} aria-label={title}>
       <Tooltip text={title}>
         <div
-          className={`p-2.5 rounded-xl transition-all duration-fast ${
+          className={`min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl transition-all duration-fast ${
             isActive(href)
               ? "bg-accent-muted text-accent"
               : "text-text-secondary hover:text-text-primary hover:bg-surface-muted"
