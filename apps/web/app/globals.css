@@ -181,6 +181,24 @@ body {
   .input::placeholder {
     color: var(--text-muted);
   }
+
+  .input,
+  select {
+    background: var(--surface);
+    border-color: var(--border);
+    color: var(--text-primary);
+  }
+
+  .input:focus,
+  select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-muted);
+  }
+
+  select option {
+    background: var(--surface);
+    color: var(--text-primary);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
