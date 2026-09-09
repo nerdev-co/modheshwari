@@ -5,6 +5,7 @@ import { Network } from "vis-network";
 import { Plus, Loader } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { Card } from "@repo/ui/card";
 
 import { API_BASE } from "../../lib/config";
 import { apiFetch } from "../../lib/api";
@@ -173,7 +174,7 @@ export default function FamilyTreeView() {
         <DreamySunsetBackground className="px-6 py-10">
             <div className="max-w-7xl mx-auto space-y-6">
                 {/* Controls */}
-                <div className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6">
+                <Card className="p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                         {/* View Type */}
                         <div>
@@ -300,19 +301,19 @@ export default function FamilyTreeView() {
                             {error}
                         </div>
                     )}
-                </div>
+                </Card>
 
                 {/* Tree Visualization */}
-                <div className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl overflow-hidden">
+                <Card className="overflow-hidden">
                     <div
                         ref={containerRef}
                         className="w-full bg-jewel-100/40"
                         style={{ height: "600px", minHeight: "600px" }}
                     />
-                </div>
+                </Card>
 
                 {/* Legend */}
-                <div className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6">
+                <Card className="p-6">
                     <h3 className="text-lg font-display font-bold text-jewel-900 mb-4">Legend</h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                         {[
@@ -343,7 +344,7 @@ export default function FamilyTreeView() {
                         <li>Adjust Depth to show more or fewer generations</li>
                         <li>Add relationships using the Add Relation button</li>
                     </ul>
-                </div>
+                </Card>
             </div>
         </DreamySunsetBackground>
     );

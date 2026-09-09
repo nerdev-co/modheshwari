@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LoaderFour } from "@repo/ui/loading";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { Card } from "@repo/ui/card";
 import { formatBloodGroup } from "@modheshwari/utils/format";
 
 import { useUser } from "../../lib/UserContext";
@@ -110,7 +111,7 @@ export default function MePage() {
         </section>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <section className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6">
+          <Card className="p-6">
             <h2 className="text-base font-display font-bold text-jewel-900 mb-4 flex items-center gap-2">
               <span>{t("profile.personalDetails")}</span>
               <span className="text-xs text-jewel-500 font-normal">{t("profile.profileLabel")}</span>
@@ -123,9 +124,9 @@ export default function MePage() {
               <ProfileField label={t("profile.phone")} value={user.profile?.phone} />
               <ProfileField label={t("profile.address")} value={user.profile?.address} />
             </div>
-          </section>
+          </Card>
 
-          <section className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6">
+          <Card className="p-6">
             <h2 className="text-base font-display font-bold text-jewel-900 mb-4 flex items-center gap-2">
               <span>{t("profile.familyMemberships")}</span>
               <span className="text-xs text-jewel-500 font-normal">{t("profile.familiesLabel")}</span>
@@ -152,16 +153,16 @@ export default function MePage() {
                 ))}
               </ul>
             )}
-          </section>
+          </Card>
         </div>
 
-        <section className="mt-8 bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6">
+        <Card className="mt-8 p-6">
           <h2 className="text-base font-display font-bold text-jewel-900 mb-4 flex items-center gap-2">
             <span>{t("profile.activity")}</span>
             <span className="text-xs text-jewel-500 font-normal">{t("profile.recentLabel")}</span>
           </h2>
           <div className="text-jewel-500 text-sm">{t("profile.noActivity")}</div>
-        </section>
+        </Card>
       </div>
     </DreamySunsetBackground>
   );

@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Package, Plus, Check, X, Loader2, AlertCircle } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { Card } from "@repo/ui/card";
 import { useToast } from "@repo/ui/toast";
 
 import { API_BASE } from "../../lib/config";
@@ -166,12 +167,12 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6 mb-8"
         >
-          <h2 className="text-lg font-display font-bold text-jewel-900 mb-4 flex items-center gap-2">
-            <Plus className="w-5 h-5 text-jewel-gold" />
-            {t("resources.createTitle")}
-          </h2>
+          <Card className="p-6 mb-8">
+            <h2 className="text-lg font-display font-bold text-jewel-900 mb-4 flex items-center gap-2">
+              <Plus className="w-5 h-5 text-jewel-gold" />
+              {t("resources.createTitle")}
+            </h2>
 
           <div className="flex gap-3">
             <div className="relative flex-grow">
@@ -196,6 +197,7 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
               {t("resources.create")}
             </Button>
           </div>
+          </Card>
         </motion.section>
 
         {/* Requests Table */}
@@ -203,9 +205,9 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl overflow-hidden"
         >
-          <div className="px-6 py-4 border-b border-jewel-400/20">
+          <Card className="overflow-hidden">
+            <div className="px-6 py-4 border-b border-jewel-400/20">
             <h2 className="text-lg font-display font-bold text-jewel-900 flex items-center gap-2">
               <Package className="w-5 h-5 text-jewel-gold" />
               {t("resources.yourRequests")}
@@ -353,6 +355,7 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
               </table>
             </div>
           )}
+          </Card>
         </motion.section>
       </div>
     </DreamySunsetBackground>

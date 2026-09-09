@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoaderFour } from "@repo/ui/loading";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
+import { Card } from "@repo/ui/card";
 
 import apiFetch from "../../lib/api";
 import { API_BASE } from "../../lib/config";
@@ -92,7 +93,7 @@ export default function NearbyPage() {
     <DreamySunsetBackground className="px-6 py-10">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
-        <section className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6">
+        <Card className="p-6">
           <h1 className="text-2xl font-display font-bold text-jewel-900">{t("nearby.title")}</h1>
           <p className="text-sm text-jewel-500 mt-1">
             {t("nearby.description")}
@@ -113,7 +114,7 @@ export default function NearbyPage() {
               className="w-full accent-jewel-gold"
             />
           </div>
-        </section>
+        </Card>
 
         {/* Error */}
         {error && (
@@ -140,9 +141,9 @@ export default function NearbyPage() {
               .toUpperCase();
 
             return (
-              <div
+              <Card
                 key={u.id}
-                className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6 flex gap-4 items-center"
+                className="p-6 flex gap-4 items-center"
               >
                 <div className="h-14 w-14 rounded-full bg-jewel-gold/20 text-jewel-deep flex items-center justify-center font-semibold">
                   {initials}
@@ -156,7 +157,7 @@ export default function NearbyPage() {
                     {u.phone && <Meta label={t("nearby.phone")} value={u.phone} />}
                   </div>
                 </div>
-              </div>
+              </Card>
             );
           })}
         </section>

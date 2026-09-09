@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { Card } from "@repo/ui/card";
 import { useToast } from "@repo/ui/toast";
 import { formatBloodGroup, toBloodGroupEnum, BLOOD_GROUPS } from "@modheshwari/utils/format";
 
@@ -86,7 +87,7 @@ export default function Medical() {
         </div>
 
         {/* My Medical Info Card */}
-        <div className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-5 mb-8">
+        <Card className="p-5 mb-8">
           <h2 className="text-lg font-display font-bold text-jewel-900 mb-4">{t("medical.myInfo")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -116,10 +117,10 @@ export default function Medical() {
           >
             {t("medical.updateInfo")}
           </Button>
-        </div>
+        </Card>
 
         {/* Search Card */}
-        <div className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-5 mb-8">
+        <Card className="p-5 mb-8">
           <label className="block text-sm text-jewel-700 font-medium mb-2">
             {t("medical.searchTitle")}
           </label>
@@ -163,10 +164,10 @@ export default function Medical() {
               </Button>
             ))}
           </div>
-        </div>
+        </Card>
 
         {/* Results Card */}
-        <div className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl overflow-hidden">
+        <Card className="overflow-hidden">
           <div className="px-5 py-4 border-b border-jewel-400/20">
             <h2 className="text-lg font-display font-bold text-jewel-900">
               {t("medical.results")}
@@ -222,7 +223,7 @@ export default function Medical() {
               </table>
             </div>
           )}
-        </div>
+        </Card>
       </div>
     </DreamySunsetBackground>
   );

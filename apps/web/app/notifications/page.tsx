@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { Card } from "@repo/ui/card";
 import { useToast } from "@repo/ui/toast";
 
 import useNotifications from "../../hooks/useNotifications";
@@ -250,7 +251,7 @@ export default function NotificationsPage(): React.ReactElement {
 
                 {/* Admin Broadcast */}
                 {isAdmin && (
-                    <section className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-8 mb-10">
+                    <Card className="p-8 mb-10">
                         <h2 className="text-2xl font-display font-bold text-jewel-900 mb-2">
                             Broadcast Notification
                         </h2>
@@ -359,11 +360,11 @@ export default function NotificationsPage(): React.ReactElement {
                                 </div>
                             )}
                         </form>
-                    </section>
+                    </Card>
                 )}
 
                 {/* Notifications List */}
-                <section className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl overflow-hidden">
+                <Card className="overflow-hidden">
                     {/* Controls */}
                     <div className="p-4 border-b border-jewel-400/20 flex flex-wrap gap-3 items-center">
                         <select
@@ -470,7 +471,7 @@ export default function NotificationsPage(): React.ReactElement {
                             })}
                         </ul>
                     )}
-                </section>
+                </Card>
             </div>
         </DreamySunsetBackground>
     );
