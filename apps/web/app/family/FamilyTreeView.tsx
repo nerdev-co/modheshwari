@@ -331,7 +331,7 @@ export default function FamilyTreeView() {
                             </div>
                         ))}
                     </div>
-                </div>
+                </Card>
 
                 {/* Instructions */}
                 <div className="bg-jewel-gold/10 border border-jewel-gold/30 rounded-2xl p-4">
@@ -344,7 +344,7 @@ export default function FamilyTreeView() {
                         <li>Adjust Depth to show more or fewer generations</li>
                         <li>Add relationships using the Add Relation button</li>
                     </ul>
-                </Card>
+                </div>
             </div>
         </DreamySunsetBackground>
     );
