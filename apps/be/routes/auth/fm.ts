@@ -132,14 +132,25 @@ export async function handleMemberSignup(req: Request) {
     const hashedPassword = await hashPassword(password);
 
     // --- Step 4: Create the User (role = MEMBER) ---
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        role: "MEMBER",
-        status: true,
-      },
+    const user = await prisma.$transaction(async (tx) => {
+      const u = await tx.user.create({
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+          role: "MEMBER",
+          status: true,
+        },
+      });
+
+      await tx.profile.create({
+        data: {
+          userId: u.id,
+          status: true,
+        },
+      });
+
+      return u;
     });
 
     // --- Step 5: Create Member Invite (Pending approval) ---
