@@ -26,6 +26,23 @@
   --emerald: #10b981;
   --saffron: #f97316;
   --ruby: #ef4444;
+
+  --jewel-50: #fafaf9;
+  --jewel-100: #f5f5f4;
+  --jewel-200: #e7e5e4;
+  --jewel-300: #d6d3d1;
+  --jewel-400: #a8a29e;
+  --jewel-500: #78716c;
+  --jewel-600: #57534e;
+  --jewel-700: #44403c;
+  --jewel-800: #292524;
+  --jewel-900: #1c1917;
+  --jewel-950: #0c0a09;
+  --jewel-gold: #eab308;
+  --jewel-gold-light: #facc15;
+  --jewel-emerald: #10b981;
+  --jewel-saffron: #f97316;
+  --jewel-ruby: #ef4444;
 }
 
 .dark {
@@ -47,6 +64,23 @@
   --emerald: #34d399;
   --saffron: #fb923c;
   --ruby: #f87171;
+
+  --jewel-50: #0c0a09;
+  --jewel-100: #1c1917;
+  --jewel-200: #292524;
+  --jewel-300: #44403c;
+  --jewel-400: #78716c;
+  --jewel-500: #a8a29e;
+  --jewel-600: #d6d3d1;
+  --jewel-700: #e7e5e4;
+  --jewel-800: #f5f5f4;
+  --jewel-900: #fafaf9;
+  --jewel-950: #fafaf9;
+  --jewel-gold: #facc15;
+  --jewel-gold-light: #fde047;
+  --jewel-emerald: #34d399;
+  --jewel-saffron: #fb923c;
+  --jewel-ruby: #f87171;
 }
 
 html,
