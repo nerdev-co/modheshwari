@@ -202,42 +202,46 @@ export async function handleReviewStatusUpdateRequest(
     const { status, remarks } = body;
     if (!status) return failure("Status field is required", null, 400);
 
-    const approval = await prisma.statusUpdateApproval.updateMany({
-      where: {
-        requestId: id,
-        approverId: user.id,
-      },
-      data: { status, remarks, reviewedAt: new Date() },
-    });
-
-    // Check if all approvers have approved
-    const allApproved = await prisma.statusUpdateApproval.count({
-      where: { requestId: id, status: "APPROVED" },
-    });
-    const totalApprovers = await prisma.statusUpdateApproval.count({
-      where: { requestId: id },
-    });
-
-    if (allApproved === totalApprovers) {
-      await prisma.statusUpdateRequest.update({
-        where: { id },
-        data: { status: "APPROVED", reviewedAt: new Date() },
+    // Wrap approval + profile update in a transaction to prevent race condition
+    // where two concurrent approvals both see "all approved" and both update the profile
+    const result = await prisma.$transaction(async (tx) => {
+      const updatedApproval = await tx.statusUpdateApproval.updateMany({
+        where: {
+          requestId: id,
+          approverId: user.id,
+        },
+        data: { status, remarks, reviewedAt: new Date() },
       });
 
-      // Update the profile
-      const reqObj = await prisma.statusUpdateRequest.findUnique({
-        where: { id },
-        select: { targetUserId: true },
+      const allApproved = await tx.statusUpdateApproval.count({
+        where: { requestId: id, status: "APPROVED" },
       });
-      if (reqObj?.targetUserId) {
-        await prisma.profile.updateMany({
-          where: { userId: reqObj.targetUserId },
-          data: { status: false },
+      const totalApprovers = await tx.statusUpdateApproval.count({
+        where: { requestId: id },
+      });
+
+      if (allApproved === totalApprovers) {
+        await tx.statusUpdateRequest.update({
+          where: { id },
+          data: { status: "APPROVED", reviewedAt: new Date() },
         });
-      }
-    }
 
-    return success("Review submitted", { approval });
+        const reqObj = await tx.statusUpdateRequest.findUnique({
+          where: { id },
+          select: { targetUserId: true },
+        });
+        if (reqObj?.targetUserId) {
+          await tx.profile.updateMany({
+            where: { userId: reqObj.targetUserId },
+            data: { status: false },
+          });
+        }
+      }
+
+      return updatedApproval;
+    });
+
+    return success("Review submitted", { approval: result });
   } catch (err) {
     return failure("Internal server error", "Unexpected Error", 500);
   }
