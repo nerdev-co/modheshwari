@@ -1,68 +1,11 @@
 /**
- * @file apps/be/routes/auth-middleware.ts
- * @description Authentication middleware that validates JWT tokens for protected routes.
+ * @file apps/be/routes/authMiddleware.ts
+ * @description Authentication helpers for validating JWT tokens on protected routes.
  */
 
 import { verifyJWT } from "@modheshwari/utils/jwt";
 
-import { extractAndVerifyToken } from "../utils/auth";
 import { logger } from "../lib/logger";
-
-/**
- * Validates JWT from the `Authorization` header and attaches user payload to context.
- *
- * @async
- * @function authMiddleware
- * @param {Object} ctx - Elysia context.
- * @param {Request} ctx.request - The incoming HTTP request.
- * @param {Object} ctx.set - Response modifier (used to set HTTP status).
- * @param {Record<string, any>} [ctx.store] - Optional shared context for storing user info.
- * @returns {Promise<void | { error: string }>} Returns 401 JSON error if unauthorized.
- *
- * @example
- * // Usage inside a route
- * app.use(authMiddleware);
- * app.get("/api/secure", ({ store }) => {
- *   return { message: `Welcome, ${store.user.name}` };
- * });
- */
-export async function authMiddleware({ request, set, store }: any) {
-  try {
-    const userId = extractAndVerifyToken(request);
-
-    // Attach user payload to store for downstream handlers
-    if (store) store.user = { id: userId };
-    else (request as any).user = { id: userId }; // fallback if store not used
-
-    // Continue silently (no return = pass-through)
-    return;
-  } catch (err: unknown) {
-    logger.error("Auth Middleware Error:", err);
-
-    let status = 500;
-    let message = "Internal Server Error";
-
-    if (err instanceof Error) {
-      message = err.message;
-    }
-
-    if (
-      typeof err === "object" &&
-      err !== null &&
-      "status" in err &&
-      typeof (err as any).status === "number"
-    ) {
-      status = (err as any).status;
-    }
-
-    set.status = status;
-
-    return new Response(JSON.stringify({ error: message }), {
-      status,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-}
 
 /**
  * Helper: extract and verify JWT from Request's Authorization header.
