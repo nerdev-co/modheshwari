@@ -16,13 +16,8 @@ export async function ensureIdempotent(messageKey: string | Buffer | null | unde
   const redis = await getRedisClient();
   const redisKey = `${PROCESSED_PREFIX}${key}`;
 
-  // Check if already processed
-  const exists = await redis.exists(redisKey);
-  if (exists) {
-    return true; // duplicate
-  }
-
-  // Mark as processed
-  await redis.set(redisKey, "1", { EX: PROCESSED_TTL });
-  return false; // not a duplicate
+  // SET NX (set-if-not-exists) is atomic — no TOCTOU race.
+  // Returns "OK" if the key was set (new message), null if it already existed (duplicate).
+  const result = await redis.set(redisKey, "1", { EX: PROCESSED_TTL, NX: true });
+  return result === null; // null means key already existed → duplicate
 }
