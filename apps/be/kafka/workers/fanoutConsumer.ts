@@ -4,6 +4,7 @@ import { createClient } from 'redis';
 import { createConsumer, TOPICS, producer } from '../config';
 import { processFanoutMessage } from './fanoutWorker';
 import { ensureIdempotent } from '../../lib/kafkaIdempotency';
+import { logger } from '../../lib/logger';
 
 /**
  * Fanout consumer: subscribes to notification events and processes
@@ -61,7 +62,7 @@ export async function runFanoutConsumer() {
                     },
                 });
             } catch (err) {
-                console.error('Error processing fanout message:', err);
+                logger.error('Error processing fanout message:', err);
             }
         },
     });
@@ -78,7 +79,7 @@ export async function runFanoutConsumer() {
 // ES module-safe check to run when executed directly
 if (import.meta.url === `file://${process.argv[1]}`) {
     runFanoutConsumer().catch((err) => {
-        console.error('Fanout consumer failed to start:', err);
+        logger.error('Fanout consumer failed to start:', err);
         process.exit(1);
     });
 }

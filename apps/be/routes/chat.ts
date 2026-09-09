@@ -2,6 +2,7 @@ import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 
 import { getUserIdFromRequest } from "./messages/auth";
+import { logger } from "../lib/logger";
 
 // GET /api/chat
 /**
@@ -75,7 +76,7 @@ export async function handleGetChat(req: Request) {
 
     return success("Chats retrieved", { personal, familyChat });
   } catch (err) {
-    console.error("Failed to fetch chat list:", err);
+    logger.error("Failed to fetch chat list:", err);
     return failure("Failed to fetch chat list", null, 500);
   }
 }

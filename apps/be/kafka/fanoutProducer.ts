@@ -3,6 +3,7 @@ import { randomUUID } from 'crypto';
 import prisma from '@modheshwari/db';
 
 import { producer as defaultProducer, TOPICS } from './config';
+import { logger } from '../lib/logger';
 
 export interface FanoutParams {
   initiatedBy: string;
@@ -73,7 +74,7 @@ export async function publishFanout(
 
     return { fanoutId, recipientCount: params.recipientIds.length, timestamp };
   } catch (err) {
-    console.error('Failed to publish fanout event:', err);
+    logger.error('Failed to publish fanout event:', err);
     throw new Error('Failed to publish fanout event');
   }
 }

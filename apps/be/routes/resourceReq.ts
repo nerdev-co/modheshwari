@@ -9,6 +9,7 @@ import {
 
 import { requireAuth } from "./authMiddleware";
 import { broadcastNotification } from "../kafka/notificationProducer";
+import { logger } from "../lib/logger";
 
 /* =========================================================
    CREATE RESOURCE REQUEST (RATE LIMITED)
@@ -172,7 +173,7 @@ export async function handleCreateResourceRequest(
 
         return success("Resource request created", { request: created }, 201);
     } catch (err) {
-        console.error("Create ResourceRequest Error:", err);
+        logger.error("Create ResourceRequest Error:", err);
         return failure("Internal server error", "Unexpected Error", 500);
     }
 }
@@ -254,7 +255,7 @@ export async function handleListResourceRequests(
             200,
         );
     } catch (err) {
-        console.error("List ResourceRequests Error:", err);
+        logger.error("List ResourceRequests Error:", err);
         return failure("Internal server error", "Unexpected Error", 500);
     }
 }
@@ -314,7 +315,7 @@ export async function handleGetResourceRequest(
 
         return success("Request fetched", { request: r }, 200);
     } catch (err) {
-        console.error("Get ResourceRequest Error:", err);
+        logger.error("Get ResourceRequest Error:", err);
         return failure("Internal server error", "Unexpected Error", 500);
     }
 }
@@ -485,7 +486,7 @@ export async function handleReviewResourceRequest(
                 });
             }
         } catch (err) {
-            console.error("Failed to broadcast approval notification:", err);
+            logger.error("Failed to broadcast approval notification:", err);
         }
 
         return success("Review recorded", null, 200);
@@ -494,7 +495,7 @@ export async function handleReviewResourceRequest(
             return failure("Not your approval", "Forbidden", 403);
         }
 
-        console.error("Review ResourceRequest Error:", err);
+        logger.error("Review ResourceRequest Error:", err);
         return failure("Internal server error", "Unexpected Error", 500);
     }
 }

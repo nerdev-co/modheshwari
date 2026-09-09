@@ -8,6 +8,7 @@ import { requireAuth } from "./authMiddleware";
 import { TOPICS } from "../kafka/config";
 import { createOutboxEvent } from "../lib/outbox";
 import getRedisClient from "@modheshwari/redis";
+import { logger } from "../lib/logger";
 
 /**
  * Shape of create notification request body
@@ -242,7 +243,7 @@ export async function handleCreateNotification(req: Request) {
             202, // Accepted (async processing)
         );
     } catch (err) {
-        console.error("Create Notification Error:", err);
+        logger.error("Create Notification Error:", err);
         return failure("Internal server error", "Unexpected Error", 500);
     }
 }
@@ -294,7 +295,7 @@ export async function handleListNotifications(req: Request): Promise<Response> {
             pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
         }, 200);
     } catch (err) {
-        console.error("List Notifications Error:", err);
+        logger.error("List Notifications Error:", err);
         return failure("Internal server error", "Unexpected Error", 500);
     }
 }

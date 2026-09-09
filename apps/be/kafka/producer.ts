@@ -1,4 +1,5 @@
 import { producer, TOPICS } from "./config";
+import { logger } from "../lib/logger";
 
 /**
  * Performs main operation.
@@ -26,7 +27,7 @@ async function startProducer() {
     await producer.disconnect();
     console.log("Producer disconnected");
   } catch (error) {
-    console.error("Error in producer:", error);
+    logger.error("Error in producer:", error);
     process.exit(1);
   }
 }

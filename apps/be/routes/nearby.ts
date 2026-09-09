@@ -2,6 +2,7 @@ import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 
 import { extractAndVerifyToken } from "../utils/auth";
+import { logger } from "../lib/logger";
 
 type NearbyRow = {
   id: string;
@@ -114,7 +115,7 @@ export async function handleGetNearbyUsers(req: Request): Promise<Response> {
 
     return success("Nearby users", data);
   } catch (err) {
-    console.error("Nearby Users Error:", err);
+    logger.error("Nearby Users Error:", err);
     return failure("Internal server error", "Unexpected Error", 500);
   }
 }

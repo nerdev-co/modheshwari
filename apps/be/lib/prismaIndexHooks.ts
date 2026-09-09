@@ -1,4 +1,5 @@
 import prisma from "@modheshwari/db";
+import { logger } from "./logger";
 
 // Register Prisma middleware to enqueue Elasticsearch indexing events in the outbox.
 // The outbox relay will pick these up and perform the actual indexing, providing
@@ -104,7 +105,7 @@ export function registerPrismaIndexHooks() {
                 }
             }
         } catch (err) {
-            console.error("Prisma index hook error:", err);
+            logger.error("Prisma index hook error:", err);
         }
 
         return result;

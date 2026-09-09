@@ -1,4 +1,5 @@
 import { createConsumer, TOPICS } from "./config";
+import { logger } from "../lib/logger";
 
 /**
  * Performs main operation.
@@ -40,7 +41,7 @@ async function startConsumer() {
       },
     });
   } catch (error) {
-    console.error("Error in consumer:", error);
+    logger.error("Error in consumer:", error);
     await consumer.disconnect();
     process.exit(1);
   }

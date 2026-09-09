@@ -1,6 +1,7 @@
 import prisma from "@modheshwari/db";
 import { verifyAuth } from "@modheshwari/utils/jwt";
 import { success, failure } from "@modheshwari/utils/response";
+import { logger } from "../lib/logger";
 
 type MedicalBody = {
   bloodGroup?:
@@ -75,7 +76,7 @@ export async function handleUpdateMedical(req: Request) {
 
     return success("Medical info updated", { profile: updated });
   } catch (err) {
-    console.error("Failed to update medical info:", err);
+    logger.error("Failed to update medical info:", err);
     return failure("Internal server error", null, 500);
   }
 }
@@ -150,7 +151,7 @@ export async function handleSearchByBloodGroup(req: Request) {
       formattedData,
     );
   } catch (err) {
-    console.error("Search by blood group error:", err);
+    logger.error("Search by blood group error:", err);
     return failure("Internal server error", null, 500);
   }
 }

@@ -1,4 +1,5 @@
 #!/usr/bin/env bun
+import { logger } from "../lib/logger";
 import elasticClient from "../lib/elastic";
 
 /**
@@ -98,7 +99,7 @@ async function run() {
     await ensureIndex("events", eventsMapping);
     console.log("Indices are ready.");
   } catch (err) {
-    console.error("Failed to setup indices:", err);
+    logger.error("Failed to setup indices:", err);
     process.exit(1);
   }
 }

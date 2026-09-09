@@ -14,6 +14,7 @@ import { requireAuth } from "./authMiddleware";
 import { extractAndVerifyToken } from "../utils/auth";
 import { createOutboxEvent } from "../lib/outbox";
 import { TOPICS } from "../kafka/config";
+import { logger } from "../lib/logger";
 
 /**
  * Creates a new event with a multi-level approval workflow.
@@ -119,7 +120,7 @@ export async function handleCreateEvent(req: Request): Promise<Response> {
 
     return success("Event created successfully", { event }, 201);
   } catch (err) {
-    console.error("CreateEvent Error:", err);
+    logger.error("CreateEvent Error:", err);
     return failure("Internal server error", "Unexpected Error", 500);
   }
 }
@@ -216,7 +217,7 @@ export async function handleListEvents(req: Request): Promise<Response> {
       buildPaginationResponse(events, total, page, limit),
     );
   } catch (err) {
-    console.error("ListEvents Error:", err);
+    logger.error("ListEvents Error:", err);
     return failure("Internal server error", "Unexpected Error", 500);
   }
 }
@@ -277,7 +278,7 @@ export async function handleListEventsCompact(req: Request): Promise<Response> {
 
     return success("Events fetched (compact)", { events: rows });
   } catch (err) {
-    console.error("ListEventsCompact Error:", err);
+    logger.error("ListEventsCompact Error:", err);
     return failure("Internal server error", "Unexpected Error", 500);
   }
 }
@@ -319,7 +320,7 @@ export async function handleGetEvent(
 
     return success("Event fetched", { event });
   } catch (err) {
-    console.error("GetEvent Error:", err);
+    logger.error("GetEvent Error:", err);
     return failure("Internal server error", "Unexpected Error", 500);
   }
 }
@@ -386,7 +387,7 @@ export async function handleRegisterForEvent(
 
     return success("Registered successfully", { registration }, 201);
   } catch (err) {
-    console.error("RegisterForEvent Error:", err);
+    logger.error("RegisterForEvent Error:", err);
     return failure("Internal server error", "Unexpected Error", 500);
   }
 }
@@ -424,7 +425,7 @@ export async function handleUnregisterFromEvent(
 
     return success("Unregistered successfully", {});
   } catch (err) {
-    console.error("UnregisterFromEvent Error:", err);
+    logger.error("UnregisterFromEvent Error:", err);
     return failure("Internal server error", "Unexpected Error", 500);
   }
 }
@@ -467,7 +468,7 @@ export async function handleGetEventRegistrations(
 
     return success("Registrations fetched", { registrations });
   } catch (err) {
-    console.error("GetEventRegistrations Error:", err);
+    logger.error("GetEventRegistrations Error:", err);
     return failure("Internal server error", "Unexpected Error", 500);
   }
 }
@@ -598,7 +599,7 @@ export async function handleApproveEvent(
 
     return success("Approval recorded", { eventStatus });
   } catch (err) {
-    console.error("ApproveEvent Error:", err);
+    logger.error("ApproveEvent Error:", err);
     return failure("Internal server error", "Unexpected Error", 500);
   }
 }

@@ -6,6 +6,7 @@ import {
 } from "@modheshwari/utils/pagination";
 
 import { extractAndVerifyToken } from "../utils/auth";
+import { logger } from "../lib/logger";
 
 /**
  * GET /api/family/members
@@ -90,7 +91,7 @@ export async function handleGetFamilyMembers(req: Request): Promise<Response> {
       },
     );
   } catch (err) {
-    console.error(" handleGetFamilyMembers error:", err);
+    logger.error(" handleGetFamilyMembers error:", err);
     return failure("Internal Server Error", "Unexpected Error", 500);
   }
 }

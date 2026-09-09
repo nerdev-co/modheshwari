@@ -3,6 +3,7 @@ import { success, failure } from "@modheshwari/utils/response";
 import { parsePagination, buildPaginationResponse } from "@modheshwari/utils/pagination";
 
 import { requireAuth } from "./authMiddleware";
+import { logger } from "../lib/logger";
 
 /**
  * Creates a medical record for a user.
@@ -51,7 +52,7 @@ export async function handleCreateMedicalRecord(req: Request): Promise<Response>
 
         return success("Medical record created", { record: rec }, 201);
     } catch (err) {
-        console.error("CreateMedicalRecord Error:", err);
+        logger.error("CreateMedicalRecord Error:", err);
         return failure("Internal server error", "Unexpected Error", 500);
     }
 }
@@ -104,7 +105,7 @@ export async function handleListMedicalRecords(req: Request): Promise<Response> 
 
         return success("Medical records fetched", buildPaginationResponse(list, total, page, limit));
     } catch (err) {
-        console.error("ListMedicalRecords Error:", err);
+        logger.error("ListMedicalRecords Error:", err);
         return failure("Internal server error", "Unexpected Error", 500);
     }
 }
@@ -143,7 +144,7 @@ export async function handleGetMedicalRecord(req: Request, id: string): Promise<
 
         return success("Medical record fetched", { record: rec });
     } catch (err) {
-        console.error("GetMedicalRecord Error:", err);
+        logger.error("GetMedicalRecord Error:", err);
         return failure("Internal server error", "Unexpected Error", 500);
     }
 }
@@ -198,7 +199,7 @@ export async function handleUpdateMedicalRecord(req: Request, id: string): Promi
 
         return success("Medical record updated", { record: updated });
     } catch (err) {
-        console.error("UpdateMedicalRecord Error:", err);
+        logger.error("UpdateMedicalRecord Error:", err);
         return failure("Internal server error", "Unexpected Error", 500);
     }
 }
@@ -237,7 +238,7 @@ export async function handleDeleteMedicalRecord(req: Request, id: string): Promi
         await prisma.medicalRecord.delete({ where: { id } });
         return success("Medical record deleted", null);
     } catch (err) {
-        console.error("DeleteMedicalRecord Error:", err);
+        logger.error("DeleteMedicalRecord Error:", err);
         return failure("Internal server error", "Unexpected Error", 500);
     }
 }

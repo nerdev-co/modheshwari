@@ -1,4 +1,5 @@
 import type { RedisClientType } from "redis";
+import { logger } from "../../lib/logger";
 
 export interface FanoutMessage {
   fanoutId?: string;
@@ -129,7 +130,7 @@ export async function processFanoutMessage(opts: {
       }
     }
 
-    console.error("processFanoutMessage failed:", err);
+    logger.error("processFanoutMessage failed:", err);
     throw err;
   }
 }

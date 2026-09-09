@@ -3,6 +3,7 @@ import { randomUUID } from "crypto";
 import { NotificationType, NotificationChannel } from "@prisma/client";
 
 import { producer, TOPICS } from "./config";
+import { logger } from "../lib/logger";
 
 export type DeliveryStrategy = "BROADCAST" | "ESCALATION";
 export type NotificationPriority = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
@@ -87,7 +88,7 @@ export async function broadcastNotification(
       notificationPriority,
     };
   } catch (error) {
-    console.error("Failed to publish notification event:", error);
+    logger.error("Failed to publish notification event:", error);
     throw new Error("Failed to queue notification for delivery");
   }
 }
@@ -111,7 +112,7 @@ export async function publishToChannel(
   const topic = topicMap[channel];
 
   if (!topic) {
-    console.error(`Unknown channel: ${channel}`);
+    logger.error(`Unknown channel: ${channel}`);
     return;
   }
 
@@ -139,7 +140,7 @@ export async function publishToChannel(
       `Published to ${channel} channel for recipient ${recipientId}`,
     );
   } catch (error) {
-    console.error(`Failed to publish to ${channel} channel:`, error);
+    logger.error(`Failed to publish to ${channel} channel:`, error);
     throw error;
   }
 }

@@ -3,6 +3,7 @@ import type { RedisClientType } from 'redis';
 import { createConsumer, TOPICS } from '../config';
 import getRedisClient from '@modheshwari/redis';
 import { ensureIdempotent } from '../../lib/kafkaIdempotency';
+import { logger } from '../../lib/logger';
 
 interface NotificationEvent {
     eventId?: string;
@@ -54,11 +55,11 @@ export async function runInAppWorker() {
                         // channel: inapp:{userId}
                         await redis.publish(`inapp:${rid}`, payloadMsg);
                     } catch (e) {
-                        console.error('Failed to publish in-app message for', rid, e);
+                        logger.error('Failed to publish in-app message for', rid, e);
                     }
                 }
             } catch (err) {
-                console.error('in-app worker error', err);
+                logger.error('in-app worker error', err);
             }
         },
     });
@@ -66,7 +67,7 @@ export async function runInAppWorker() {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
     runInAppWorker().catch((e) => {
-        console.error('in-app worker failed', e);
+        logger.error('in-app worker failed', e);
         process.exit(1);
     });
 }

@@ -4,6 +4,7 @@ import { authRoutes } from "./authRoutes";
 import { staticRoutes } from "./staticRoutes";
 import { matchParameterizedRoute } from "./parameterizedRoutes";
 import { withCorsHeaders, handleCors } from "../utils/cors";
+import { logger } from "../lib/logger";
 
 /**
  * Main request router
@@ -74,7 +75,7 @@ export async function router(req: Request): Promise<Response> {
       req,
     );
   } catch (err) {
-    console.error("Request error:", err);
+    logger.error("Request error:", err);
     return withCorsHeaders(
       Response.json({ error: "Internal server error" }, { status: 500 }),
       req,

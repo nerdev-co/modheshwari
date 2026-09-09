@@ -24,6 +24,7 @@ import {
   buildSelectClause,
 } from "../utils/searchParser";
 import elasticClient from "../lib/elastic";
+import { logger } from "../lib/logger";
 
 type CacheEntry = { ts: number; data: any };
 const CACHE_TTL = 60 * 1000; // 60 seconds
@@ -212,7 +213,7 @@ export async function handleSearch(req: Request): Promise<Response> {
       buildPaginationResponse(users, total, page, limit),
     );
   } catch (err) {
-    console.error("Search Error:", err);
+    logger.error("Search Error:", err);
     return failure("Internal Server Error", "Unexpected", 500);
   }
 }

@@ -1,4 +1,5 @@
 import elasticClient from "./elastic";
+import { logger } from "./logger";
 
 /**
  * Performs index user operation.
@@ -28,7 +29,7 @@ export async function indexUser(user: any) {
       refresh: false,
     });
   } catch (err) {
-    console.error("Failed to index user:", err);
+    logger.error("Failed to index user:", err);
   }
 }
 
@@ -44,7 +45,7 @@ export async function deleteUser(userId: string) {
   } catch (err: any) {
     // ignore not found (Elasticsearch client error shape varies)
     const status = err?.meta?.statusCode ?? err?.statusCode ?? (err && (err as any).status);
-    if (status !== 404) console.error("Failed to delete user from index:", err);
+    if (status !== 404) logger.error("Failed to delete user from index:", err);
   }
 }
 
@@ -71,7 +72,7 @@ export async function indexEvent(ev: any) {
       refresh: false,
     });
   } catch (err) {
-    console.error("Failed to index event:", err);
+    logger.error("Failed to index event:", err);
   }
 }
 
@@ -86,7 +87,7 @@ export async function deleteEvent(eventId: string) {
     await elasticClient.delete({ index: "events", id: eventId });
   } catch (err: any) {
     const status = err?.meta?.statusCode ?? err?.statusCode ?? (err && (err as any).status);
-    if (status !== 404) console.error("Failed to delete event from index:", err);
+    if (status !== 404) logger.error("Failed to delete event from index:", err);
   }
 }
 

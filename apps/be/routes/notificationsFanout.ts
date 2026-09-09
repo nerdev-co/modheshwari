@@ -5,6 +5,7 @@ import { requireAuth } from './authMiddleware';
 import resolveRecipients from '../utils/recipientResolver';
 import { TOPICS } from '../kafka/config';
 import { createOutboxEvent } from '../lib/outbox';
+import { logger } from '../lib/logger';
 
 type Scope = 'gotra' | 'community' | 'family';
 
@@ -91,7 +92,7 @@ export async function handleFanoutNotification(req: Request) {
 
         return success('Fanout queued', { recipientCount: resolved.count }, 202);
     } catch (err) {
-        console.error('Fanout Error:', err);
+        logger.error('Fanout Error:', err);
         return failure('Internal server error', 'Unexpected Error', 500);
     }
 }
