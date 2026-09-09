@@ -9,6 +9,7 @@ import { formatBloodGroup, toBloodGroupEnum, BLOOD_GROUPS } from "@modheshwari/u
 import { API_BASE } from "../../lib/config";
 import apiFetch from "../../lib/api";
 import { useUser } from "../../lib/UserContext";
+import { useLocale } from "../../lib/LocaleContext";
 
 interface MedicalInfo {
   userId: string;
@@ -27,6 +28,7 @@ export default function Medical() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, loading } = useUser();
+  const { t } = useLocale();
 
   const myProfile = user?.profile ?? null;
   const [medicalList, setMedicalList] = useState<MedicalInfo[]>([]);
@@ -84,30 +86,30 @@ export default function Medical() {
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-display font-bold text-jewel-900 mb-1">Medical Dashboard</h1>
-          <p className="text-sm text-jewel-500">Welcome back, {user.name}</p>
+          <h1 className="text-3xl font-display font-bold text-jewel-900 mb-1">{t("medical.title")}</h1>
+          <p className="text-sm text-jewel-500">{t("medical.welcome").replace("{{name}}", user.name)}</p>
         </div>
 
         {/* My Medical Info Card */}
         <div className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-5 mb-8">
-          <h2 className="text-lg font-display font-bold text-jewel-900 mb-4">My Medical Information</h2>
+          <h2 className="text-lg font-display font-bold text-jewel-900 mb-4">{t("medical.myInfo")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <p className="text-xs text-jewel-400 mb-1">Blood Group</p>
+              <p className="text-xs text-jewel-400 mb-1">{t("medical.bloodGroup")}</p>
               <p className="text-sm font-medium text-jewel-800">
                 {formatBloodGroup(myProfile?.bloodGroup)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-jewel-400 mb-1">Allergies</p>
+              <p className="text-xs text-jewel-400 mb-1">{t("medical.allergies")}</p>
               <p className="text-sm font-medium text-jewel-800">
-                {myProfile?.allergies || "None recorded"}
+                {myProfile?.allergies || t("medical.noneRecorded")}
               </p>
             </div>
             <div>
-              <p className="text-xs text-jewel-400 mb-1">Medical Notes</p>
+              <p className="text-xs text-jewel-400 mb-1">{t("medical.medicalNotes")}</p>
               <p className="text-sm font-medium text-jewel-800">
-                {myProfile?.medicalNotes || "None recorded"}
+                {myProfile?.medicalNotes || t("medical.noneRecorded")}
               </p>
             </div>
           </div>
@@ -117,23 +119,23 @@ export default function Medical() {
             onClick={() => navigate("/me/edit")}
             className="mt-4 justify-start"
           >
-            Update Medical Info →
+            {t("medical.updateInfo")}
           </Button>
         </div>
 
         {/* Search Card */}
         <div className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-5 mb-8">
           <label className="block text-sm text-jewel-700 font-medium mb-2">
-            Search users by blood group
+            {t("medical.searchTitle")}
           </label>
           <p className="text-xs text-jewel-400 mb-3">
-            Enter blood group (e.g., O+, AB-, B+)
+            {t("medical.searchDesc")}
           </p>
 
           <div className="flex gap-3">
             <input
               type="text"
-              placeholder="e.g. O+, AB-, B+"
+              placeholder={t("medical.searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
@@ -146,7 +148,7 @@ export default function Medical() {
               onClick={() => fetchMedicalInfo(searchQuery)}
               disabled={searchLoading || !searchQuery.trim()}
             >
-              {searchLoading ? "Searching..." : "Search"}
+              {searchLoading ? t("medical.searching") : t("medical.search")}
             </Button>
           </div>
 
@@ -172,7 +174,7 @@ export default function Medical() {
         <div className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl overflow-hidden">
           <div className="px-5 py-4 border-b border-jewel-400/20">
             <h2 className="text-lg font-display font-bold text-jewel-900">
-              Search Results
+              {t("medical.results")}
               {medicalList.length > 0 && (
                 <span className="ml-2 text-sm text-jewel-500 font-normal">
                   ({medicalList.length} users)
@@ -184,19 +186,19 @@ export default function Medical() {
           {medicalList.length === 0 ? (
             <div className="text-center text-jewel-400 py-10 text-sm">
               {searchQuery
-                ? "No users found with this blood group"
-                : "Enter a blood group to search"}
+                ? t("medical.noResultsFound")
+                : t("medical.noResults")}
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-jewel-100/60 text-jewel-600">
                   <tr>
-                    <th className="px-4 py-3 text-left font-medium">Name</th>
-                    <th className="px-4 py-3 text-left font-medium">Email</th>
-                    <th className="px-4 py-3 text-left font-medium">Blood Group</th>
-                    <th className="px-4 py-3 text-left font-medium">Allergies</th>
-                    <th className="px-4 py-3 text-left font-medium">Notes</th>
+                    <th className="px-4 py-3 text-left font-medium">{t("medical.name")}</th>
+                    <th className="px-4 py-3 text-left font-medium">{t("medical.email")}</th>
+                    <th className="px-4 py-3 text-left font-medium">{t("medical.bloodGroup")}</th>
+                    <th className="px-4 py-3 text-left font-medium">{t("medical.allergies")}</th>
+                    <th className="px-4 py-3 text-left font-medium">{t("medical.notes")}</th>
                   </tr>
                 </thead>
 
