@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { Card } from "@repo/ui/card";
 import { useToast } from "@repo/ui/toast";
 
 import { API_BASE } from "../../../lib/config";
@@ -73,7 +74,7 @@ export default function SignupPage() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="max-w-md w-full relative z-10"
       >
-        <div className="bg-jewel-50/80 backdrop-blur-xl rounded-2xl p-8 border border-jewel-400/20 shadow-jewel">
+        <Card className="p-8">
           <div className="text-center mb-8">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
@@ -199,7 +200,7 @@ export default function SignupPage() {
               </a>
             </p>
           </div>
-        </div>
+        </Card>
 
         <motion.div
           initial={{ opacity: 0, y: 10 }}

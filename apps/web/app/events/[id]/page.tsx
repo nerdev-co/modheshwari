@@ -19,6 +19,7 @@ import { LoaderOne } from "@repo/ui/loading";
 import { NotAuthenticated } from "@repo/ui/notAuthenticated";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { Card } from "@repo/ui/card";
 import { useToast } from "@repo/ui/toast";
 
 import apiFetch from "../../../lib/api";
@@ -273,7 +274,7 @@ export default function EventDetailsPage() {
     return (
         <DreamySunsetBackground className="px-6 py-10">
             <div className="max-w-5xl mx-auto">
-                <div className="bg-jewel-50/80 backdrop-blur-xl rounded-3xl border border-jewel-400/20 shadow-jewel p-5 md:p-8">
+                <Card className="backdrop-blur-xl shadow-jewel p-5 md:p-8">
                     {/* Header */}
                     <Button
                         variant="secondary"
@@ -286,11 +287,7 @@ export default function EventDetailsPage() {
                     </Button>
 
                     {/* Event Card */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="rounded-2xl bg-jewel-50/60 backdrop-blur-xl border border-jewel-400/20 shadow-jewel p-6 md:p-8"
-                    >
+                    <Card className="backdrop-blur-xl shadow-jewel p-6 md:p-8">
                         {/* Status & Registration Count */}
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                             {getStatusBadge(event.status)}
@@ -413,16 +410,11 @@ export default function EventDetailsPage() {
                                 <strong>{t("events.detail.cancelledLabel")}</strong> {t("events.detail.cancelledMessage")}
                             </div>
                         )}
-                    </motion.div>
+                    </Card>
 
                     {/* Approval Status */}
                     {event.approvals && event.approvals.length > 0 && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="mt-6 rounded-2xl bg-jewel-50/60 backdrop-blur-xl border border-jewel-400/20 p-6"
-                        >
+                        <Card className="mt-6 backdrop-blur-xl p-6">
                             <h2 className="text-xl font-display font-bold text-jewel-900 mb-4">{t("events.detail.approvalStatus")}</h2>
                             <div className="space-y-3">
                                 {event.approvals.map((approval) => (
@@ -449,17 +441,12 @@ export default function EventDetailsPage() {
                                     </div>
                                 ))}
                             </div>
-                        </motion.div>
+                        </Card>
                     )}
 
                     {/* Moderation Area */}
                     {isAdmin && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.25 }}
-                            className="mt-6 bg-jewel-100/60 backdrop-blur-xl border border-jewel-400/20 rounded-2xl p-6"
-                        >
+                        <Card className="mt-6 bg-jewel-100/60 backdrop-blur-xl rounded-2xl p-6">
                             <h2 className="text-lg font-display font-bold text-jewel-900 mb-3">{t("events.detail.moderation")}</h2>
                             <p className="text-sm text-jewel-500 mb-4">
                                 {t("events.detail.moderationDescription")}
@@ -515,9 +502,9 @@ export default function EventDetailsPage() {
                                     {t("events.detail.suggestChanges")}
                                 </Button>
                             </div>
-                        </motion.div>
+                        </Card>
                     )}
-                </div>
+                </Card>
             </div>
         </DreamySunsetBackground>
     );

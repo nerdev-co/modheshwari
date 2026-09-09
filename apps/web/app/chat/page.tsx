@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { NotAuthenticated } from "@repo/ui/notAuthenticated";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { Card } from "@repo/ui/card";
 
 import { API_BASE } from "../../lib/config";
 import { apiFetch } from "../../lib/api";
@@ -348,7 +349,7 @@ export default function ChatPage() {
     return (
         <DreamySunsetBackground className="px-6 py-10">
             <div className="max-w-7xl mx-auto">
-                <div className="bg-jewel-50/80 backdrop-blur-xl rounded-2xl border border-jewel-400/20 shadow-jewel overflow-hidden">
+                <Card className="backdrop-blur-xl overflow-hidden">
                     <div className="grid grid-cols-1 md:grid-cols-5 min-h-[85vh]">
                         {/* Sidebar */}
                         <div className="md:col-span-1 border-b md:border-b-0 md:border-r border-jewel-400/20 bg-jewel-100/40">
@@ -563,7 +564,7 @@ export default function ChatPage() {
                             )}
                         </div>
                     </div>
-                </div>
+                </Card>
             </div>
         </DreamySunsetBackground>
     );

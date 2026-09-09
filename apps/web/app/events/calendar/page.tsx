@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Calendar as CalIcon } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { Card } from "@repo/ui/card";
 
 import apiFetch from "../../../lib/api";
 import { API_BASE } from "../../../lib/config";
@@ -161,7 +162,7 @@ export default function EventsCalendar() {
   return (
     <DreamySunsetBackground className="px-6 py-10">
       <div className="max-w-6xl mx-auto">
-        <div className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6 md:p-8">
+        <Card className="p-6 md:p-8">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div className="flex items-center gap-3">
@@ -301,7 +302,7 @@ export default function EventsCalendar() {
             </div>
 
             <aside className="mt-4 lg:mt-0 lg:w-80 lg:flex-shrink-0">
-              <div className="rounded-2xl bg-jewel-50/80 border border-jewel-400/20 backdrop-blur-xl p-4">
+              <Card className="bg-jewel-50/80 backdrop-blur-xl p-4">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-display font-bold text-jewel-900">
                     {selectedDate
@@ -357,14 +358,14 @@ export default function EventsCalendar() {
                       <div className="text-sm text-jewel-500">{t("events.calendar.noEventsOnDay")}</div>
                     )}
                 </div>
-              </div>
+              </Card>
             </aside>
           </div>
 
           {loading && (
             <div className="mt-4 text-sm text-jewel-500">{t("events.calendar.loadingEvents")}</div>
           )}
-        </div>
+        </Card>
       </div>
     </DreamySunsetBackground>
   );

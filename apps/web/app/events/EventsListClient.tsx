@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { Card } from "@repo/ui/card";
 import { useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 import {
@@ -176,7 +177,7 @@ export default function EventsListClient() {
         {isLoading || error ? (
           <LoaderOne />
         ) : events.length === 0 ? (
-          <div className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-12 text-center">
+          <Card className="p-12 text-center">
             <Calendar className="w-16 h-16 text-jewel-400 mx-auto mb-4" />
             <h3 className="text-xl font-display font-bold text-jewel-900 mb-2">{t("events.list.noEvents")}</h3>
             <p className="text-sm text-jewel-500 mb-6">{filter === "approved" ? t("events.list.noApprovedEvents") : t("events.list.adjustFilters")}</p>
@@ -184,20 +185,16 @@ export default function EventsListClient() {
               <Plus className="w-4 h-4" />
               {t("events.list.createNewEvent")}
             </Button>
-          </div>
+          </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {events.map((event, index) => {
               const status = getStatusConfig(event.status);
               const initial = event.createdBy?.name ? event.createdBy.name.charAt(0).toUpperCase() : "?";
               return (
-                <motion.div
+                <Card
                   key={event.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                  onClick={() => navigate(`/events/${event.id}`)}
-                  className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6 hover:shadow-jewel-lg transition-all cursor-pointer hover:scale-[1.02]"
+                  className="backdrop-blur-xl shadow-jewel p-6 hover:shadow-jewel-lg transition-all cursor-pointer hover:scale-[1.02]"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${status.classes}`}>
@@ -248,7 +245,7 @@ export default function EventsListClient() {
                       <p className="text-xs text-jewel-400">{new Date(event.createdAt).toLocaleDateString()}</p>
                     </div>
                   </div>
-                </motion.div>
+                </Card>
               );
             })}
           </div>

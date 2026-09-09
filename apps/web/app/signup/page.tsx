@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Shield, Users } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
+import { Card } from "@repo/ui/card";
 
 const signupOptions = [
   {
@@ -27,7 +28,7 @@ export default function SignupLandingPage() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="w-full max-w-3xl relative z-10"
       >
-        <div className="bg-jewel-50/80 backdrop-blur-xl rounded-2xl p-8 sm:p-10 border border-jewel-400/20 shadow-jewel">
+        <Card className="p-8 sm:p-10">
           <div className="text-center max-w-2xl mx-auto">
             <div className="inline-flex items-center justify-center h-16 w-16 rounded-xl bg-gradient-to-br from-jewel-gold to-jewel-500 text-jewel-deep text-2xl font-bold shadow-lg shadow-jewel-gold/25 mb-4">
               <Users className="w-8 h-8" />
@@ -69,7 +70,7 @@ export default function SignupLandingPage() {
           <div className="mt-8 text-center text-sm text-jewel-500">
             Already approved? <Link to="/signin" className="font-medium text-jewel-gold hover:text-jewel-500">Sign in</Link>
           </div>
-        </div>
+        </Card>
       </motion.main>
     </DreamySunsetBackground>
   );

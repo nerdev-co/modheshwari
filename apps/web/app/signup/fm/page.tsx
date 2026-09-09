@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@repo/ui/button";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
+import { Card } from "@repo/ui/card";
 import { useToast } from "@repo/ui/toast";
 
 import { API_BASE } from "../../../lib/config";
@@ -53,7 +54,7 @@ export default function MemberSignupPage() {
     return (
         <DreamySunsetBackground className="flex items-center justify-center px-6 py-10">
             <div className="w-full max-w-md">
-                <div className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 rounded-2xl p-8 shadow-jewel">
+                <Card className="p-8 shadow-jewel">
                     {submitted ? (
                         <SuccessState />
                     ) : (
@@ -131,7 +132,7 @@ export default function MemberSignupPage() {
                             </p>
                         </>
                     )}
-                </div>
+                </Card>
             </div>
         </DreamySunsetBackground>
     );
