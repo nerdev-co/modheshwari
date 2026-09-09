@@ -9,10 +9,6 @@ import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import SearchInput from "./SearchInput";
 import { useUser } from "../../lib/UserContext";
 
-/**
- * Performs  search page operation.
- * @returns {React.JSX.Element} Description of return value
- */
 export default function SearchPage() {
   const { user, loading } = useUser();
   const navigate = useNavigate();

@@ -36,10 +36,6 @@ const EMPTY_FORM: FormState = {
   notes: "",
 };
 
-/**
- * Performs  medical records page operation.
- * @returns {any} Description of return value
- */
 export default function MedicalRecordsPage() {
   const { user, loading } = useUser();
   const navigate = useNavigate();
@@ -210,7 +206,6 @@ export default function MedicalRecordsPage() {
 }
 
 /**
- * Performs  field operation.
  * @param {{ label: string; children: React.ReactNode; }} {
  *   label,
  *   children,
@@ -218,7 +213,6 @@ export default function MedicalRecordsPage() {
  *   label,
  *   children,
  * }
- * @returns {any} Description of return value
  */
 function Field({
   label,
@@ -235,11 +229,6 @@ function Field({
   );
 }
 
-/**
- * Performs  row operation.
- * @param {{ label: string; value?: string; }} { label, value } - Description of { label, value }
- * @returns {any} Description of return value
- */
 function Row({ label, value }: { label: string; value?: string }) {
   return (
     <div className="text-sm">

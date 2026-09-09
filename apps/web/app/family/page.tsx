@@ -10,10 +10,6 @@ import FamilyPageContent from "./FamilyPageContent";
 import FamilyTreeView from "./FamilyTreeView";
 import { useLocale } from "../../lib/LocaleContext";
 
-/**
- * Performs  family page operation.
- * @returns {React.ReactElement<unknown, string | React.JSXElementConstructor<any>>} Description of return value
- */
 export default function FamilyPage(): React.ReactElement {
   const [activeTab, setActiveTab] = useState<"list" | "tree">("list");
   const { t } = useLocale();

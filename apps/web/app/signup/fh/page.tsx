@@ -19,10 +19,6 @@ import { useToast } from "@repo/ui/toast";
 import { API_BASE } from "../../../lib/config";
 import { useLocale } from "../../../lib/LocaleContext";
 
-/**
- * Performs  signup page operation.
- * @returns {React.JSX.Element} Description of return value
- */
 export default function SignupPage() {
   const navigate = useNavigate();
   const { toast } = useToast();

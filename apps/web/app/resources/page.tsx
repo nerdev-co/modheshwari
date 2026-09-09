@@ -32,9 +32,7 @@ interface Approval {
 }
 
 /**
- * Performs get status color operation.
  * @param {string} status - Description of status
- * @returns {string} Description of return value
  */
 function getStatusColor(status: string): string {
   switch (status) {
@@ -49,10 +47,6 @@ function getStatusColor(status: string): string {
   }
 }
 
-/**
- * Performs  resource requests page operation.
- * @returns {React.JSX.Element} Description of return value
- */
 export default function ResourceRequestsPage(): React.JSX.Element | null {
   const { toast } = useToast();
   const { user: me, loading } = useUser();

@@ -11,7 +11,6 @@ import { ROLE_COLORS } from "../../lib/constants";
 import { useLocale } from "../../lib/LocaleContext";
 
 /**
- * Performs  profile field operation.
  * @param {{ label: string; value?: string; }} {
  *   label,
  *   value,
@@ -19,7 +18,6 @@ import { useLocale } from "../../lib/LocaleContext";
  *   label,
  *   value,
  * }
- * @returns {React.JSX.Element} Description of return value
  */
 function ProfileField({
   label,
@@ -38,10 +36,6 @@ function ProfileField({
   );
 }
 
-/**
- * Performs  me page operation.
- * @returns {React.JSX.Element} Description of return value
- */
 export default function MePage() {
   const navigate = useNavigate();
   const { user, loading, logout } = useUser();

@@ -30,7 +30,6 @@ type Message = {
 
 /**
  * Performs chat operations.
- * @returns {React.JSX.Element} Description of return value
  */
 export default function ChatPage() {
     const { t } = useLocale();

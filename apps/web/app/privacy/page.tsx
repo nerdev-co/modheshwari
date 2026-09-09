@@ -3,10 +3,6 @@
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { useLocale } from "../../lib/LocaleContext";
 
-/**
- * Performs  privacy operation.
- * @returns {React.JSX.Element} Description of return value
- */
 export default function Privacy() {
   const { t } = useLocale();
 

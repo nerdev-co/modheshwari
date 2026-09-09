@@ -26,7 +26,6 @@ const INITIAL_FORM_STATE: ContactFormState = {
 
 /**
  * Performs contact page operations.
- * @returns {React.JSX.Element} Description of return value
  */
 export default function ContactPage() {
     const { t } = useLocale();
@@ -176,9 +175,7 @@ export default function ContactPage() {
 }
 
 /**
- * Performs  input operation.
  * @param {React.InputHTMLAttributes<HTMLInputElement>} props - Description of props
- * @returns {any} Description of return value
  */
 function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
     return (

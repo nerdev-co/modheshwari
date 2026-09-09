@@ -37,10 +37,6 @@ type Priority = "low" | "normal" | "high" | "urgent";
 type ReadFilter = "all" | "read" | "unread";
 type SortBy = "newest" | "oldest" | "unread-first";
 
-/**
- * Performs get token operation.
- * @returns {string} Description of return value
- */
 function getToken(): string | null {
     if (typeof window === "undefined") return null;
     return localStorage.getItem("token");
@@ -48,9 +44,7 @@ function getToken(): string | null {
 
 
 /**
- * Performs is admin role operation.
  * @param {Role} role - Description of role
- * @returns {boolean} Description of return value
  */
 function isAdminRole(role?: Role): boolean {
     return (
@@ -61,9 +55,7 @@ function isAdminRole(role?: Role): boolean {
 }
 
 /**
- * Performs dedupe key operation.
  * @param {Notification} n - Description of n
- * @returns {string} Description of return value
  */
 function dedupeKey(n: Notification): string {
     if (n.id) return `id:${n.id}`;
@@ -71,10 +63,6 @@ function dedupeKey(n: Notification): string {
     return `fallback:${n.message}:${n.createdAt}`;
 }
 
-/**
- * Performs  notifications page operation.
- * @returns {React.ReactElement} Description of return value
- */
 export default function NotificationsPage(): React.ReactElement {
     const { notifications: hookNotifications, unreadCount, refresh, markRead, markAllRead, pulse } = useNotifications();
     const { toast } = useToast();

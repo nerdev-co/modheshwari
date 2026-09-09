@@ -11,10 +11,6 @@ import { useLocale } from "../../lib/LocaleContext";
 
 type SpecType = "openapi" | "asyncapi";
 
-/**
- * Performs  spec page operation.
- * @returns {React.JSX.Element} Description of return value
- */
 export default function SpecPage() {
   const [specType, setSpecType] = useState<SpecType>("openapi");
   const [asyncApiSpec, setAsyncApiSpec] = useState<string>("");

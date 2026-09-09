@@ -18,11 +18,6 @@ interface NearbyUser {
   distanceKm: number;
 }
 
-/**
- * Performs  meta operation.
- * @param {{ label: string; value: string; }} { label, value } - Description of { label, value }
- * @returns {React.JSX.Element} Description of return value
- */
 function Meta({ label, value }: { label: string; value: string }) {
   return (
     <div className="p-3 border border-jewel-400/20 rounded-xl bg-jewel-50/50">
@@ -32,10 +27,6 @@ function Meta({ label, value }: { label: string; value: string }) {
   );
 }
 
-/**
- * Performs  nearby page operation.
- * @returns {React.JSX.Element} Description of return value
- */
 export default function NearbyPage() {
   const navigate = useNavigate();
   const { t } = useLocale();

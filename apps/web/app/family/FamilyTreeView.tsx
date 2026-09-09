@@ -27,10 +27,6 @@ interface GraphData {
 
 type ViewType = "ancestors" | "descendants" | "full";
 
-/**
- * Performs  family tree view operation.
- * @returns {React.JSX.Element} Description of return value
- */
 export default function FamilyTreeView() {
     const containerRef = useRef<HTMLDivElement>(null);
     const networkRef = useRef<Network | null>(null);

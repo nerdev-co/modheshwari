@@ -12,10 +12,6 @@ import { API_BASE } from "../../../lib/config";
 import { useUser } from "../../../lib/UserContext";
 import { useLocale } from "../../../lib/LocaleContext";
 
-/**
- * Performs  edit profile page operation.
- * @returns {React.JSX.Element} Description of return value
- */
 export default function EditProfilePage() {
   const navigate = useNavigate();
   const { toast } = useToast();

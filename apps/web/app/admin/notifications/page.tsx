@@ -21,8 +21,6 @@ const ROLES = [
 ] as const;
 
 /**
- * Performs admin notifications operation.
- * @returns Description of object
 */
 export default function AdminNotifications() {
     const navigate = useNavigate();

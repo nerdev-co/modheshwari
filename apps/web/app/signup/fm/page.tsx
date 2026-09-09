@@ -8,10 +8,6 @@ import { useToast } from "@repo/ui/toast";
 import { API_BASE } from "../../../lib/config";
 import { useLocale } from "../../../lib/LocaleContext";
 
-/**
- * Performs  member signup page operation.
- * @returns {React.JSX.Element} Description of return value
- */
 export default function MemberSignupPage() {
     const { toast } = useToast();
     const { t } = useLocale();
@@ -142,7 +138,6 @@ export default function MemberSignupPage() {
 }
 
 /**
- * Performs  input operation.
  * @param {{ label: string; } & React.InputHTMLAttributes<HTMLInputElement>} {
  *     label,
  *     ...props
@@ -150,7 +145,6 @@ export default function MemberSignupPage() {
  *     label,
  *     ...props
  * }
- * @returns {React.JSX.Element} Description of return value
  */
 function Input({
     label,
@@ -170,10 +164,6 @@ function Input({
     );
 }
 
-/**
- * Performs  success state operation.
- * @returns {React.JSX.Element} Description of return value
- */
 function SuccessState() {
     const { t } = useLocale();
     return (

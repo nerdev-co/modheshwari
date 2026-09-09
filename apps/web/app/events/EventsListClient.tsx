@@ -37,7 +37,6 @@ type Event = {
 const fetcher = /**
  * Executes fetcher operation.
  * @param {string} url - Description of url
- * @returns {Promise<any>} Description of return value
  */
 async (url: string) => {
   const res = await apiFetch(url);
@@ -45,11 +44,6 @@ async (url: string) => {
   return res.json();
 };
 
-/**
- * Performs  events list client operation.
- * @param {{ initialData: Event[]; }} { initialData } - Description of { initialData }
- * @returns {any} Description of return value
- */
 export default function EventsListClient() {
   const { t } = useLocale();
   const navigate = useNavigate();

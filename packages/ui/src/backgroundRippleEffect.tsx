@@ -15,32 +15,7 @@ type DivGridProps = {
   interactive?: boolean;
 };
 
-const DivGrid = /**
- * Executes  div grid operation.
- * @param {DivGridProps} {
- *   className,
- *   rows = 7,
- *   cols = 30,
- *   cellSize = 56,
- *   borderColor = "#d4c9a8",
- *   fillColor = "rgba(201, 162, 39, 0.15)",
- *   clickedCell = null,
- *   onCellClick = () => {},
- *   interactive = true,
- * } - Description of {
- *   className,
- *   rows = 7,
- *   cols = 30,
- *   cellSize = 56,
- *   borderColor = "#d4c9a8",
- *   fillColor = "rgba(201, 162, 39, 0.15)",
- *   clickedCell = null,
- *   onCellClick = () => {},
- *   interactive = true,
- * }
- * @returns {any} Description of return value
- */
-({
+const DivGrid = ({
   className,
   rows = 7,
   cols = 30,
@@ -113,22 +88,7 @@ interface BackgroundRippleEffectProps {
   className?: string;
 }
 
-export const BackgroundRippleEffect = /**
- * Executes  background ripple effect operation.
- * @param {BackgroundRippleEffectProps} {
- *   rows = 8,
- *   cols = 27,
- *   cellSize = 56,
- *   className,
- * } - Description of {
- *   rows = 8,
- *   cols = 27,
- *   cellSize = 56,
- *   className,
- * }
- * @returns {any} Description of return value
- */
-({
+export const BackgroundRippleEffect = ({
   rows = 8,
   cols = 27,
   cellSize = 56,

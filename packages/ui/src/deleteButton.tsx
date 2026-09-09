@@ -7,19 +7,6 @@ interface DeleteButtonProps
   children?: React.ReactNode;
 }
 
-/**
- * Performs  delete button operation.
- * @param {DeleteButtonProps} {
- *   children = "Delete",
- *   className = "",
- *   ...rest
- * } - Description of {
- *   children = "Delete",
- *   className = "",
- *   ...rest
- * }
- * @returns {any} Description of return value
- */
 export function DeleteButton({
   children = "Delete",
   className = "",
