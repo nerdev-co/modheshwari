@@ -154,7 +154,7 @@ export default function EditProfilePage() {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate("/me")}
+              onClick={() => navigate(-1)}
               disabled={saving}
             >
               Cancel
