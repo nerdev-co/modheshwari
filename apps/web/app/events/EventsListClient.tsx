@@ -194,7 +194,7 @@ export default function EventsListClient() {
               return (
                 <Card
                   key={event.id}
-                  className="backdrop-blur-xl shadow-jewel p-6 hover:shadow-jewel-lg transition-all cursor-pointer hover:scale-[1.02]"
+                  className="shadow-jewel p-6 hover:shadow-jewel-lg transition-all cursor-pointer hover:scale-[1.02]"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${status.classes}`}>

@@ -93,7 +93,7 @@ export default function EditProfilePage() {
       <div className="max-w-3xl mx-auto">
         <form
           onSubmit={handleSubmit}
-          className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-8"
+          className="bg-jewel-50/80 border border-jewel-400/20 shadow-jewel rounded-2xl p-8"
         >
           <h1 className="text-2xl font-display font-bold text-jewel-900 mb-6">
             {t("edit.title")}

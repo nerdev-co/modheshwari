@@ -105,7 +105,7 @@ export default function AdminNotifications() {
 
     return (
         <DreamySunsetBackground className="px-6 py-10">
-            <div className="max-w-3xl mx-auto bg-jewel-50/80 backdrop-blur-xl p-6 rounded-3xl border border-jewel-400/20 shadow-jewel">
+            <div className="max-w-3xl mx-auto bg-jewel-50/80 p-6 rounded-3xl border border-jewel-400/20 shadow-jewel">
                 <h1 className="text-xl font-display font-bold text-jewel-900 mb-4">{t("admin.notifications.heading")}</h1>
 
                 <div className="mb-3">

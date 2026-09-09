@@ -349,7 +349,7 @@ export default function ChatPage() {
     return (
         <DreamySunsetBackground className="px-6 py-10">
             <div className="max-w-7xl mx-auto">
-                <Card className="backdrop-blur-xl overflow-hidden">
+                <Card className="overflow-hidden">
                     <div className="grid grid-cols-1 md:grid-cols-5 min-h-[85vh]">
                         {/* Sidebar */}
                         <div className="md:col-span-1 border-b md:border-b-0 md:border-r border-jewel-400/20 bg-jewel-100/40">

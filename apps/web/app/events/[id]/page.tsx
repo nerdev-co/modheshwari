@@ -274,7 +274,7 @@ export default function EventDetailsPage() {
     return (
         <DreamySunsetBackground className="px-6 py-10">
             <div className="max-w-5xl mx-auto">
-                <Card className="backdrop-blur-xl shadow-jewel p-5 md:p-8">
+                <Card className="shadow-jewel p-5 md:p-8">
                     {/* Header */}
                     <Button
                         variant="secondary"
@@ -287,7 +287,7 @@ export default function EventDetailsPage() {
                     </Button>
 
                     {/* Event Card */}
-                    <Card className="backdrop-blur-xl shadow-jewel p-6 md:p-8">
+                    <Card className="shadow-jewel p-6 md:p-8">
                         {/* Status & Registration Count */}
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                             {getStatusBadge(event.status)}
@@ -414,7 +414,7 @@ export default function EventDetailsPage() {
 
                     {/* Approval Status */}
                     {event.approvals && event.approvals.length > 0 && (
-                        <Card className="mt-6 backdrop-blur-xl p-6">
+                        <Card className="mt-6 p-6">
                             <h2 className="text-xl font-display font-bold text-jewel-900 mb-4">{t("events.detail.approvalStatus")}</h2>
                             <div className="space-y-3">
                                 {event.approvals.map((approval) => (
@@ -446,7 +446,7 @@ export default function EventDetailsPage() {
 
                     {/* Moderation Area */}
                     {isAdmin && (
-                        <Card className="mt-6 bg-jewel-100/60 backdrop-blur-xl rounded-2xl p-6">
+                        <Card className="mt-6 bg-jewel-100/60 rounded-2xl p-6">
                             <h2 className="text-lg font-display font-bold text-jewel-900 mb-3">{t("events.detail.moderation")}</h2>
                             <p className="text-sm text-jewel-500 mb-4">
                                 {t("events.detail.moderationDescription")}
