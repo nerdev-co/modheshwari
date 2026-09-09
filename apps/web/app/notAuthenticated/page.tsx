@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { NotAuthenticated } from "@repo/ui/notAuthenticated";
 
 /**
@@ -8,15 +8,15 @@ import { NotAuthenticated } from "@repo/ui/notAuthenticated";
  * @returns {React.JSX.Element} Description of return value
  */
 export default function ProtectedPage() {
-    const router = useRouter();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const t = setTimeout(() => {
-            router.push("/signin");
+            navigate("/signin");
         }, 2500);
 
         return () => clearTimeout(t);
-    }, [router]);
+    }, [navigate]);
 
     return <NotAuthenticated />;
 }

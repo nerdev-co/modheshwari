@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { useToast } from "@repo/ui/toast";
@@ -24,7 +24,7 @@ interface MedicalInfo {
  * @returns {any} Description of return value
  */
 export default function Medical() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { user, loading } = useUser();
 
@@ -114,7 +114,7 @@ export default function Medical() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => router.push("/me/edit")}
+            onClick={() => navigate("/me/edit")}
             className="mt-4 justify-start"
           >
             Update Medical Info →

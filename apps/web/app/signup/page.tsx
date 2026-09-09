@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Shield, Users } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
@@ -48,7 +48,7 @@ export default function SignupLandingPage() {
             {signupOptions.map((option) => (
               <Link
                 key={option.href}
-                href={option.href}
+                to={option.href}
                 className="group rounded-2xl border border-jewel-400/20 bg-jewel-50/70 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-jewel-gold/40 hover:shadow-lg hover:shadow-jewel-gold/10"
               >
                 <div className="flex items-start justify-between gap-4">
@@ -71,7 +71,7 @@ export default function SignupLandingPage() {
           </div>
 
           <div className="mt-8 text-center text-sm text-jewel-500">
-            Already approved? <Link href="/signin" className="font-medium text-jewel-gold hover:text-jewel-500">Sign in</Link>
+            Already approved? <Link to="/signin" className="font-medium text-jewel-gold hover:text-jewel-500">Sign in</Link>
           </div>
         </div>
       </motion.main>

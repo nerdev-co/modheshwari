@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   User,
@@ -23,7 +23,7 @@ import { API_BASE } from "../../../lib/config";
  * @returns {React.JSX.Element} Description of return value
  */
 export default function SignupPage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   const [form, setForm] = useState({
@@ -53,7 +53,7 @@ export default function SignupPage() {
 
       if (data.status === "success") {
         toast("Signup successful!", { variant: "success" });
-        router.push("/me");
+        navigate("/me");
       } else {
         toast(data.message || "Signup failed", { variant: "error" });
       }

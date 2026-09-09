@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { LoaderFour } from "@repo/ui/loading";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
@@ -41,7 +41,7 @@ function ProfileField({
  * @returns {React.JSX.Element} Description of return value
  */
 export default function MePage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { user, loading, logout } = useUser();
 
   if (loading) {
@@ -102,14 +102,14 @@ export default function MePage() {
             <p className="text-sm text-jewel-500 mt-1">{user.email}</p>
           </div>
           <div className="flex flex-col gap-2">
-            <Button onClick={() => router.push("/me/edit")}>
+            <Button onClick={() => navigate("/me/edit")}>
               Edit profile
             </Button>
             <Button
               variant="secondary"
               onClick={() => {
                 logout();
-                router.push("/signin");
+                navigate("/signin");
               }}
             >
               Sign out

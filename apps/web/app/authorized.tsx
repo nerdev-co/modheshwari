@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 /**
@@ -7,18 +7,18 @@ import { useEffect, useState } from "react";
  * @returns {{ token: string; loading: boolean; }} Description of return value
  */
 export function useAuth() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const stored = localStorage.getItem("token");
-    if (!stored) router.push("/signin");
+    if (!stored) navigate("/signin");
     else {
       setToken(stored);
       setLoading(false);
     }
-  }, [router]);
+  }, [navigate]);
 
   return { token, loading };
 }

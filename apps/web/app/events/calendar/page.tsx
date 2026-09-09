@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Calendar as CalIcon } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
@@ -47,7 +47,7 @@ export default function EventsCalendar() {
   const [loading, setLoading] = useState(false);
 
   const base = API_BASE;
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const lastItemsRef = React.useRef<string | null>(null);
 
@@ -271,7 +271,7 @@ export default function EventsCalendar() {
                             key={ev.id}
                             onClick={(e) => {
                               e.stopPropagation();
-                              router.push(`/events/${ev.id}`);
+                              navigate(`/events/${ev.id}`);
                             }}
                             title={ev.name}
                             className="text-xs px-2 py-1 rounded-md bg-jewel-50/80 border border-jewel-400/20 text-jewel-900 hover:bg-jewel-100 truncate"
@@ -309,7 +309,7 @@ export default function EventsCalendar() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => router.push("/events")}
+                    onClick={() => navigate("/events")}
                     className="text-xs text-jewel-gold hover:text-jewel-500 hover:underline"
                   >
                     View all
@@ -337,7 +337,7 @@ export default function EventsCalendar() {
                       <div className="ml-3 flex-shrink-0">
                         <Button
                           variant="secondary"
-                          onClick={() => router.push(`/events/${ev.id}`)}
+                          onClick={() => navigate(`/events/${ev.id}`)}
                         >
                           Open
                         </Button>

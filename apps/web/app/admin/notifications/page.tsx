@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { useToast } from "@repo/ui/toast";
@@ -23,14 +23,14 @@ const ROLES = [
  * @returns Description of object
 */
 export default function AdminNotifications() {
-    const router = useRouter();
+    const navigate = useNavigate();
     const { toast } = useToast();
     const [authorized, setAuthorized] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (!token) {
-            router.push("/signin");
+            navigate("/signin");
             return;
         }
         try {
@@ -41,13 +41,13 @@ export default function AdminNotifications() {
                 if (["COMMUNITY_HEAD", "COMMUNITY_SUBHEAD", "GOTRA_HEAD"].includes(role)) {
                     setAuthorized(true);
                 } else {
-                    router.push("/me");
+                    navigate("/me");
                 }
             }
         } catch {
-            router.push("/signin");
+            navigate("/signin");
         }
-    }, [router]);
+    }, [navigate]);
 
     const [message, setMessage] = useState("");
     const [subject, setSubject] = useState("");

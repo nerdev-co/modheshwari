@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useNavigate, useParams } from "react-router-dom";
 import {
     Calendar,
     MapPin,
@@ -68,7 +68,7 @@ interface EventDetails {
  * @returns {React.JSX.Element} Description of return value
  */
 export default function EventDetailsPage() {
-    const router = useRouter();
+    const navigate = useNavigate();
     const params = useParams();
     const { toast } = useToast();
     const eventId = params?.id as string;
@@ -264,7 +264,7 @@ export default function EventDetailsPage() {
             <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
                 <div className="text-center">
                     <h2 className="text-2xl font-display font-bold text-jewel-900 mb-2">Event not found</h2>
-                    <Button variant="ghost" onClick={() => router.push("/events")}>
+                    <Button variant="ghost" onClick={() => navigate("/events")}>
                         Back to Events
                     </Button>
                 </div>
@@ -280,7 +280,7 @@ export default function EventDetailsPage() {
                     <Button
                         variant="secondary"
                         size="sm"
-                        onClick={() => router.back()}
+                        onClick={() => navigate(-1)}
                         className="inline-flex items-center gap-2 mb-6"
                     >
                         <ArrowLeft className="w-4 h-4" />

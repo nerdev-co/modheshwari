@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { LoaderOne } from "@repo/ui/loading";
 import { NotAuthenticated } from "@repo/ui/notAuthenticated";
 import { MemberCard } from "@repo/ui/memberCard";
@@ -42,7 +42,7 @@ interface Member {
  *   - Auth token is never stored locally.
  */
 export default function FamilyPageContent() {
-    const router = useRouter();
+    const navigate = useNavigate();
     const { toast } = useToast();
 
     const [hydrated, setHydrated] = useState(false);
@@ -72,7 +72,7 @@ export default function FamilyPageContent() {
                 );
 
                 if (res.status === 401) {
-                    router.push(`/signin?next=/family`);
+                    navigate(`/signin?next=/family`);
                     return;
                 }
 
@@ -87,7 +87,7 @@ export default function FamilyPageContent() {
                 setLoading(false);
             }
         },
-        [token, router],
+        [token, navigate],
     );
 
     const toggleStatus = async (userId: string, currentStatus: boolean) => {

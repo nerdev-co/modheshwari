@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { Calendar, MapPin, FileText, ArrowLeft, Loader } from "lucide-react";
 import { NotAuthenticated } from "@repo/ui/notAuthenticated";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
@@ -14,7 +14,7 @@ import apiFetch from "../../../lib/api";
  * @returns {React.JSX.Element} Description of return value
  */
 export default function CreateEventPage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [hydrated, setHydrated] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -45,7 +45,7 @@ export default function CreateEventPage() {
         method: "POST",
         body: JSON.stringify(formData),
       });
-      router.push("/events");
+      navigate("/events");
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       setError(msg || "An error occurred");
@@ -69,7 +69,7 @@ export default function CreateEventPage() {
   return (
     <DreamySunsetBackground className="px-6 py-10">
       <div className="max-w-2xl mx-auto">
-        <Button variant="ghost" onClick={() => router.back()}>
+        <Button variant="ghost" onClick={() => navigate(-1)}>
           <ArrowLeft className="w-4 h-4" />
           Back
         </Button>
@@ -170,7 +170,7 @@ export default function CreateEventPage() {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => router.back()}
+              onClick={() => navigate(-1)}
               className="flex-1"
             >
               Cancel

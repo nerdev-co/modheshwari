@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, Lock, Loader2, ArrowRight } from "lucide-react";
 import { useToast } from "@repo/ui/toast";
@@ -25,7 +25,7 @@ const roles = [
  * @returns {React.JSX.Element} Description of return value
  */
 export default function SigninPage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,7 +54,7 @@ export default function SigninPage() {
         } catch {
           // ignore dispatch errors
         }
-        router.push("/me");
+        navigate("/me");
       } else {
         const msg =
           (data && (data.message || data.error)) ||
@@ -190,7 +190,7 @@ export default function SigninPage() {
             <p className="text-center text-sm text-jewel-600">
               Don&apos;t have an account?{" "}
               <Link
-                href="/signup"
+                to="/signup"
                 className="text-jewel-gold hover:text-jewel-500 font-medium transition-colors"
               >
                 Sign Up

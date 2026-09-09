@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { LoaderFour } from "@repo/ui/loading";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 
@@ -36,7 +36,7 @@ function Meta({ label, value }: { label: string; value: string }) {
  * @returns {React.JSX.Element} Description of return value
  */
 export default function NearbyPage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [users, setUsers] = useState<NearbyUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +46,7 @@ export default function NearbyPage() {
     const token =
       typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (!token) {
-      router.push("/signin");
+      navigate("/signin");
       return;
     }
 
@@ -86,7 +86,7 @@ export default function NearbyPage() {
 
     fetchNearby();
     return () => controller.abort();
-  }, [radiusKm, router]);
+  }, [radiusKm, navigate]);
 
   if (loading) {
     return (

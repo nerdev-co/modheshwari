@@ -1,131 +1,111 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@repo/ui/button";
-import { GlowCard } from "@repo/ui/glow-card";
 import {
   Users,
   Shield,
   FileText,
-  Sparkles,
-  ArrowRight,
   Heart,
   Bell,
   Calendar,
+  ArrowRight,
+  Sparkles,
 } from "lucide-react";
+import { useLocale } from "../lib/LocaleContext";
 
-/**
- * Performs  home operation.
- * @returns {React.JSX.Element} Description of return value
- */
 export default function Home() {
-  const router = useRouter();
+  const navigate = useNavigate();
+  const { t, locale } = useLocale();
 
   const features = [
     {
       icon: Users,
-      title: "Family Management",
-      description:
-        "Organize and track family members across generations with ease",
+      titleKey: "landing.feature1Title",
+      descKey: "landing.feature1Desc",
+      color: "bg-accent-muted text-accent",
     },
     {
       icon: Shield,
-      title: "Role-Based Access",
-      description:
-        "Secure permissions for community heads, gotra heads, and family members",
-    },
-    {
-      icon: FileText,
-      title: "Record Keeping",
-      description:
-        "Maintain accurate family records without spreadsheets or confusion",
+      titleKey: "landing.feature2Title",
+      descKey: "landing.feature2Desc",
+      color: "bg-emerald-50 text-emerald-600",
     },
     {
       icon: Heart,
-      title: "Medical Emergency",
-      description:
-        "Quick access to blood group info and emergency contacts when needed",
-    },
-    {
-      icon: Bell,
-      title: "Smart Notifications",
-      description:
-        "Stay updated with family events, approvals, and important announcements",
+      titleKey: "landing.feature3Title",
+      descKey: "landing.feature3Desc",
+      color: "bg-ruby-50 text-ruby-500",
     },
     {
       icon: Calendar,
-      title: "Event Planning",
-      description:
-        "Organize community gatherings with built-in approval workflows",
+      titleKey: "landing.feature4Title",
+      descKey: "landing.feature4Desc",
+      color: "bg-saffron-50 text-saffron-500",
+    },
+    {
+      icon: Bell,
+      titleKey: "landing.feature5Title",
+      descKey: "landing.feature5Desc",
+      color: "bg-jewel-100 text-jewel-600",
+    },
+    {
+      icon: FileText,
+      titleKey: "landing.feature6Title",
+      descKey: "landing.feature6Desc",
+      color: "bg-accent-muted text-accent",
     },
   ];
 
   const stats = [
-    { value: "500+", label: "Families" },
-    { value: "2000+", label: "Members" },
-    { value: "50+", label: "Gotras" },
+    { value: "500+", labelKey: "landing.families" },
+    { value: "2,000+", labelKey: "landing.members" },
+    { value: "50+", labelKey: "landing.gotras" },
   ];
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
-      <div className="absolute inset-0 bg-jewel-50" />
-
-      <div className="absolute top-20 left-10 w-72 h-72 bg-jewel-gold/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-40 right-10 w-96 h-96 bg-jewel-emerald/10 rounded-full blur-3xl" />
-      <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-jewel-goldLight/5 rounded-full blur-2xl" />
-
-      <main className="relative z-10 flex flex-col items-center px-4 sm:px-6 py-16 sm:py-24">
+    <div className="relative min-h-screen">
+      <main className="relative z-10 flex flex-col items-center px-4 sm:px-6 pt-24 pb-16">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-jewel-100/60 border border-jewel-400/30 backdrop-blur-sm mb-10"
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-muted border border-accent/20 mb-8"
         >
-          <Sparkles className="w-4 h-4 text-jewel-500" />
-          <span className="text-sm text-jewel-700 font-medium">
-            Trusted by Modheshwari Community
+          <Sparkles className="w-3.5 h-3.5 text-accent" />
+          <span className="text-xs text-accent font-medium">
+            {t("landing.badge")}
           </span>
         </motion.div>
 
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-5xl sm:text-7xl font-display font-bold tracking-tight text-center max-w-5xl"
+          transition={{ duration: 0.3, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+          className="text-4xl sm:text-6xl font-display font-bold tracking-tight text-center max-w-3xl text-text-primary"
         >
-          <span className="bg-gradient-to-r from-jewel-900 via-jewel-800 to-jewel-900 bg-clip-text text-transparent">
-            Manage Your Family
-          </span>
-          <br />
-          <span className="bg-gradient-to-r from-jewel-gold via-jewel-goldLight to-jewel-500 bg-clip-text text-transparent">
-            Heritage, Digitally
-          </span>
+          {t("landing.title")}
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-6 max-w-2xl text-lg sm:text-xl text-jewel-700 text-center leading-relaxed"
+          transition={{ duration: 0.3, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-5 max-w-xl text-base sm:text-lg text-text-secondary text-center leading-relaxed"
         >
-          A secure, private platform for community leaders and families to
-          organize records, manage access, and stay connected across
-          generations.
+          {t("landing.description")}
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-12 flex flex-col sm:flex-row gap-4"
+          transition={{ duration: 0.3, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-8 flex flex-col sm:flex-row gap-3"
         >
-          <Button onClick={() => router.push("/signin")}>
-            <span className="flex items-center gap-2">
-              Get Started
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </span>
+          <Button onClick={() => navigate("/signin")}>
+            {t("landing.getStarted")}
+            <ArrowRight className="w-4 h-4" />
           </Button>
-
           <Button
             variant="secondary"
             onClick={() =>
@@ -134,128 +114,95 @@ export default function Home() {
                 ?.scrollIntoView({ behavior: "smooth" })
             }
           >
-            Learn More
+            {t("landing.seeFeatures")}
           </Button>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-20 grid grid-cols-3 gap-8 sm:gap-16"
+          transition={{ duration: 0.3, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-16 grid grid-cols-3 gap-8 sm:gap-16"
         >
           {stats.map((stat, idx) => (
             <div key={idx} className="text-center">
-              <div className="text-3xl sm:text-4xl font-display font-bold bg-gradient-to-r from-jewel-gold to-jewel-500 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl font-bold text-text-primary">
                 {stat.value}
               </div>
-              <div className="mt-2 text-sm text-jewel-600">{stat.label}</div>
+              <div className="mt-1 text-xs sm:text-sm text-text-muted">
+                {t(stat.labelKey)}
+              </div>
             </div>
           ))}
         </motion.div>
 
-        <section id="features" className="mt-32 w-full max-w-7xl">
+        <section id="features" className="mt-24 w-full max-w-5xl">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center mb-12"
           >
-            <h2 className="text-3xl sm:text-5xl font-display font-bold text-jewel-900 mb-4">
-              Everything You Need
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-text-primary mb-3">
+              {t("landing.featuresTitle")}
             </h2>
-            <p className="text-jewel-600 text-lg">
-              Powerful features designed for community and family management
+            <p className="text-text-secondary text-sm sm:text-base">
+              {t("landing.featuresDescription")}
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {features.map((feature, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 8 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.3, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
               >
-                <GlowCard className="p-6 h-full">
-                  <div className="inline-flex p-3 bg-gradient-to-br from-jewel-200 to-jewel-100 rounded-xl mb-4">
-                    <feature.icon className="w-6 h-6 text-jewel-600" />
+                <div className="card-elevated h-full group hover:shadow-medium transition-shadow duration-fast">
+                  <div className={`inline-flex p-2.5 rounded-xl ${feature.color} mb-3`}>
+                    <feature.icon className="w-5 h-5" />
                   </div>
-
-                  <h3 className="text-xl font-semibold text-jewel-900 mb-2">
-                    {feature.title}
+                  <h3 className="text-sm font-semibold text-text-primary mb-1.5">
+                    {t(feature.titleKey)}
                   </h3>
-
-                  <p className="text-jewel-600 text-sm leading-relaxed">
-                    {feature.description}
+                  <p className="text-text-secondary text-sm leading-relaxed">
+                    {t(feature.descKey)}
                   </p>
-                </GlowCard>
+                </div>
               </motion.div>
             ))}
           </div>
         </section>
 
-        <section className="mt-32 w-full max-w-4xl">
+        <section className="mt-24 w-full max-w-2xl">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="relative p-8 sm:p-12 bg-jewel-50/60 backdrop-blur-sm border border-jewel-400/20 rounded-3xl shadow-jewel"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="card-elevated p-8 text-center"
           >
-            <div className="absolute -top-6 left-8">
-              <div className="text-6xl text-jewel-300">&quot;</div>
+            <div className="w-12 h-12 rounded-full bg-accent-muted mx-auto mb-4 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-accent" />
             </div>
-
-            <p className="text-lg sm:text-xl text-jewel-800 leading-relaxed mb-6 italic">
-              This platform has transformed how we manage our community records.
-              The role-based access and approval workflows make everything
-              seamless and secure. Highly recommended for any community leader!
+            <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary mb-3">
+              {t("landing.ctaTitle")}
+            </h2>
+            <p className="text-text-secondary text-sm mb-6 max-w-md mx-auto">
+              {t("landing.ctaDescription")}
             </p>
-
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-jewel-gold to-jewel-500" />
-              <div>
-                <div className="font-semibold text-jewel-900">
-                  Rajesh Sharma
-                </div>
-                <div className="text-sm text-jewel-600">Community Head</div>
-              </div>
-            </div>
+            <Button onClick={() => navigate("/signin")}>
+              {t("landing.ctaButton")}
+              <ArrowRight className="w-4 h-4" />
+            </Button>
           </motion.div>
         </section>
 
-        <section className="mt-32 w-full max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="relative p-12 bg-gradient-to-br from-jewel-100/80 to-jewel-200/80 backdrop-blur-sm border border-jewel-gold/30 rounded-3xl text-center overflow-hidden shadow-jewel"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-jewel-gold/10 to-jewel-emerald/10" />
-
-            <div className="relative">
-              <h2 className="text-3xl sm:text-4xl font-display font-bold text-jewel-900 mb-4">
-                Ready to Get Started?
-              </h2>
-              <p className="text-jewel-700 mb-8 max-w-2xl mx-auto">
-                Join hundreds of families already managing their heritage with
-                our platform
-              </p>
-
-              <Button onClick={() => router.push("/signin")}>
-                Sign In Now
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </div>
-          </motion.div>
-        </section>
-
-        <footer className="mt-24 text-center text-jewel-600 text-sm pb-8">
-          <p>© 2026 Modheshwari Community Platform. All rights reserved.</p>
+        <footer className="mt-20 text-center text-text-muted text-xs pb-8">
+          <p>{t("landing.footer")}</p>
         </footer>
       </main>
     </div>

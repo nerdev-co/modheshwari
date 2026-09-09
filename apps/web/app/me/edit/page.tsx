@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { LoaderFour } from "@repo/ui/loading";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
@@ -16,7 +16,7 @@ import { useUser } from "../../../lib/UserContext";
  * @returns {React.JSX.Element} Description of return value
  */
 export default function EditProfilePage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { user, loading, updateProfile } = useUser();
   const [saving, setSaving] = useState(false);
@@ -48,7 +48,7 @@ export default function EditProfilePage() {
     const token = localStorage.getItem("token");
     if (!token) {
       toast("You need to sign in first.", { variant: "warning" });
-      router.push("/signin");
+      navigate("/signin");
       return;
     }
 
@@ -69,7 +69,7 @@ export default function EditProfilePage() {
         toast("Profile updated successfully.", { variant: "success" });
         const updated = data.data;
         if (updated) updateProfile(updated);
-        router.push("/me");
+        navigate("/me");
       } else {
         toast(data.message || "Failed to update profile.", { variant: "error" });
       }
@@ -154,7 +154,7 @@ export default function EditProfilePage() {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => router.push("/me")}
+              onClick={() => navigate("/me")}
               disabled={saving}
             >
               Cancel
