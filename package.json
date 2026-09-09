@@ -45,11 +45,12 @@
   ],
   "dependencies": {
     "@elastic/elasticsearch": "^9.3.1",
-    "@prisma/client": "6",
+    "@prisma/client": "6.19.3",
     "@sinclair/typebox": "0.32.10",
     "@types/js-yaml": "^4.0.9",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/swagger-ui-react": "^5.18.0",
+    "baseline-browser-mapping": "^2.11.21",
     "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
