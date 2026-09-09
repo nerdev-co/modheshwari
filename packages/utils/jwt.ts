@@ -1,25 +1,35 @@
 //auth continuation — managing session identity after login.
 import { join } from "path";
+import { fileURLToPath } from "url";
 
 import { config } from "dotenv";
 import jwt from "jsonwebtoken";
 
 // Load .env from monorepo root if not already loaded
-const cwd = typeof process !== "undefined" && process.cwd ? process.cwd() : __dirname;
-if (cwd) {
-  config({ path: join(cwd, "../../.env") });
+const dir =
+  typeof process !== "undefined" && process.cwd
+    ? process.cwd()
+    : typeof __dirname !== "undefined"
+      ? __dirname
+      : fileURLToPath(import.meta.url);
+if (dir) {
+  config({ path: join(dir, "../../.env") });
 }
 
-// Check for secrets *after* loading .env
-if (!process.env.JWT_SECRET) {
-  throw new Error("Missing JWT_SECRET in environment variables");
-}
-if (!process.env.JWT_REFRESH_SECRET) {
-  throw new Error("Missing JWT_REFRESH_SECRET in environment variables");
+// Read secrets lazily so missing env vars don't crash module load time
+function getSecret(): string {
+  if (!process.env.JWT_SECRET) {
+    throw new Error("Missing JWT_SECRET in environment variables");
+  }
+  return process.env.JWT_SECRET;
 }
 
-const JWT_SECRET = process.env.JWT_SECRET!;
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!;
+function getRefreshSecret(): string {
+  if (!process.env.JWT_REFRESH_SECRET) {
+    throw new Error("Missing JWT_REFRESH_SECRET in environment variables");
+  }
+  return process.env.JWT_REFRESH_SECRET;
+}
 
 export interface AuthPayload {
   userId?: string;
@@ -38,7 +48,7 @@ export function signJWT(payload: AuthPayload) {
   const p: Record<string, unknown> = { ...(payload as Record<string, unknown>) };
   if (payload.userId && !p.id) p.id = payload.userId;
   if (payload.id && !p.userId) p.userId = payload.id;
-  return jwt.sign(p, JWT_SECRET, { expiresIn: "15m" });
+  return jwt.sign(p, getSecret(), { expiresIn: "15m" });
 }
 
 /**
@@ -48,7 +58,7 @@ export function signJWT(payload: AuthPayload) {
  */
 export function verifyJWT(token: string): AuthPayload | null {
   try {
-    return jwt.verify(token, JWT_SECRET) as AuthPayload;
+    return jwt.verify(token, getSecret()) as AuthPayload;
   } catch {
     return null;
   }
@@ -73,7 +83,7 @@ export async function verifyAuth(req: Request): Promise<AuthPayload | null> {
  * @returns A signed JWT valid for 7 days (refresh token).
  */
 export function signRefreshJWT(payload: AuthPayload) {
-  return jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: "7d" });
+  return jwt.sign(payload, getRefreshSecret(), { expiresIn: "7d" });
 }
 
 /**
@@ -83,7 +93,7 @@ export function signRefreshJWT(payload: AuthPayload) {
  */
 export function verifyRefreshJWT(token: string): AuthPayload | null {
   try {
-    return jwt.verify(token, JWT_REFRESH_SECRET) as AuthPayload;
+    return jwt.verify(token, getRefreshSecret()) as AuthPayload;
   } catch {
     return null;
   }
