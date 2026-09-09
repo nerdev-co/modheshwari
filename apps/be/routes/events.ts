@@ -11,7 +11,6 @@ import {
 } from "@modheshwari/utils/pagination";
 
 import { requireAuth } from "./authMiddleware";
-import { extractAndVerifyToken } from "../utils/auth";
 import { createOutboxEvent } from "../lib/outbox";
 import { TOPICS } from "../kafka/config";
 import { logger } from "../lib/logger";
@@ -237,10 +236,9 @@ export async function handleListEvents(req: Request): Promise<Response> {
  *   or an error message with HTTP status code on failure.
  */
 export async function handleListEventsCompact(req: Request): Promise<Response> {
-  const userId = extractAndVerifyToken(req);
-  if (!userId) {
-    return failure("Unauthorized", "Auth Error", 401);
-  }
+  const auth = requireAuth(req);
+  if (!auth.ok) return auth.response;
+  const userId = auth.payload.userId as string;
 
   try {
     const url = new URL(req.url);

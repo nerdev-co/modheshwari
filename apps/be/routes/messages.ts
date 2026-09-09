@@ -11,7 +11,6 @@
  */
 
 export {
-  getUserIdFromRequest,
   handleGetConversations,
   handleCreateConversation,
   handleGetMessages,

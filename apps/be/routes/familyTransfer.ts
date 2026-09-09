@@ -1,5 +1,5 @@
 import prisma from "@modheshwari/db";
-import { verifyAuth } from "@modheshwari/utils/jwt";
+import { requireAuth } from "./authMiddleware";
 import { success, failure } from "@modheshwari/utils/response";
 
 import { logger } from "../lib/logger";
@@ -12,11 +12,9 @@ import { logger } from "../lib/logger";
  * @returns {Promise<Response>} - JSON response with status and membership details.
  */
 export async function handleFamilyTransfer(req: Request) {
-  const user = await verifyAuth(req);
-  if (!user) return failure("Unauthorized", null, 401);
-
-  const userId = user.userId ?? user.id;
-  if (!userId) return failure("Unauthorized: missing userId", null, 401);
+  const auth = requireAuth(req);
+  if (!auth.ok) return auth.response;
+  const userId = (auth.payload.userId ?? auth.payload.id) as string;
 
   const body = (await req.json()) as { newFamilyId?: string };
   const { newFamilyId } = body;

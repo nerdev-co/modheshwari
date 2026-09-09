@@ -1,7 +1,7 @@
 import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 
-import { getUserIdFromRequest } from "./auth";
+import { requireAuth } from "../authMiddleware";
 import getRedisClient from "@modheshwari/redis";
 
 const CONVERSATIONS_TTL = Number(
@@ -22,10 +22,9 @@ function conversationsCacheKey(userId: string): string {
  * Get all conversations for the current user
  */
 export async function handleGetConversations(req: Request): Promise<Response> {
-  const userId = getUserIdFromRequest(req);
-  if (!userId) {
-    return failure("Unauthorized", null, 401);
-  }
+  const auth = requireAuth(req);
+  if (!auth.ok) return auth.response;
+  const userId = auth.payload.userId as string;
 
   try {
     const redis = await getRedisClient();
@@ -133,10 +132,9 @@ export async function handleGetConversations(req: Request): Promise<Response> {
 export async function handleCreateConversation(
   req: Request,
 ): Promise<Response> {
-  const userId = getUserIdFromRequest(req);
-  if (!userId) {
-    return failure("Unauthorized", null, 401);
-  }
+  const auth = requireAuth(req);
+  if (!auth.ok) return auth.response;
+  const userId = auth.payload.userId as string;
 
   try {
     const body = (await req.json()) as any;

@@ -1,7 +1,7 @@
 import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 
-import { getUserIdFromRequest } from "./messages/auth";
+import { requireAuth } from "./authMiddleware";
 import { logger } from "../lib/logger";
 
 // GET /api/chat
@@ -25,8 +25,9 @@ import { logger } from "../lib/logger";
  *   an error message with HTTP status code on failure.
  */
 export async function handleGetChat(req: Request) {
-  const userId = getUserIdFromRequest(req);
-  if (!userId) return failure("Unauthorized", null, 401);
+  const auth = requireAuth(req);
+  if (!auth.ok) return auth.response;
+  const userId = auth.payload.userId as string;
 
   try {
     // 1. Personal conversations (most recent)

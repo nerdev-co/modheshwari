@@ -1,5 +1,5 @@
 import prisma from "@modheshwari/db";
-import { verifyAuth } from "@modheshwari/utils/jwt";
+import { requireAuth } from "./authMiddleware";
 import { success, failure } from "@modheshwari/utils/response";
 import { logger } from "../lib/logger";
 
@@ -24,11 +24,9 @@ type MedicalBody = {
  * Body: { bloodGroup?: string, allergies?: string, medicalNotes?: string }
  */
 export async function handleUpdateMedical(req: Request) {
-  const user = await verifyAuth(req);
-  if (!user) return failure("Unauthorized", null, 401);
-
-  const userId = user.userId ?? user.id;
-  if (!userId) return failure("Unauthorized: missing userId", null, 401);
+  const auth = requireAuth(req);
+  if (!auth.ok) return auth.response;
+  const userId = (auth.payload.userId ?? auth.payload.id) as string;
 
   const body = (await req.json().catch(() => null)) as MedicalBody;
   if (!body || (!body.bloodGroup && !body.allergies && !body.medicalNotes)) {
@@ -87,8 +85,8 @@ export async function handleUpdateMedical(req: Request) {
  * GET /api/medical/search?bloodGroup=O_POS
  */
 export async function handleSearchByBloodGroup(req: Request) {
-  const user = await verifyAuth(req);
-  if (!user) return failure("Unauthorized", null, 401);
+  const auth = requireAuth(req);
+  if (!auth.ok) return auth.response;
 
   const url = new URL(req.url);
   const bloodGroup = url.searchParams.get("bloodGroup");

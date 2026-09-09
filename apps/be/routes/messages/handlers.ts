@@ -1,7 +1,7 @@
 import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 
-import { getUserIdFromRequest } from "./auth";
+import { requireAuth } from "../authMiddleware";
 
 /**
  * GET /api/messages/:conversationId
@@ -11,10 +11,9 @@ export async function handleGetMessages(
   req: Request,
   conversationId: string
 ): Promise<Response> {
-  const userId = getUserIdFromRequest(req);
-  if (!userId) {
-    return failure("Unauthorized", null, 401);
-  }
+  const auth = requireAuth(req);
+  if (!auth.ok) return auth.response;
+  const userId = auth.payload.userId as string;
 
   const url = new URL(req.url);
   const limit = parseInt(url.searchParams.get("limit") || "50");
@@ -74,10 +73,9 @@ export async function handleGetMessages(
  * Send a message in a conversation
  */
 export async function handleSendMessage(req: Request): Promise<Response> {
-  const userId = getUserIdFromRequest(req);
-  if (!userId) {
-    return failure("Unauthorized", null, 401);
-  }
+  const auth = requireAuth(req);
+  if (!auth.ok) return auth.response;
+  const userId = auth.payload.userId as string;
 
   try {
     const body = await req.json();
@@ -149,10 +147,9 @@ export async function handleSendMessage(req: Request): Promise<Response> {
  * Mark all messages in a conversation as read
  */
 export async function handleMarkMessagesRead(req: Request): Promise<Response> {
-  const userId = getUserIdFromRequest(req);
-  if (!userId) {
-    return failure("Unauthorized", null, 401);
-  }
+  const auth = requireAuth(req);
+  if (!auth.ok) return auth.response;
+  const userId = auth.payload.userId as string;
 
   try {
     const body = await req.json();

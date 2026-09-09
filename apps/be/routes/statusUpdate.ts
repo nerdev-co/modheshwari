@@ -1,5 +1,5 @@
 import prisma from "@modheshwari/db";
-import { verifyAuth } from "@modheshwari/utils/jwt";
+import { requireAuth } from "./authMiddleware";
 import { success, failure } from "@modheshwari/utils/response";
 import type { Role } from "@prisma/client";
 
@@ -40,11 +40,9 @@ import type { Role } from "@prisma/client";
  */
 export async function handleCreateStatusUpdateRequest(req: Request) {
   try {
-    const user = await verifyAuth(req);
-    if (!user) return failure("Unauthorized", null, 401);
-
-    const userId = user.userId ?? user.id;
-    if (!userId) return failure("Unauthorized: missing userId", null, 401);
+    const auth = requireAuth(req);
+    if (!auth.ok) return auth.response;
+    const userId = (auth.payload.userId ?? auth.payload.id) as string;
 
     const body = (await req.json()) as {
       targetUserId?: string;
@@ -123,14 +121,15 @@ if (!approver) throw new Error(`No active approver found for role: ${role}`);
  */
 export async function handleListStatusUpdateRequests(req: Request) {
   try {
-    const user = await verifyAuth(req);
-    if (!user) return failure("Unauthorized", null, 401);
+    const auth = requireAuth(req);
+    if (!auth.ok) return auth.response;
+    const userId = auth.payload.userId as string;
 
     const requests = await prisma.statusUpdateRequest.findMany({
       where: {
         OR: [
-          { requestedById: user.id },
-          { approvals: { some: { approverId: user.id } } },
+          { requestedById: userId },
+          { approvals: { some: { approverId: userId } } },
         ],
       },
       include: {
@@ -191,8 +190,9 @@ export async function handleReviewStatusUpdateRequest(
   id: string,
 ) {
   try {
-    const user = await verifyAuth(req);
-    if (!user) return failure("Unauthorized", null, 401);
+    const auth = requireAuth(req);
+    if (!auth.ok) return auth.response;
+    const userId = auth.payload.userId as string;
 
     const body = (await req.json()) as {
       status?: "APPROVED" | "REJECTED";
@@ -208,7 +208,7 @@ export async function handleReviewStatusUpdateRequest(
       const updatedApproval = await tx.statusUpdateApproval.updateMany({
         where: {
           requestId: id,
-          approverId: user.id,
+          approverId: userId,
         },
         data: { status, remarks, reviewedAt: new Date() },
       });

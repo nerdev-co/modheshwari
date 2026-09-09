@@ -5,7 +5,7 @@ import {
   buildPaginationResponse,
 } from "@modheshwari/utils/pagination";
 
-import { extractAndVerifyToken } from "../utils/auth";
+import { requireAuth } from "./authMiddleware";
 import { logger } from "../lib/logger";
 
 /**
@@ -16,8 +16,9 @@ import { logger } from "../lib/logger";
  */
 export async function handleGetFamilyMembers(req: Request): Promise<Response> {
   try {
-    const userId = extractAndVerifyToken(req);
-    if (!userId) return failure("Unauthorized", "Unauthorized", 401);
+    const auth = requireAuth(req);
+    if (!auth.ok) return auth.response;
+    const userId = auth.payload.userId as string;
 
     // Find family headed by this user
     const family = await prisma.family.findFirst({

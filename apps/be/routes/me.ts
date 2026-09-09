@@ -3,7 +3,7 @@ import { success, failure } from "@modheshwari/utils/response";
 import type { bloodGroup as PrismaBloodGroup } from "@prisma/client";
 import { validatePhone, formatE164 } from "@modheshwari/utils/phone";
 
-import { extractAndVerifyToken } from "../utils/auth";
+import { requireAuth } from "./authMiddleware";
 import {
   isValidBloodGroup,
   normalizeBloodGroup,
@@ -80,8 +80,9 @@ type MeUser = NonNullable<Awaited<ReturnType<typeof fetchUserWithFamilies>>>;
 export async function handleGetMe(req: Request): Promise<Response> {
   try {
     // --- Step 1: Extract and validate JWT ---
-    const userId = extractAndVerifyToken(req);
-    if (!userId) return failure("Unauthorized", "Auth Error", 401);
+    const auth = requireAuth(req);
+    if (!auth.ok) return auth.response;
+    const userId = auth.payload.userId as string;
 
     // --- Step 2: Fetch user + family memberships ---
     const redis = await getRedisClient();
@@ -206,8 +207,9 @@ type UpdateProfileBody = {
 export async function handleUpdateMe(req: Request): Promise<Response> {
   try {
     // --- Step 1: Extract and validate JWT ---
-    const userId = extractAndVerifyToken(req);
-    if (!userId) return failure("Unauthorized", "Auth Error", 401);
+    const auth = requireAuth(req);
+    if (!auth.ok) return auth.response;
+    const userId = auth.payload.userId as string;
 
     // --- Step 2: Parse and validate input ---
     const body = (await req.json()) as UpdateProfileBody;

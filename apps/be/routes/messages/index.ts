@@ -11,7 +11,6 @@
  * focused modules for better maintainability and testability.
  */
 
-export { getUserIdFromRequest } from "./auth";
 export { handleGetConversations, handleCreateConversation } from "./conversations";
 export { handleGetMessages, handleSendMessage, handleMarkMessagesRead } from "./handlers";
 export { handleSearchUsersForChat } from "./search";

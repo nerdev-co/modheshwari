@@ -1,7 +1,7 @@
 import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 
-import { extractAndVerifyToken } from "../../utils/auth";
+import { requireAuth } from "../authMiddleware";
 
 /**
  * GET /api/messages/search-users
@@ -10,11 +10,9 @@ import { extractAndVerifyToken } from "../../utils/auth";
 export async function handleSearchUsersForChat(
     req: Request,
 ): Promise<Response> {
-    //extract user details from token
-    const userId = extractAndVerifyToken(req);
-    if (!userId) {
-        return failure("Unauthorized", "Auth Error", 401);
-    }
+    const auth = requireAuth(req);
+    if (!auth.ok) return auth.response;
+    const userId = auth.payload.userId as string;
 
     //parse the url query params
     const url = new URL(req.url);

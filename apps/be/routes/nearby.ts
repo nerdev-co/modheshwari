@@ -1,7 +1,7 @@
 import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 
-import { extractAndVerifyToken } from "../utils/auth";
+import { requireAuth } from "./authMiddleware";
 import { logger } from "../lib/logger";
 
 type NearbyRow = {
@@ -25,8 +25,9 @@ const MAX_LIMIT = 100;
  */
 export async function handleGetNearbyUsers(req: Request): Promise<Response> {
   try {
-    const userId = extractAndVerifyToken(req);
-    if (!userId) return failure("Unauthorized", "Auth Error", 401);
+    const auth = requireAuth(req);
+    if (!auth.ok) return auth.response;
+    const userId = auth.payload.userId as string;
 
     const url = new URL(req.url);
 
