@@ -3,6 +3,7 @@
 import { ToastProvider } from "@repo/ui/toast";
 
 import { UserProvider } from "../lib/UserContext";
+import { ErrorBoundary } from "./errorBoundary";
 
 /**
  * Performs  providers operation.
@@ -11,8 +12,10 @@ import { UserProvider } from "../lib/UserContext";
  */
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ToastProvider>
-      <UserProvider>{children}</UserProvider>
-    </ToastProvider>
+    <ErrorBoundary>
+      <ToastProvider>
+        <UserProvider>{children}</UserProvider>
+      </ToastProvider>
+    </ErrorBoundary>
   );
 }
