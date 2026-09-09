@@ -4,7 +4,7 @@ import { indexUser, indexEvent } from "../../lib/elasticIndexer";
 import { logger } from "../../lib/logger";
 import { elasticsearchReconciliationCount } from "../../lib/metrics";
 
-const RECONCILIATION_INTERVAL_MS = Number(process.env.ES_RECONCILIATION_INTERVAL_MS || "1000 * 60 * 60"); // 1 hour
+const RECONCILIATION_INTERVAL_MS = Number(process.env.ES_RECONCILIATION_INTERVAL_MS) || 1000 * 60 * 60; // 1 hour
 const BATCH_SIZE = 500;
 
 /**
