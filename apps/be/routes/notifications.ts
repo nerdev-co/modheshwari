@@ -229,7 +229,7 @@ export async function handleCreateNotification(req: Request) {
                 }
                 await pipeline.exec();
             } catch (err) {
-                console.warn("Realtime publish failed", err instanceof Error ? err.message : String(err));
+                logger.warn("Realtime publish failed", err);
             }
         }
 

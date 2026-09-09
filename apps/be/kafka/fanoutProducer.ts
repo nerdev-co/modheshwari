@@ -53,7 +53,7 @@ export async function publishFanout(
         },
       });
     } catch (e) {
-      console.warn('Failed to write fanout audit record:', e);
+      logger.warn('Failed to write fanout audit record:', e);
     }
     if (producer.connect) await producer.connect();
 

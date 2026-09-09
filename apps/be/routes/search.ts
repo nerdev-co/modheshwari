@@ -187,7 +187,7 @@ export async function handleSearch(req: Request): Promise<Response> {
 
         return success("Search results", buildPaginationResponse(users, totalHits, page, limit));
       } catch (err) {
-        console.warn('Elasticsearch query failed, falling back to DB', err);
+        logger.warn('Elasticsearch query failed, falling back to DB', err);
         // fall through to DB-based search
       }
     }

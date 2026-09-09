@@ -43,7 +43,7 @@ export async function processFanoutMessage(opts: {
         data: { status: "PROCESSING" },
       });
     } catch (e) {
-      console.warn("Failed to mark fanout audit PROCESSING", e);
+      logger.warn("Failed to mark fanout audit PROCESSING", e);
     }
   }
 
@@ -112,7 +112,7 @@ export async function processFanoutMessage(opts: {
           },
         });
       } catch (e) {
-        console.warn("Failed to mark fanout audit COMPLETED", e);
+        logger.warn("Failed to mark fanout audit COMPLETED", e);
       }
     }
 
@@ -126,7 +126,7 @@ export async function processFanoutMessage(opts: {
           data: { status: "FAILED", error: String(err?.message || err) },
         });
       } catch (e) {
-        console.warn("Failed to mark fanout audit FAILED", e);
+        logger.warn("Failed to mark fanout audit FAILED", e);
       }
     }
 

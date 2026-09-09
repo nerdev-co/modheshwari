@@ -76,8 +76,8 @@ export async function broadcastNotification(
       ],
     });
 
-    console.log(
-      `✓ Notification event ${eventId} published to Kafka (${deliveryStrategy}/${notificationPriority})`
+    logger.info(
+      `Notification event ${eventId} published to Kafka (${deliveryStrategy}/${notificationPriority})`
     );
 
     return {
@@ -136,7 +136,7 @@ export async function publishToChannel(
       ],
     });
 
-    console.log(
+    logger.info(
       `Published to ${channel} channel for recipient ${recipientId}`,
     );
   } catch (error) {

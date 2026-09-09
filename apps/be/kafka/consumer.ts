@@ -12,7 +12,7 @@ async function startConsumer() {
   try {
     // Connect the consumer
     await consumer.connect();
-    console.log("Consumer connected successfully");
+    logger.info("Consumer connected successfully");
 
     // Subscribe to topics
     await consumer.subscribe({
@@ -25,14 +25,14 @@ async function startConsumer() {
       fromBeginning: true,
     });
 
-    console.log("Subscribed to topics. Waiting for messages...");
+    logger.info("Subscribed to topics. Waiting for messages...");
 
     // Process messages
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
-        console.log({
-          topic: topic,
-          partition: partition,
+        logger.debug("Message received", {
+          topic,
+          partition,
           offset: message.offset,
           key: message.key?.toString(),
           value: message.value?.toString(),

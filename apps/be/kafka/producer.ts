@@ -9,7 +9,7 @@ async function startProducer() {
   try {
     // Connect the producer
     await producer.connect();
-    console.log("Producer connected successfully");
+    logger.info("Producer connected successfully");
 
     // Send a basic message
     await producer.send({
@@ -21,11 +21,11 @@ async function startProducer() {
       ],
     });
 
-    console.log("Message sent to quickstart-events topic");
+    logger.info("Message sent to quickstart-events topic");
 
     // Disconnect
     await producer.disconnect();
-    console.log("Producer disconnected");
+    logger.info("Producer disconnected");
   } catch (error) {
     logger.error("Error in producer:", error);
     process.exit(1);
