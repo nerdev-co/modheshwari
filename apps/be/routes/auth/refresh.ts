@@ -3,7 +3,7 @@ import {
   signJWT,
   signRefreshJWT,
 } from "@modheshwari/utils/jwt";
-import { failure } from "@modheshwari/utils/response";
+import { success, failure } from "@modheshwari/utils/response";
 import prisma from "@modheshwari/db";
 
 /**
@@ -32,17 +32,23 @@ export async function handleRefresh(req: Request): Promise<Response> {
     // Optionally issue new refresh token
     const newRefreshToken = signRefreshJWT({ userId: user.id });
 
-    // Set new refresh token cookie
     const headers = new Headers();
+    headers.append("Content-Type", "application/json");
     headers.append(
       "Set-Cookie",
       `refreshToken=${newRefreshToken}; HttpOnly; Path=/; SameSite=Strict; Max-Age=604800; Secure`,
     );
 
-    return new Response(JSON.stringify({ accessToken }), {
-      status: 200,
-      headers,
-    });
+    return new Response(
+      JSON.stringify({
+        status: "success",
+        message: "Token refreshed",
+        data: { accessToken },
+        error: null,
+        timestamp: new Date().toISOString(),
+      }),
+      { status: 200, headers },
+    );
   } catch {
     return failure("Internal server error", "Unexpected Error", 500);
   }
