@@ -70,14 +70,14 @@ export default function MemberSignupPage() {
                             </div>
 
                             <form onSubmit={handleSubmit} className="space-y-5">
-                                <Input
+                                <LabeledInput
                                     label={t("signup.fm.fullNameLabel")}
                                     placeholder={t("signup.fm.fullNamePlaceholder")}
                                     value={form.name}
                                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                                 />
 
-                                <Input
+                                <LabeledInput
                                     label={t("signup.fm.emailLabel")}
                                     type="email"
                                     placeholder={t("signup.fm.emailPlaceholder")}
@@ -85,7 +85,7 @@ export default function MemberSignupPage() {
                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                                 />
 
-                                <Input
+                                <LabeledInput
                                     label={t("signup.fm.passwordLabel")}
                                     type="password"
                                     placeholder={t("signup.fm.passwordPlaceholder")}
@@ -95,7 +95,7 @@ export default function MemberSignupPage() {
                                     }
                                 />
 
-                                <Input
+                                <LabeledInput
                                     label={t("signup.fm.familyIdLabel")}
                                     placeholder={t("signup.fm.familyIdPlaceholder")}
                                     value={form.familyId}
@@ -104,7 +104,7 @@ export default function MemberSignupPage() {
                                     }
                                 />
 
-                                <Input
+                                <LabeledInput
                                     label={t("signup.fm.relationLabel")}
                                     placeholder={t("signup.fm.relationPlaceholder")}
                                     value={form.relationWithFamilyHead}
@@ -148,7 +148,7 @@ export default function MemberSignupPage() {
  *     ...props
  * }
  */
-function Input({
+function LabeledInput({
     label,
     ...props
 }: {
