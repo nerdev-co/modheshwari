@@ -15,7 +15,7 @@ const createTransition = (
 
 export const LoaderOne = () => {
   return (
-    <div className="flex items-center gap-2">
+    <div role="status" aria-live="polite" aria-label="Loading" className="flex items-center gap-2">
       {[0, 1, 2].map((i) => (
         <motion.div
           key={i}
@@ -23,6 +23,7 @@ export const LoaderOne = () => {
           animate={{ y: [0, 10, 0] }}
           transition={createTransition(i)}
           className="h-4 w-4 rounded-full border border-jewel-400/30 bg-gradient-to-b from-jewel-gold/40 to-jewel-500/40"
+          aria-hidden="true"
         />
       ))}
     </div>
@@ -39,24 +40,27 @@ export const LoaderTwo = () => {
   });
 
   return (
-    <div className="flex items-center">
+    <div role="status" aria-live="polite" aria-label="Loading" className="flex items-center">
       <motion.div
         initial={{ x: 0 }}
         animate={{ x: [0, 20, 0] }}
         transition={transition(0)}
         className="h-4 w-4 rounded-full bg-jewel-gold/60 shadow-jewel"
+        aria-hidden="true"
       />
       <motion.div
         initial={{ x: 0 }}
         animate={{ x: [0, 20, 0] }}
         transition={transition(0.4)}
         className="h-4 w-4 -translate-x-2 rounded-full bg-jewel-gold/60 shadow-jewel"
+        aria-hidden="true"
       />
       <motion.div
         initial={{ x: 0 }}
         animate={{ x: [0, 20, 0] }}
         transition={transition(0.8)}
         className="h-4 w-4 -translate-x-4 rounded-full bg-jewel-gold/60 shadow-jewel"
+        aria-hidden="true"
       />
     </div>
   );
@@ -75,8 +79,11 @@ export const LoaderThree = () => {
       strokeLinecap="round"
       strokeLinejoin="round"
       className="h-20 w-20 stroke-jewel-500"
+      role="status"
+      aria-live="polite"
+      aria-label="Loading"
     >
-      <motion.path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <motion.path stroke="none" d="M0 0h24v24H0z" fill="none" aria-hidden="true" />
       <motion.path
         initial={{ pathLength: 0, fill: "transparent" }}
         animate={{ pathLength: 1, fill: "var(--jewel-gold)" }}
@@ -87,6 +94,7 @@ export const LoaderThree = () => {
           repeatType: "reverse",
         }}
         d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"
+        aria-hidden="true"
       />
     </motion.svg>
   );
@@ -94,7 +102,7 @@ export const LoaderThree = () => {
 
 export const LoaderFour = ({ text = "Loading..." }: { text?: string }) => {
   return (
-    <div className="relative font-bold text-jewel-900 [perspective:1000px]">
+    <div role="status" aria-live="polite" aria-label={text} className="relative font-bold text-jewel-900 [perspective:1000px]">
       <motion.span
         animate={{
           skewX: [0, -40, 0],
@@ -109,6 +117,7 @@ export const LoaderFour = ({ text = "Loading..." }: { text?: string }) => {
           times: [0, 0.2, 0.5, 0.8, 1],
         }}
         className="relative z-20 inline-block"
+        aria-hidden="true"
       >
         {text}
       </motion.span>
@@ -126,6 +135,7 @@ export const LoaderFour = ({ text = "Loading..." }: { text?: string }) => {
           ease: "linear",
           times: [0, 0.2, 0.5, 0.8, 1],
         }}
+        aria-hidden="true"
       >
         {text}
       </motion.span>
@@ -135,7 +145,7 @@ export const LoaderFour = ({ text = "Loading..." }: { text?: string }) => {
 
 export const LoaderFive = ({ text }: { text: string }) => {
   return (
-    <div className="font-bold text-jewel-900">
+    <div role="status" aria-live="polite" aria-label={text} className="font-bold text-jewel-900">
       {text.split("").map((char, i) => (
         <motion.span
           key={i}
@@ -158,6 +168,7 @@ export const LoaderFive = ({ text }: { text: string }) => {
             ease: "easeInOut",
             repeatDelay: 2,
           }}
+          aria-hidden="true"
         >
           {char === " " ? "\u00A0" : char}
         </motion.span>

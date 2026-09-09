@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ComponentType } from "react";
+import { useState, useEffect, useRef, type ComponentType } from "react";
 import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -32,8 +32,70 @@ export default function NavBar() {
   const navigate = useNavigate();
   const { user, loading, logout } = useUser();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+  const profileButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
   const { unreadCount } = useNotifications();
   const { t } = useLocale();
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(e.target as Node)) {
+        setProfileMenuOpen(false);
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setProfileMenuOpen(false);
+        profileButtonRef.current?.focus();
+      }
+    };
+    if (profileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleEscape);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [profileMenuOpen]);
+
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      const menu = mobileMenuRef.current;
+      if (!menu) return;
+      const focusable = menu.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      first?.focus();
+      const handleTab = (e: KeyboardEvent) => {
+        if (e.key !== "Tab") return;
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      };
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          setMobileMenuOpen(false);
+          mobileMenuButtonRef.current?.focus();
+        }
+      };
+      menu.addEventListener("keydown", handleTab);
+      document.addEventListener("keydown", handleEscape);
+      return () => {
+        menu.removeEventListener("keydown", handleTab);
+        document.removeEventListener("keydown", handleEscape);
+      };
+    }
+  }, [mobileMenuOpen]);
 
   const isActive = (href: string) => pathname === href;
 
@@ -46,7 +108,7 @@ export default function NavBar() {
     Icon: ComponentType<{ className?: string }>;
     title: string;
   }) => (
-    <Link to={href}>
+    <Link to={href} aria-label={title}>
       <Tooltip text={title}>
         <div
           className={`p-2.5 rounded-xl transition-all duration-fast ${
@@ -55,7 +117,7 @@ export default function NavBar() {
               : "text-text-secondary hover:text-text-primary hover:bg-surface-muted"
           }`}
         >
-          <Icon className="h-[18px] w-[18px]" />
+          <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
         </div>
       </Tooltip>
     </Link>
@@ -143,9 +205,18 @@ export default function NavBar() {
                 )}
               </Link>
 
-              <div className="relative group">
+              <div className="relative" ref={profileMenuRef}>
                 <button
-                  onClick={() => navigate("/me")}
+                  ref={profileButtonRef}
+                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                  onKeyDown={(e) => {
+                    if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setProfileMenuOpen(true);
+                    }
+                  }}
+                  aria-expanded={profileMenuOpen}
+                  aria-haspopup="true"
                   aria-label={t("nav.profile")}
                   className="h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-jewel-900
                     hover:scale-[1.05] transition-transform duration-fast"
@@ -154,56 +225,77 @@ export default function NavBar() {
                   {initials}
                 </button>
 
-                <div className="hidden group-hover:block absolute right-0 mt-3 w-52
-                  bg-surface border border-border
-                  rounded-2xl shadow-elevated z-50 overflow-hidden">
-                  <div className="px-4 py-3 border-b border-border">
-                    <div className="font-medium text-sm text-text-primary">
-                      {user.name}
-                    </div>
-                    <div className="text-xs text-text-muted mt-0.5">
-                      {user.email}
-                    </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <span className={`px-2 py-0.5 rounded-lg text-[10px] font-semibold text-jewel-900 ${ROLE_COLORS[user.role] || "bg-jewel-400"}`}>
-                        {user.role ? user.role.replace(/_/g, " ") : "Unknown"}
-                      </span>
-                      {user.status ? (
-                        <span className="px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-jewel-emerald/10 text-jewel-emerald border border-jewel-emerald/20">
-                          {t("common.active")}
+                {profileMenuOpen && (
+                  <div
+                    role="menu"
+                    aria-orientation="vertical"
+                    className="absolute right-0 mt-3 w-52
+                      bg-surface border border-border
+                      rounded-2xl shadow-elevated z-50 overflow-hidden"
+                  >
+                    <div className="px-4 py-3 border-b border-border">
+                      <div className="font-medium text-sm text-text-primary">
+                        {user.name}
+                      </div>
+                      <div className="text-xs text-text-muted mt-0.5">
+                        {user.email}
+                      </div>
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className={`px-2 py-0.5 rounded-lg text-[10px] font-semibold text-jewel-900 ${ROLE_COLORS[user.role] || "bg-jewel-400"}`}>
+                          {user.role ? user.role.replace(/_/g, " ") : "Unknown"}
                         </span>
-                      ) : (
-                        <span className="px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-surface-muted text-text-muted border border-border">
-                          {t("common.inactive")}
-                        </span>
-                      )}
+                        {user.status ? (
+                          <span className="px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-jewel-emerald/10 text-jewel-emerald border border-jewel-emerald/20">
+                            {t("common.active")}
+                          </span>
+                        ) : (
+                          <span className="px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-surface-muted text-text-muted border border-border">
+                            {t("common.inactive")}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="py-1">
+                      <button
+                        role="menuitem"
+                        onClick={() => {
+                          setProfileMenuOpen(false);
+                          navigate("/me/edit");
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "ArrowDown") {
+                            e.preventDefault();
+                            (e.target as HTMLElement).nextElementSibling?.querySelector('[role="menuitem"]')?.focus();
+                          }
+                        }}
+                        className="w-full text-left px-4 py-2.5 hover:bg-surface-muted text-sm text-text-secondary transition-colors"
+                      >
+                        {t("nav.editProfile")}
+                      </button>
+                      <button
+                        role="menuitem"
+                        onClick={() => {
+                          setProfileMenuOpen(false);
+                          logout();
+                          navigate("/signin");
+                        }}
+                        className="w-full text-left px-4 py-2.5 hover:bg-ruby-50 text-sm text-ruby-500 transition-colors"
+                      >
+                        {t("nav.signOut")}
+                      </button>
                     </div>
                   </div>
-                  <div className="py-1">
-                    <button
-                      onClick={() => navigate("/me/edit")}
-                      className="w-full text-left px-4 py-2.5 hover:bg-surface-muted text-sm text-text-secondary transition-colors"
-                    >
-                      {t("nav.editProfile")}
-                    </button>
-                    <button
-                      onClick={() => {
-                        logout();
-                        navigate("/signin");
-                      }}
-                      className="w-full text-left px-4 py-2.5 hover:bg-ruby-50 text-sm text-ruby-500 transition-colors"
-                    >
-                      {t("nav.signOut")}
-                    </button>
-                  </div>
-                </div>
+                )}
               </div>
             </>
           )}
 
           <button
+            ref={mobileMenuButtonRef}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
             className="md:hidden p-2.5 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all"
           >
             {mobileMenuOpen ? <X className="h-[18px] w-[18px]" /> : <Menu className="h-[18px] w-[18px]" />}
@@ -214,6 +306,11 @@ export default function NavBar() {
       <AnimatePresence>
         {mobileMenuOpen && !loading && (
           <motion.div
+            id="mobile-menu"
+            ref={mobileMenuRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation menu"
             initial={{ opacity: 0, y: -8, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.96 }}
