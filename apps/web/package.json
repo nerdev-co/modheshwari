@@ -4,11 +4,11 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bunx next dev --turbopack --port 3000",
-    "build": "bunx next build",
-    "start": "bunx next start",
-    "lint": "bunx next lint --max-warnings 0",
-    "check-types": "bunx tsc --noEmit",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .ts,.tsx",
+    "check-types": "tsc --noEmit",
     "test": "jest --config jest.config.js --setupFilesAfterEnv=./jest.setup.ts"
   },
   "dependencies": {
@@ -17,9 +17,9 @@
     "framer-motion": "^12.42.2",
     "js-yaml": "^5.2.1",
     "lucide-react": "^0.562.0",
-    "next": "^15.5.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-router-dom": "^7.1.0",
     "swagger-ui-react": "^5.32.8",
     "swr": "^2.2.0",
     "tailwind-merge": "^3.6.0",
@@ -32,6 +32,7 @@
     "@types/node": "^22.15.3",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
+    "@vitejs/plugin-react": "^4.3.0",
     "autoprefixer": "^10.4.21",
     "baseline-browser-mapping": "^2.10.12",
     "eslint": "^9.34.0",
@@ -39,6 +40,7 @@
     "postcss": "^8.5.6",
     "tailwindcss": "3.4.14",
     "ts-jest": "^29.1.1",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "vite": "^6.0.0"
   }
 }

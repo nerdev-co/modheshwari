@@ -2,22 +2,23 @@
 
 import { useEffect } from "react";
 
-/**
- * Performs  theme initializer operation.
- * @returns {any} Description of return value
- */
 export default function ThemeInitializer() {
   useEffect(() => {
-    const updateTheme = () => {
-      const hour = new Date().getHours();
-      const isDark = hour >= 19 || hour < 7;
-      document.documentElement.classList.toggle("dark", isDark);
-    };
-
-    updateTheme();
-    const interval = setInterval(updateTheme, 60 * 1000);
-    return () => clearInterval(interval);
+    const saved = localStorage.getItem("theme");
+    const root = document.documentElement;
+    
+    root.classList.remove("light", "dark");
+    
+    if (saved === "dark") {
+      root.classList.add("dark");
+    } else if (saved === "light") {
+      root.classList.add("light");
+    } else {
+      // Default to system preference
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      root.classList.add(prefersDark ? "dark" : "light");
+    }
   }, []);
 
-  return null; // no UI, just sets theme
+  return null;
 }

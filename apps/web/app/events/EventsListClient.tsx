@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 import {
   Calendar,
@@ -52,8 +52,8 @@ async (url: string) => {
  * @param {{ initialData: Event[]; }} { initialData } - Description of { initialData }
  * @returns {any} Description of return value
  */
-export default function EventsListClient({ initialData }: { initialData: Event[] }) {
-  const router = useRouter();
+export default function EventsListClient() {
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [hydrated, setHydrated] = useState(false);
   const [token, setToken] = useState<string | null>(null);
@@ -81,7 +81,7 @@ export default function EventsListClient({ initialData }: { initialData: Event[]
   const statusParam = filter === "all" ? "" : `?status=${filter.toUpperCase()}`;
   const key = `${API_BASE}/events${statusParam}`;
 
-  const { data, error, isLoading } = useSWR(key, fetcher, { fallbackData: { data: { data: initialData } } });
+  const { data, error, isLoading } = useSWR(key, fetcher);
 
   const events: Event[] = data?.data?.data || [];
 
@@ -150,12 +150,12 @@ export default function EventsListClient({ initialData }: { initialData: Event[]
           <div className="flex items-center gap-3">
             <Button
               variant="secondary"
-              onClick={() => router.push("/events/calendar")}
+              onClick={() => navigate("/events/calendar")}
             >
               <Calendar className="w-4 h-4" />
               Calendar
             </Button>
-            <Button onClick={() => router.push("/events/create")}>
+            <Button onClick={() => navigate("/events/create")}>
               <Plus className="w-4 h-4" />
               Create
             </Button>
@@ -187,7 +187,7 @@ export default function EventsListClient({ initialData }: { initialData: Event[]
             <Calendar className="w-16 h-16 text-jewel-400 mx-auto mb-4" />
             <h3 className="text-xl font-display font-bold text-jewel-900 mb-2">No events found</h3>
             <p className="text-sm text-jewel-500 mb-6">{filter === "approved" ? "No approved events at the moment. Check back later!" : "Try adjusting your filters or create a new event."}</p>
-            <Button onClick={() => router.push("/events/create")}>
+            <Button onClick={() => navigate("/events/create")}>
               <Plus className="w-4 h-4" />
               Create New Event
             </Button>
@@ -203,7 +203,7 @@ export default function EventsListClient({ initialData }: { initialData: Event[]
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
-                  onClick={() => router.push(`/events/${event.id}`)}
+                  onClick={() => navigate(`/events/${event.id}`)}
                   className="bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 shadow-jewel rounded-2xl p-6 hover:shadow-jewel-lg transition-all cursor-pointer hover:scale-[1.02]"
                 >
                   <div className="flex items-start justify-between mb-4">
