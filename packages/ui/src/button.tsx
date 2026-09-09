@@ -35,7 +35,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variantClasses: Record<ButtonVariant, string> = {
       primary: `
-        bg-accent text-jewel-900 font-semibold
+        bg-accent text-on-accent font-semibold
         hover:bg-accent-hover
         focus-visible:ring-accent
       `,

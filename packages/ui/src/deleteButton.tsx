@@ -20,7 +20,7 @@ export function DeleteButton({
         bg-jewel-ruby text-white font-medium shadow-md
         border border-jewel-ruby
         transition-all duration-300 ease-in-out
-        hover:bg-white hover:text-jewel-ruby hover:border-jewel-ruby
+        hover:bg-surface hover:text-jewel-ruby hover:border-jewel-ruby
         focus:outline-none focus:ring-2 focus:ring-jewel-ruby focus:ring-offset-2
         ${className}
       `.trim()}

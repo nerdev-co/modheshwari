@@ -29,19 +29,19 @@ export default function Home() {
       icon: Shield,
       titleKey: "landing.feature2Title",
       descKey: "landing.feature2Desc",
-      color: "bg-emerald-50 text-emerald-600",
+      color: "bg-jewel-emerald/10 text-jewel-emerald",
     },
     {
       icon: Heart,
       titleKey: "landing.feature3Title",
       descKey: "landing.feature3Desc",
-      color: "bg-ruby-50 text-ruby-500",
+      color: "bg-jewel-ruby/10 text-jewel-ruby",
     },
     {
       icon: Calendar,
       titleKey: "landing.feature4Title",
       descKey: "landing.feature4Desc",
-      color: "bg-saffron-50 text-saffron-500",
+      color: "bg-jewel-saffron/10 text-jewel-saffron",
     },
     {
       icon: Bell,

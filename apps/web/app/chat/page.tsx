@@ -488,7 +488,7 @@ export default function ChatPage() {
                             max-w-[78%] md:max-w-[60%] rounded-3xl px-4 py-3 border
                             ${isMe
                                                             ? "bg-jewel-gold/10 border-jewel-gold/30 text-jewel-900"
-                                                            : "bg-white/60 border-jewel-400/20 text-jewel-800"
+                                                            : "bg-surface/60 border-jewel-400/20 text-jewel-800"
                                                         }
                           `}
                                                 >
@@ -549,7 +549,7 @@ export default function ChatPage() {
                                             value={input}
                                             onChange={(e) => onInputChange(e.target.value)}
                                             placeholder={t("chat.typeMessage")}
-                                            className="flex-1 px-4 py-3 rounded-2xl bg-white/60 border border-jewel-400/30 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
+                                            className="flex-1 px-4 py-3 rounded-2xl bg-surface/60 border border-jewel-400/30 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
                                             onKeyDown={(e) => {
                                                 if (e.key === "Enter") sendMessage();
                                             }}

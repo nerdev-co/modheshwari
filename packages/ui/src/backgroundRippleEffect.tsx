@@ -20,7 +20,7 @@ const DivGrid = ({
   rows = 7,
   cols = 30,
   cellSize = 56,
-  borderColor = "#d4c9a8",
+  borderColor = "var(--border)",
   fillColor = "rgba(201, 162, 39, 0.15)",
   clickedCell = null,
   onCellClick = () => {},

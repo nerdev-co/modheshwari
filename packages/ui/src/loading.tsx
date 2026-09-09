@@ -79,7 +79,7 @@ export const LoaderThree = () => {
       <motion.path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <motion.path
         initial={{ pathLength: 0, fill: "transparent" }}
-        animate={{ pathLength: 1, fill: "#c9a227" }}
+        animate={{ pathLength: 1, fill: "var(--jewel-gold)" }}
         transition={{
           duration: 2,
           ease: "easeInOut",

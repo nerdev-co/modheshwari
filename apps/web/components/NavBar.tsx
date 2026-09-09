@@ -169,7 +169,7 @@ export default function NavBar() {
                         {user.role ? user.role.replace(/_/g, " ") : "Unknown"}
                       </span>
                       {user.status ? (
-                        <span className="px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-emerald-50 text-emerald-600 border border-emerald-500/20">
+                        <span className="px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-jewel-emerald/10 text-jewel-emerald border border-jewel-emerald/20">
                           {t("common.active")}
                         </span>
                       ) : (

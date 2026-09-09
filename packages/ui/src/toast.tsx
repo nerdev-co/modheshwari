@@ -77,11 +77,11 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
 const VARIANT_STYLES: Record<ToastVariant, string> = {
   success:
-    "bg-emerald-50 border-emerald-500/20 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
+    "bg-jewel-emerald/10 border-jewel-emerald/20 text-jewel-emerald",
   error:
-    "bg-ruby-50 border-ruby-500/20 text-ruby-600 dark:bg-ruby-950 dark:text-ruby-300",
+    "bg-jewel-ruby/10 border-jewel-ruby/20 text-jewel-ruby",
   warning:
-    "bg-accent-muted border-accent/20 text-accent-hover dark:bg-amber-950 dark:text-amber-300",
+    "bg-accent-muted border-accent/20 text-accent-hover",
   info:
     "bg-surface border-border text-text-primary",
 };

@@ -42,6 +42,7 @@ export default {
         "text-primary": "var(--text-primary)",
         "text-secondary": "var(--text-secondary)",
         "text-muted": "var(--text-muted)",
+        "text-on-accent": "var(--text-on-accent)",
         "jewel-deep": "var(--text-primary)",
         emerald: "var(--emerald)",
         saffron: "var(--saffron)",
