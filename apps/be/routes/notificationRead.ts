@@ -40,21 +40,20 @@ export async function handleMarkAsRead(req: Request, id: string): Promise<Respon
     const userId = payload.userId as string;
     const notificationId = id;
 
-    // Update notification as read
-    const notification = await prisma.$transaction((tx) =>
-      tx.notification.update({
+    // Mark read + outbox event in a single transaction so the notification
+    // is never marked read without the Kafka event being written
+    const notification = await prisma.$transaction(async (tx) => {
+      const updated = await tx.notification.update({
         where: {
           id: notificationId,
-          userId, // Ensure user can only mark their own notifications
+          userId,
         },
         data: {
           read: true,
           readAt: new Date(),
         },
-      }),
-    );
+      });
 
-    await prisma.$transaction(async (tx) => {
       await createOutboxEvent(tx, {
         eventType: "notification.read",
         aggregateType: "Notification",
@@ -66,6 +65,8 @@ export async function handleMarkAsRead(req: Request, id: string): Promise<Respon
         },
         topic: TOPICS.NOTIFICATION_READ,
       });
+
+      return updated;
     });
 
     return new Response(
@@ -137,19 +138,20 @@ export async function handleMarkMultipleAsRead(req: Request): Promise<Response> 
       });
     }
 
-    // Update all notifications as read
-    const [result, updatedNotifications] = await prisma.$transaction([
-      prisma.notification.updateMany({
+    // Mark read + outbox events in a single transaction
+    const updatedNotifications = await prisma.$transaction(async (tx) => {
+      await tx.notification.updateMany({
         where: {
           id: { in: notificationIds },
-          userId, // Ensure user can only mark their own notifications
+          userId,
         },
         data: {
           read: true,
           readAt: new Date(),
         },
-      }),
-      prisma.notification.findMany({
+      });
+
+      const updated = await tx.notification.findMany({
         where: {
           id: { in: notificationIds },
           userId,
@@ -157,30 +159,32 @@ export async function handleMarkMultipleAsRead(req: Request): Promise<Response> 
           readAt: { not: null },
         },
         select: { id: true },
-      }),
-    ]);
+      });
+
+      if (updated.length > 0) {
+        const events = updated.map((n) => ({
+          eventType: "notification.read",
+          aggregateType: "Notification",
+          aggregateId: n.id,
+          payload: {
+            notificationId: n.id,
+            userId,
+            readAt: new Date().toISOString(),
+          },
+          topic: TOPICS.NOTIFICATION_READ,
+        }));
+        await createOutboxEvents(tx, events);
+      }
+
+      return updated;
+    });
 
     const updatedIds = updatedNotifications.map(n => n.id);
-    
-    await prisma.$transaction(async (tx) => {
-      const events = updatedIds.map((id) => ({
-        eventType: "notification.read",
-        aggregateType: "Notification",
-        aggregateId: id,
-        payload: {
-          notificationId: id,
-          userId,
-          readAt: new Date().toISOString(),
-        },
-        topic: TOPICS.NOTIFICATION_READ,
-      }));
-      await createOutboxEvents(tx, events);
-    });
 
     return new Response(
       JSON.stringify({
         success: true,
-        updatedCount: result.count,
+        updatedCount: updatedIds.length,
       }),
       {
         status: 200,
@@ -226,16 +230,17 @@ export async function handleMarkAllAsRead(req: Request): Promise<Response> {
 
     const userId = payload.userId as string;
 
-    // Get all unread notification IDs
-    const [unreadNotifications, result] = await prisma.$transaction([
-      prisma.notification.findMany({
+    // Get all unread, mark read, and write outbox events in one transaction
+    const unreadNotifications = await prisma.$transaction(async (tx) => {
+      const unread = await tx.notification.findMany({
         where: {
           userId,
           read: false,
         },
         select: { id: true },
-      }),
-      prisma.notification.updateMany({
+      });
+
+      await tx.notification.updateMany({
         where: {
           userId,
           read: false,
@@ -244,13 +249,10 @@ export async function handleMarkAllAsRead(req: Request): Promise<Response> {
           read: true,
           readAt: new Date(),
         },
-      }),
-    ]);
+      });
 
-    // Publish read events via outbox
-    if (unreadNotifications.length > 0) {
-      await prisma.$transaction(async (tx) => {
-        const events = unreadNotifications.map((notif) => ({
+      if (unread.length > 0) {
+        const events = unread.map((notif) => ({
           eventType: "notification.read",
           aggregateType: "Notification",
           aggregateId: notif.id,
@@ -262,13 +264,15 @@ export async function handleMarkAllAsRead(req: Request): Promise<Response> {
           topic: TOPICS.NOTIFICATION_READ,
         }));
         await createOutboxEvents(tx, events);
-      });
-    }
+      }
+
+      return unread;
+    });
 
     return new Response(
       JSON.stringify({
         success: true,
-        updatedCount: result.count,
+        updatedCount: unreadNotifications.length,
       }),
       {
         status: 200,
