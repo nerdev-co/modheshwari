@@ -54,7 +54,10 @@ export default function MePage() {
     );
   }
 
-  if (!user) return null;
+  if (!user) {
+    navigate("/signin");
+    return null;
+  }
 
   const initials = (user.name || "")
     .split(" ")
