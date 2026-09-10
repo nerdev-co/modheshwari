@@ -370,7 +370,7 @@ export default function NavBar() {
                       navigate("/signin");
                     }}
                     className="w-full py-2.5 rounded-xl bg-surface-muted text-text-secondary text-sm font-medium
-                      hover:bg-ruby-50 hover:text-ruby-500 transition-all"
+                      hover:bg-ruby-50 hover:text-ruby-500 transition-all active:scale-[0.98]"
                   >
                     {t("nav.signOut")}
                   </button>
@@ -384,7 +384,7 @@ export default function NavBar() {
                   to="/signin"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block w-full py-2.5 rounded-xl bg-accent text-jewel-900 text-sm font-semibold text-center
-                    hover:bg-accent-hover transition-all"
+                    hover:bg-accent-hover transition-all active:scale-[0.98]"
                 >
                   {t("nav.signIn")}
                 </Link>

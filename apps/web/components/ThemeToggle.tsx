@@ -41,7 +41,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button aria-label="Toggle theme" className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-text-secondary hover:bg-surface-muted transition-colors">
+      <button aria-label="Toggle theme" className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-text-secondary hover:bg-surface-muted transition-all duration-fast active:scale-[0.95]">
         <Monitor className="w-4 h-4" />
       </button>
     );

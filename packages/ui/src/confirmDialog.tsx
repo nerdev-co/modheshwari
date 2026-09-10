@@ -104,7 +104,7 @@ export function ConfirmDialog({
               <button
                 ref={cancelRef}
                 onClick={onCancel}
-                className="px-4 py-2 text-sm font-medium text-text-secondary rounded-xl border border-border hover:bg-surface-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                className="px-4 py-2 text-sm font-medium text-text-secondary rounded-xl border border-border hover:bg-surface-muted transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 active:scale-[0.98]"
               >
                 {cancelLabel}
               </button>
