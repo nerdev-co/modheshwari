@@ -7,7 +7,9 @@ import { Package, Plus, Check, X, Loader2, AlertCircle } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
+import { LoadingState } from "@repo/ui/loadingState";
 import { useToast } from "@repo/ui/toast";
+import { MOTION_PAGE_ENTER } from "@repo/ui/motion";
 
 import { API_BASE } from "../../lib/config";
 import apiFetch from "../../lib/api";
@@ -87,7 +89,11 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
     if (!loading && !me) navigate("/signin");
   }, [me, loading, navigate]);
 
-  if (loading) return <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center"><p className="text-jewel-500">Loading...</p></DreamySunsetBackground>;
+  if (loading) return (
+    <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
+      <LoadingState message="Loading..." />
+    </DreamySunsetBackground>
+  );
   if (!me) return null;
 
   async function handleCreate(): Promise<void> {
@@ -146,7 +152,7 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={MOTION_PAGE_ENTER}
           className="mb-12"
         >
           <div className="flex items-center gap-3 mb-3">
@@ -166,7 +172,7 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ ...MOTION_PAGE_ENTER, delay: 0.2 }}
         >
           <Card className="p-6 mb-8">
             <h2 className="text-lg font-display font-bold text-jewel-900 mb-4 flex items-center gap-2">
@@ -204,7 +210,7 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ ...MOTION_PAGE_ENTER, delay: 0.4 }}
         >
           <Card className="overflow-hidden">
             <div className="px-6 py-4 border-b border-jewel-400/20">

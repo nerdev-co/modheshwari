@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
+import { LoadingState } from "@repo/ui/loadingState";
+import { MOTION_PAGE_ENTER } from "@repo/ui/motion";
 
 import SearchInput from "./SearchInput";
 import { useUser } from "../../lib/UserContext";
@@ -34,7 +36,11 @@ export default function SearchPage() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
-  if (loading) return <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center"><p className="text-jewel-500">Loading...</p></DreamySunsetBackground>;
+  if (loading) return (
+    <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
+      <LoadingState message="Loading..." />
+    </DreamySunsetBackground>
+  );
   if (!user) return null;
 
   return (
@@ -43,7 +49,7 @@ export default function SearchPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={MOTION_PAGE_ENTER}
           className="text-center mb-12"
         >
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-jewel-gold/15 border border-jewel-gold/25 mb-6">
@@ -62,7 +68,7 @@ export default function SearchPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ ...MOTION_PAGE_ENTER, delay: 0.2 }}
           className="bg-jewel-50/80 backdrop-blur-2xl rounded-2xl p-8 border border-jewel-400/20 shadow-jewel"
         >
           <div className="relative mb-6">
@@ -87,7 +93,7 @@ export default function SearchPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ ...MOTION_PAGE_ENTER, delay: 0.6 }}
           className="mt-8"
         >
           <p className="text-sm text-jewel-400 mb-3">Advanced Filters:</p>
@@ -114,7 +120,7 @@ export default function SearchPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+          transition={{ ...MOTION_PAGE_ENTER, delay: 0.8 }}
           className="mt-12 text-center"
         >
           <p className="text-xs text-jewel-400">

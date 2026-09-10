@@ -14,6 +14,11 @@ export const MOTION_EXIT: Transition = {
   ease: SPRING_CURVE,
 };
 
+export const MOTION_PAGE_ENTER: Transition = {
+  duration: 0.4,
+  ease: SPRING_CURVE,
+};
+
 export const FADE_IN: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
