@@ -48,19 +48,61 @@ export default function NavBar() {
         setProfileMenuOpen(false);
       }
     };
-    const handleEscape = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setProfileMenuOpen(false);
         profileButtonRef.current?.focus();
+        return;
+      }
+      if (!profileMenuRef.current) return;
+      const menuItems = Array.from(
+        profileMenuRef.current.querySelectorAll<HTMLElement>('[role="menuitem"]')
+      );
+      if (menuItems.length === 0) return;
+      const currentIndex = menuItems.indexOf(document.activeElement as HTMLElement);
+
+      if (e.key === "Tab") {
+        e.preventDefault();
+        if (e.shiftKey) {
+          const prev = currentIndex <= 0 ? menuItems.length - 1 : currentIndex - 1;
+          menuItems[prev]?.focus();
+        } else {
+          const next = currentIndex >= menuItems.length - 1 ? 0 : currentIndex + 1;
+          menuItems[next]?.focus();
+        }
+        return;
+      }
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const next = currentIndex >= menuItems.length - 1 ? 0 : currentIndex + 1;
+        menuItems[next]?.focus();
+        return;
+      }
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        const prev = currentIndex <= 0 ? menuItems.length - 1 : currentIndex - 1;
+        menuItems[prev]?.focus();
+        return;
+      }
+      if (e.key === "Home") {
+        e.preventDefault();
+        menuItems[0]?.focus();
+        return;
+      }
+      if (e.key === "End") {
+        e.preventDefault();
+        menuItems[menuItems.length - 1]?.focus();
       }
     };
     if (profileMenuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("keydown", handleEscape);
+      document.addEventListener("keydown", handleKeyDown);
+      const firstItem = profileMenuRef.current?.querySelector<HTMLElement>('[role="menuitem"]');
+      firstItem?.focus();
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [profileMenuOpen]);
 
@@ -239,12 +281,6 @@ export default function NavBar() {
                         onClick={() => {
                           setProfileMenuOpen(false);
                           navigate("/me/edit");
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "ArrowDown") {
-                            e.preventDefault();
-                            (e.target as HTMLElement).nextElementSibling?.querySelector('[role="menuitem"]')?.focus();
-                          }
                         }}
                         className="w-full text-left px-4 py-2.5 hover:bg-surface-muted text-sm text-text-secondary transition-colors"
                       >
