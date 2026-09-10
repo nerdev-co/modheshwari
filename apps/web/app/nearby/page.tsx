@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoaderFour } from "@repo/ui/loading";
+import { EmptyState } from "@repo/ui/emptyState";
+import { ErrorState } from "@repo/ui/errorState";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Card } from "@repo/ui/card";
 
@@ -118,15 +120,15 @@ export default function NearbyPage() {
 
         {/* Error */}
         {error && (
-          <section className="mt-6 border border-jewel-ruby/30 bg-jewel-ruby/10 text-jewel-ruby rounded-xl p-4 text-sm">
-            {error}
+          <section className="mt-6">
+            <ErrorState message={error} />
           </section>
         )}
 
         {/* Empty */}
         {!error && users.length === 0 && (
-          <section className="mt-6 border border-jewel-400/20 rounded-xl p-6 text-sm text-jewel-500 bg-jewel-50/60">
-            {t("nearby.noMembers")}
+          <section className="mt-6">
+            <EmptyState title={t("nearby.noMembers")} />
           </section>
         )}
 

@@ -17,6 +17,7 @@ import {
 import { motion } from "framer-motion";
 import { LoaderOne } from "@repo/ui/loading";
 import { EmptyState } from "@repo/ui/emptyState";
+import { ErrorState } from "@repo/ui/errorState";
 import { NotAuthenticated } from "@repo/ui/notAuthenticated";
 import { useToast } from "@repo/ui/toast";
 
@@ -175,8 +176,10 @@ export default function EventsListClient() {
           ))}
         </div>
 
-        {isLoading || error ? (
+        {isLoading ? (
           <LoaderOne />
+        ) : error ? (
+          <ErrorState message={error.message} onRetry={() => mutate(key)} />
         ) : events.length === 0 ? (
           <EmptyState
             icon={Calendar}
