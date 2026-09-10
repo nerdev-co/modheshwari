@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Calendar as CalIcon } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
-import { Card } from "@repo/ui/card";
+import { LoadingState } from "@repo/ui/loadingState";
+import { LoadingState } from "@repo/ui/loadingState";
 
 import apiFetch from "../../../lib/api";
 import { API_BASE } from "../../../lib/config";
@@ -113,7 +114,11 @@ export default function EventsCalendar() {
     return () => controller.abort();
   }, [base, current]);
 
-  if (authLoading) return <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center"><p className="text-jewel-500">{t("events.calendar.loading")}</p></DreamySunsetBackground>;
+  if (authLoading) return (
+    <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
+      <LoadingState message={t("events.calendar.loading")} />
+    </DreamySunsetBackground>
+  );
   if (!user) return null;
 
   const firstDayIndex = monthStart.getDay();
@@ -162,7 +167,7 @@ export default function EventsCalendar() {
   return (
     <DreamySunsetBackground className="px-6 py-10">
       <div className="max-w-6xl mx-auto">
-        <Card className="p-6 md:p-8">
+        <div className="p-6 md:p-8 bg-surface rounded-2xl border border-border">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div className="flex items-center gap-3">
@@ -302,7 +307,7 @@ export default function EventsCalendar() {
             </div>
 
             <aside className="mt-4 lg:mt-0 lg:w-80 lg:flex-shrink-0">
-              <div className="bg-jewel-50/80 p-4 rounded-2xl border border-border">
+              <div className="bg-surface-muted p-4 rounded-2xl border border-border">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-display font-bold text-jewel-900">
                     {selectedDate
@@ -363,9 +368,11 @@ export default function EventsCalendar() {
           </div>
 
           {loading && (
-            <div className="mt-4 text-sm text-jewel-500">{t("events.calendar.loadingEvents")}</div>
+            <div className="mt-4">
+              <LoadingState message={t("events.calendar.loadingEvents")} size="sm" />
+            </div>
           )}
-        </Card>
+        </div>
       </div>
     </DreamySunsetBackground>
   );
