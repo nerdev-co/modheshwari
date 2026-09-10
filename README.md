@@ -52,25 +52,6 @@ flowchart LR
 - **Elasticsearch derived index**: ES indexing is routed through the outbox relay. A periodic reconciliation worker re-indexes recently updated documents to repair drift.
 - **Role-change audit**: every role change is recorded in an immutable audit log with anomaly counters for rate-limited and mass-demotion patterns.
 
-## API docs
-
-The current API contract is documented in [openapi.yaml](openapi.yaml). Regenerate it with `bun run openapi:gen` when backend routes change.
-
-## Repository structure
-
-- apps/be — Bun-based backend API and business workflows
-- apps/web — Next.js frontend
-- apps/ws — realtime WebSocket service
-- packages/db — Prisma schema, migrations, and seed data
-- packages/utils — shared auth, response, rate-limit, and pagination helpers
-- monitoring — Prometheus, Alertmanager, Grafana, and alert rules
-
-## Prerequisites
-
-- Bun 1.2+
-- Docker Desktop or Docker Engine
-- PostgreSQL and Redis are provided by Docker Compose
-
 ## Getting started
 
 1. Copy the environment template:
@@ -122,10 +103,6 @@ If you seed the database with `bun run db:seed`, you can sign in with any of the
 - Generate docs: `bun run docs:gen`
 - Generate OpenAPI: `bun run openapi:gen`
 - Seed the database: `bun run db:seed`
-
-## Environment and secrets
-
-This repository intentionally ignores local environment files. Only [.env.example](.env.example) is tracked as a template. Do not commit real `.env` files, private keys, or credentials.
 
 ## Deployment and operations
 
