@@ -166,7 +166,7 @@ export default function MedicalRecordsPage() {
             <textarea
               value={form.notes}
               onChange={(e) => updateField("notes", e.target.value)}
-              className="w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 min-h-[100px] resize-none"
+              className="w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 min-h-[100px] resize-none"
               placeholder="Anything important..."
               aria-label="Notes"
             />

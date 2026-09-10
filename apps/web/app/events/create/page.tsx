@@ -94,7 +94,7 @@ export default function CreateEventPage() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder={t("events.create.namePlaceholder")}
-                className="w-full pl-11 pr-4 py-3 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
+                className="w-full pl-11 pr-4 py-3 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent transition-all"
               />
             </div>
           </div>
@@ -110,7 +110,7 @@ export default function CreateEventPage() {
               value={formData.description}
               onChange={handleChange}
               placeholder={t("events.create.descriptionPlaceholder")}
-              className="w-full px-4 py-3 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all resize-none"
+              className="w-full px-4 py-3 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent transition-all resize-none"
             />
           </div>
 
@@ -127,7 +127,7 @@ export default function CreateEventPage() {
                 required
                 value={formData.date}
                 onChange={handleChange}
-                className="w-full pl-11 pr-4 py-3 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-jewel-900 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
+                className="w-full pl-11 pr-4 py-3 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-jewel-900 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent transition-all"
               />
             </div>
           </div>
@@ -145,7 +145,7 @@ export default function CreateEventPage() {
                 value={formData.venue}
                 onChange={handleChange}
                 placeholder={t("events.create.venuePlaceholder")}
-                className="w-full pl-11 pr-4 py-3 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
+                className="w-full pl-11 pr-4 py-3 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent transition-all"
               />
             </div>
           </div>

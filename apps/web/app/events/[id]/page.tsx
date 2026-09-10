@@ -457,7 +457,7 @@ export default function EventDetailsPage() {
                                 value={moderationRemarks}
                                 onChange={(e) => setModerationRemarks(e.target.value)}
                                 placeholder={t("events.detail.moderationPlaceholder")}
-                                className="w-full min-h-[90px] p-4 rounded-xl bg-jewel-50/50 border border-jewel-400/30 text-sm text-jewel-800 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent mb-4 resize-none"
+                                className="w-full min-h-[90px] p-4 rounded-xl bg-jewel-50/50 border border-jewel-400/30 text-sm text-jewel-800 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent mb-4 resize-none"
                             />
 
                             <div className="flex gap-3">

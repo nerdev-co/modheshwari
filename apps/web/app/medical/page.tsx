@@ -138,7 +138,7 @@ export default function Medical() {
               onKeyDown={(e) => {
                 if (e.key === "Enter") fetchMedicalInfo(searchQuery);
               }}
-              className="flex-grow bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 text-jewel-900"
+              className="flex-grow bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 text-jewel-900"
             />
 
             <Button

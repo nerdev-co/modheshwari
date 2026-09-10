@@ -193,7 +193,7 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
                     void handleCreate();
                   }
                 }}
-                className="w-full pl-12 pr-4 py-3 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-sm text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/40 focus:border-transparent transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-sm text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent transition-all"
               />
             </div>
             <Button

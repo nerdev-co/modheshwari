@@ -265,7 +265,7 @@ export default function NotificationsPage(): React.ReactElement {
                                 value={subject}
                                 onChange={(e) => setSubject(e.target.value)}
                                 placeholder="Subject (optional)"
-                                className="w-full bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-3 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
+                                className="w-full bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-3 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50"
                             />
 
                             <textarea
@@ -273,14 +273,14 @@ export default function NotificationsPage(): React.ReactElement {
                                 onChange={(e) => setMessage(e.target.value)}
                                 rows={3}
                                 placeholder="Write a message to broadcast..."
-                                className="w-full bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-3 resize-none text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
+                                className="w-full bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-3 resize-none text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50"
                             />
 
                             <div className="flex flex-wrap items-center gap-3">
                                 <select
                                     value={targetRole}
                                     onChange={(e) => setTargetRole(e.target.value)}
-                                    className="bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-3 text-jewel-900 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
+                                    className="bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-3 text-jewel-900 focus:outline-none focus:ring-2 focus:ring-accent/50"
                                 >
                                     <option value="ALL">All users</option>
 
@@ -317,7 +317,7 @@ export default function NotificationsPage(): React.ReactElement {
                                 <select
                                     value={priority}
                                     onChange={(e) => setPriority(e.target.value as Priority)}
-                                    className="bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-3 text-jewel-900 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
+                                    className="bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-3 text-jewel-900 focus:outline-none focus:ring-2 focus:ring-accent/50"
                                 >
                                     <option value="low">Low Priority</option>
                                     <option value="normal">Normal Priority</option>
@@ -371,7 +371,7 @@ export default function NotificationsPage(): React.ReactElement {
                         <select
                             value={filterRead}
                             onChange={(e) => setFilterRead(e.target.value as ReadFilter)}
-                            className="border border-jewel-400/30 bg-jewel-50/50 rounded-xl px-3 py-2 text-sm text-jewel-900 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
+                            className="border border-jewel-400/30 bg-jewel-50/50 rounded-xl px-3 py-2 text-sm text-jewel-900 focus:outline-none focus:ring-2 focus:ring-accent/50"
                         >
                             <option value="all">All</option>
                             <option value="unread">Unread</option>
@@ -381,7 +381,7 @@ export default function NotificationsPage(): React.ReactElement {
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value as SortBy)}
-                            className="border border-jewel-400/30 bg-jewel-50/50 rounded-xl px-3 py-2 text-sm text-jewel-900 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
+                            className="border border-jewel-400/30 bg-jewel-50/50 rounded-xl px-3 py-2 text-sm text-jewel-900 focus:outline-none focus:ring-2 focus:ring-accent/50"
                         >
                             <option value="newest">Newest</option>
                             <option value="oldest">Oldest</option>
@@ -391,7 +391,7 @@ export default function NotificationsPage(): React.ReactElement {
                         <select
                             value={selectedType}
                             onChange={(e) => setSelectedType(e.target.value)}
-                            className="border border-jewel-400/30 bg-jewel-50/50 rounded-xl px-3 py-2 text-sm text-jewel-900 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
+                            className="border border-jewel-400/30 bg-jewel-50/50 rounded-xl px-3 py-2 text-sm text-jewel-900 focus:outline-none focus:ring-2 focus:ring-accent/50"
                         >
                             <option value="all">All types</option>
                             {notificationTypes.map((t) => (

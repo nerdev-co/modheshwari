@@ -549,7 +549,7 @@ export default function ChatPage() {
                                             value={input}
                                             onChange={(e) => onInputChange(e.target.value)}
                                             placeholder={t("chat.typeMessage")}
-                                            className="flex-1 px-4 py-3 rounded-2xl bg-surface/60 border border-jewel-400/30 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all"
+                                            className="flex-1 px-4 py-3 rounded-2xl bg-surface/60 border border-jewel-400/30 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent transition-all"
                                             onKeyDown={(e) => {
                                                 if (e.key === "Enter") sendMessage();
                                             }}

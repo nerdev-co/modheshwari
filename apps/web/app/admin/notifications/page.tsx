@@ -113,7 +113,7 @@ export default function AdminNotifications() {
                     <input
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
-                        className="w-full mt-1 p-2 rounded-xl bg-jewel-50/50 border border-jewel-400/30 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50"
+                        className="w-full mt-1 p-2 rounded-xl bg-jewel-50/50 border border-jewel-400/30 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50"
                     />
                 </div>
 
@@ -123,7 +123,7 @@ export default function AdminNotifications() {
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         rows={4}
-                        className="w-full mt-1 p-2 rounded-xl bg-jewel-50/50 border border-jewel-400/30 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 resize-none"
+                        className="w-full mt-1 p-2 rounded-xl bg-jewel-50/50 border border-jewel-400/30 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 resize-none"
                     />
                 </div>
 

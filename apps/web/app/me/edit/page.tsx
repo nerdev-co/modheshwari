@@ -111,7 +111,7 @@ export default function EditProfilePage() {
                 value={formData.bloodGroup}
                 onChange={handleChange}
                 placeholder={t("edit.bloodGroupPlaceholder")}
-                className="mt-1 block w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent"
+                className="mt-1 block w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent"
               />
             </div>
 
@@ -126,7 +126,7 @@ export default function EditProfilePage() {
                 value={formData.gotra}
                 onChange={handleChange}
                 placeholder={t("edit.gotraPlaceholder")}
-                className="mt-1 block w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent"
+                className="mt-1 block w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent"
               />
             </div>
 
@@ -141,7 +141,7 @@ export default function EditProfilePage() {
                 value={formData.profession}
                 onChange={handleChange}
                 placeholder={t("edit.professionPlaceholder")}
-                className="mt-1 block w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent"
+                className="mt-1 block w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent"
               />
             </div>
           </div>

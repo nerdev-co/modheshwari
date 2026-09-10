@@ -158,7 +158,7 @@ export default function ContactPage() {
                                 placeholder={t("contact.messagePlaceholder")}
                                 value={formData.message}
                                 onChange={handleChange}
-                                className="w-full rounded-xl bg-jewel-50/50 border border-jewel-400/30 px-4 py-3 text-sm text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-jewel-gold/50 focus:border-transparent transition-all resize-none"
+                                className="w-full rounded-xl bg-jewel-50/50 border border-jewel-400/30 px-4 py-3 text-sm text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent transition-all resize-none"
                             />
 
                             <Button
