@@ -15,7 +15,7 @@ Modheshwari is a full-stack community management platform for organizing familie
 
 - Language: TypeScript
 - Runtime: Bun
-- Frontend: Next.js 15, React 19, Tailwind CSS, Framer Motion
+- Frontend: Vite, React 19, React Router, Tailwind CSS, Framer Motion
 - Backend: Elysia, Prisma ORM, PostgreSQL
 - Realtime: WebSocket service with Redis and Kafka
 - Infrastructure: Docker Compose, Nginx, GitHub Actions, Prometheus/Grafana
@@ -25,7 +25,7 @@ Modheshwari is a full-stack community management platform for organizing familie
 
 ```mermaid
 flowchart LR
-    A[Next.js Web App] --> B[Backend API]
+    A[Vite Web App] --> B[Backend API]
     A --> C[WebSocket Service]
     B --> D[(PostgreSQL)]
     B --> E[(Redis)]
@@ -103,7 +103,7 @@ If you seed the database with `bun run db:seed`, you can sign in with any of the
 
 ## Release
 
-Current release: v0.1.0
+Current release: v1.1.0
 
 ## License
 
