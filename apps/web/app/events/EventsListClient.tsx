@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { LoaderOne } from "@repo/ui/loading";
+import { EmptyState } from "@repo/ui/emptyState";
 import { NotAuthenticated } from "@repo/ui/notAuthenticated";
 import { useToast } from "@repo/ui/toast";
 
@@ -177,15 +178,15 @@ export default function EventsListClient() {
         {isLoading || error ? (
           <LoaderOne />
         ) : events.length === 0 ? (
-          <Card className="p-12 text-center">
-            <Calendar className="w-16 h-16 text-jewel-400 mx-auto mb-4" />
-            <h3 className="text-xl font-display font-bold text-jewel-900 mb-2">{t("events.list.noEvents")}</h3>
-            <p className="text-sm text-jewel-500 mb-6">{filter === "approved" ? t("events.list.noApprovedEvents") : t("events.list.adjustFilters")}</p>
-            <Button onClick={() => navigate("/events/create")}>
-              <Plus className="w-4 h-4" />
-              {t("events.list.createNewEvent")}
-            </Button>
-          </Card>
+          <EmptyState
+            icon={Calendar}
+            title={t("events.list.noEvents")}
+            description={filter === "approved" ? t("events.list.noApprovedEvents") : t("events.list.adjustFilters")}
+            action={{
+              label: t("events.list.createNewEvent"),
+              onClick: () => navigate("/events/create"),
+            }}
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {events.map((event, index) => {
