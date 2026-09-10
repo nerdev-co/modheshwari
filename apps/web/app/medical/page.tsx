@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
+import { LoadingState } from "@repo/ui/loadingState";
 import { useToast } from "@repo/ui/toast";
 import { formatBloodGroup, toBloodGroupEnum, BLOOD_GROUPS } from "@modheshwari/utils/format";
 
@@ -64,7 +65,7 @@ export default function Medical() {
   if (loading) {
     return (
       <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
-        <p className="text-jewel-500">Loading user info...</p>
+        <LoadingState message="Loading user info..." />
       </DreamySunsetBackground>
     );
   }
