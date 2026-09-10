@@ -8,10 +8,8 @@ import {
   Mail,
   Lock,
   Users,
-  Loader2,
-  ArrowRight,
-  Shield,
 } from "lucide-react";
+import { MOTION_ENTER } from "@repo/ui/motion";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
@@ -72,7 +70,7 @@ export default function SignupPage() {
       <motion.main
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={MOTION_ENTER}
         className="max-w-md w-full relative z-10"
       >
         <Card className="p-8">
@@ -80,7 +78,7 @@ export default function SignupPage() {
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              transition={{ ...MOTION_ENTER, delay: 0.1 }}
               className="inline-flex items-center justify-center h-16 w-16 rounded-xl bg-gradient-to-br from-jewel-gold to-jewel-500 text-jewel-deep text-lg font-bold shadow-lg shadow-jewel-gold/25 mb-4"
             >
               <Users className="w-8 h-8" />
@@ -206,7 +204,7 @@ export default function SignupPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ ...MOTION_ENTER, delay: 0.3 }}
           className="mt-6 bg-jewel-50/60 backdrop-blur-xl rounded-xl p-4 border border-jewel-400/20"
         >
           <div className="flex items-start gap-3">
@@ -220,7 +218,7 @@ export default function SignupPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
+          transition={{ ...MOTION_ENTER, delay: 0.4 }}
           className="mt-4 space-y-2"
         >
           {[
@@ -241,7 +239,7 @@ export default function SignupPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ ...MOTION_ENTER, delay: 0.5 }}
           className="mt-6 text-center"
         >
           <p className="text-xs text-jewel-500">

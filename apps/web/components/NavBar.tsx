@@ -18,6 +18,7 @@ import {
   MessageCircle,
   Stethoscope,
 } from "lucide-react";
+import { MOTION_ENTER, MOTION_EXIT } from "@repo/ui/motion";
 
 import { useUser } from "../lib/UserContext";
 import { ROLE_COLORS, ROLE_COLORS_CSS } from "../lib/constants";
@@ -136,9 +137,10 @@ export default function NavBar() {
       <div className="h-[60px]" />
 
       <motion.nav
+        aria-label="Main navigation"
         initial={{ y: -16, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        transition={MOTION_ENTER}
         className="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex items-center h-12
           rounded-2xl border border-border
           bg-surface/80 backdrop-blur-xl
@@ -305,16 +307,26 @@ export default function NavBar() {
 
       <AnimatePresence>
         {mobileMenuOpen && !loading && (
-          <motion.div
-            id="mobile-menu"
-            ref={mobileMenuRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Navigation menu"
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={MOTION_EXIT}
+              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm md:hidden"
+              aria-hidden="true"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            <motion.div
+              id="mobile-menu"
+              ref={mobileMenuRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Navigation menu"
             initial={{ opacity: 0, y: -8, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.96 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            transition={MOTION_ENTER}
             className="fixed top-18 left-3 right-3 z-50 md:hidden
               bg-surface border border-border
               rounded-2xl shadow-elevated overflow-hidden"
@@ -367,7 +379,8 @@ export default function NavBar() {
               </div>
             )}
           </motion.div>
-        )}
+        </>
+      )}
       </AnimatePresence>
     </>
   );

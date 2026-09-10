@@ -3,6 +3,8 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { MOTION_ENTER, MOTION_EXIT } from "./motion";
+
 interface ConfirmDialogProps {
   open: boolean;
   title: string;
@@ -47,7 +49,7 @@ export function ConfirmDialog({
       }
       if (e.key === "Tab" && dialogRef.current) {
         const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-          'button:not([disabled])'
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"]), input:not([disabled]), textarea:not([disabled]), select:not([disabled])'
         );
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
@@ -81,13 +83,14 @@ export function ConfirmDialog({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
+          transition={MOTION_EXIT}
           className="fixed inset-0 z-[10000] flex items-center justify-center p-4"
         >
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={MOTION_EXIT}
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={onCancel}
           />
@@ -97,7 +100,7 @@ export function ConfirmDialog({
             initial={{ opacity: 0, scale: 0.96, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            transition={MOTION_ENTER}
             role="alertdialog"
             aria-modal="true"
             aria-labelledby="confirm-title"

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Shield, Users } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Card } from "@repo/ui/card";
+import { MOTION_ENTER } from "@repo/ui/motion";
 
 const signupOptions = [
   {
@@ -25,7 +26,7 @@ export default function SignupLandingPage() {
       <motion.main
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={MOTION_ENTER}
         className="w-full max-w-3xl relative z-10"
       >
         <Card className="p-8 sm:p-10">

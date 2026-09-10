@@ -8,6 +8,7 @@ import { Mail, Lock, Loader2, ArrowRight } from "lucide-react";
 import { useToast } from "@repo/ui/toast";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
+import { MOTION_ENTER } from "@repo/ui/motion";
 import { Input } from "@repo/ui/input";
 
 import { apiPost } from "../../lib/api";
@@ -74,7 +75,7 @@ export default function SigninPage() {
       <motion.main
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={MOTION_ENTER}
         className="w-full max-w-md relative z-10"
       >
         <div className="bg-jewel-50/80 backdrop-blur-xl rounded-2xl p-8 border border-jewel-400/20 shadow-jewel">
@@ -82,7 +83,7 @@ export default function SigninPage() {
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              transition={{ ...MOTION_ENTER, delay: 0.1 }}
               className="inline-flex items-center justify-center h-16 w-16 rounded-xl bg-gradient-to-br from-jewel-gold to-jewel-500 text-jewel-deep text-2xl font-bold shadow-lg shadow-jewel-gold/25 mb-4"
             >
               M
@@ -206,7 +207,7 @@ export default function SigninPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ ...MOTION_ENTER, delay: 0.3 }}
           className="mt-6 text-center"
         >
           <p className="text-xs text-jewel-500">

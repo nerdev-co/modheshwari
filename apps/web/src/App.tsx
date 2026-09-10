@@ -38,6 +38,7 @@ export default function App() {
         <ThemeInitializer />
         <a
           href="#main-content"
+          aria-label="Skip to main content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[10001] focus:rounded-xl focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-jewel-900 focus:outline-none focus:ring-2 focus:ring-accent"
         >
           Skip to content

@@ -14,7 +14,6 @@ import {
     UserCheck,
     UserX,
 } from "lucide-react";
-import { motion } from "framer-motion";
 import { LoaderOne } from "@repo/ui/loading";
 import { NotAuthenticated } from "@repo/ui/notAuthenticated";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
@@ -274,7 +273,8 @@ export default function EventDetailsPage() {
     return (
         <DreamySunsetBackground className="px-6 py-10">
             <div className="max-w-5xl mx-auto">
-                <Card className="shadow-jewel p-5 md:p-8">
+                {/* Event Details */}
+                <div className="shadow-jewel p-5 md:p-8">
                     {/* Header */}
                     <Button
                         variant="secondary"
@@ -504,7 +504,7 @@ export default function EventDetailsPage() {
                             </div>
                         </Card>
                     )}
-                </Card>
+                </div>
             </div>
         </DreamySunsetBackground>
     );

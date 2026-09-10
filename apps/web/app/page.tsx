@@ -12,6 +12,8 @@ import {
   ArrowRight,
   Sparkles,
 } from "lucide-react";
+import { MOTION_ENTER } from "@repo/ui/motion";
+
 import { useLocale } from "../lib/LocaleContext";
 
 export default function Home() {
@@ -69,7 +71,7 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          transition={MOTION_ENTER}
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-muted border border-accent/20 mb-8"
         >
           <Sparkles className="w-3.5 h-3.5 text-accent" />
@@ -81,7 +83,7 @@ export default function Home() {
         <motion.h1
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ ...MOTION_ENTER, delay: 0.05 }}
           className="text-4xl sm:text-6xl font-display font-bold tracking-tight text-center max-w-3xl text-text-primary"
         >
           {t("landing.title")}
@@ -90,7 +92,7 @@ export default function Home() {
         <motion.p
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ ...MOTION_ENTER, delay: 0.1 }}
           className="mt-5 max-w-xl text-base sm:text-lg text-text-secondary text-center leading-relaxed"
         >
           {t("landing.description")}
@@ -99,7 +101,7 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ ...MOTION_ENTER, delay: 0.15 }}
           className="mt-8 flex flex-col sm:flex-row gap-3"
         >
           <Button onClick={() => navigate("/signin")}>
@@ -121,7 +123,7 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ ...MOTION_ENTER, delay: 0.2 }}
           className="mt-16 grid grid-cols-3 gap-8 sm:gap-16"
         >
           {stats.map((stat, idx) => (
@@ -141,7 +143,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={MOTION_ENTER}
             className="text-center mb-12"
           >
             <h2 className="text-2xl sm:text-3xl font-display font-bold text-text-primary mb-3">
@@ -159,7 +161,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 8 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.3, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ ...MOTION_ENTER, delay: idx * 0.05 }}
               >
                 <div className="card-elevated h-full group hover:shadow-medium transition-shadow duration-fast">
                   <div className={`inline-flex p-2.5 rounded-xl ${feature.color} mb-3`}>
@@ -182,7 +184,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={MOTION_ENTER}
             className="card-elevated p-8 text-center"
           >
             <div className="w-12 h-12 rounded-full bg-accent-muted mx-auto mb-4 flex items-center justify-center">
