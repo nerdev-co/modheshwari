@@ -7,6 +7,8 @@ import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
 import { Input } from "@repo/ui/input";
 import { useLocale } from "../../lib/LocaleContext";
+import { API_BASE } from "../../lib/config";
+import apiFetch from "../../lib/api";
 
 type ContactType = "question" | "bug" | "feature" | "feedback";
 
@@ -26,14 +28,12 @@ const INITIAL_FORM_STATE: ContactFormState = {
     type: "question",
 };
 
-/**
- * Performs contact page operations.
- */
 export default function ContactPage() {
     const { t } = useLocale();
     const [formData, setFormData] = useState(INITIAL_FORM_STATE);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -57,9 +57,26 @@ export default function ContactPage() {
     const handleSubmit = async () => {
         if (!isFormValid || isSubmitting) return;
         setIsSubmitting(true);
-        await new Promise((r) => setTimeout(r, 1200));
-        setSubmitted(true);
-        setIsSubmitting(false);
+        setError(null);
+        try {
+            await apiFetch(`${API_BASE}/contact`, {
+                method: "POST",
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    subject: formData.subject,
+                    message: formData.message,
+                    type: formData.type,
+                }),
+            });
+            setSubmitted(true);
+        } catch (err) {
+            setError(
+                err instanceof Error ? err.message : "Failed to send message. Please try again.",
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const contactTypes = [
@@ -160,6 +177,12 @@ export default function ContactPage() {
                                 onChange={handleChange}
                                 className="w-full rounded-xl bg-jewel-50/50 border border-jewel-400/30 px-4 py-3 text-sm text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent transition-all resize-none"
                             />
+
+                            {error && (
+                                <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700" role="alert">
+                                    {error}
+                                </div>
+                            )}
 
                             <Button
                                 onClick={handleSubmit}
