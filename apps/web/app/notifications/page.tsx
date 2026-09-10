@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
+import { LoadingState } from "@repo/ui/loadingState";
 import { useToast } from "@repo/ui/toast";
 
 import useNotifications from "../../hooks/useNotifications";
@@ -427,7 +428,7 @@ export default function NotificationsPage(): React.ReactElement {
 
                     {/* Content */}
                     {loading ? (
-                        <p className="text-center py-12 text-jewel-500">Loading...</p>
+                        <LoadingState message="Loading..." />
                     ) : filteredNotifications.length === 0 ? (
                         <p className="text-center py-12 text-jewel-500">No notifications</p>
                     ) : (

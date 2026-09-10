@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
+import { LoadingState } from "@repo/ui/loadingState";
 
 import FamilyTreeView from "../FamilyTreeView";
 import { useUser } from "../../../lib/UserContext";
@@ -15,7 +16,11 @@ export default function FamilyTreePage() {
     if (!loading && !user) navigate("/signin");
   }, [user, loading, navigate]);
 
-  if (loading) return <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center"><p className="text-jewel-500">Loading...</p></DreamySunsetBackground>;
+  if (loading) return (
+    <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
+      <LoadingState message="Loading..." />
+    </DreamySunsetBackground>
+  );
   if (!user) return null;
 
   return (

@@ -6,6 +6,7 @@ import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
 import { Input } from "@repo/ui/input";
+import { LoadingState } from "@repo/ui/loadingState";
 
 import { API_BASE } from "../../../lib/config";
 import { apiFetch } from "../../../lib/api";
@@ -51,7 +52,11 @@ export default function MedicalRecordsPage() {
     if (!loading && !user) navigate("/signin");
   }, [user, loading, navigate]);
 
-  if (loading) return <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center"><p className="text-jewel-500">Loading...</p></DreamySunsetBackground>;
+  if (loading) return (
+    <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
+      <LoadingState message="Loading..." />
+    </DreamySunsetBackground>
+  );
   if (!user) return null;
 
   const hasAnyFormValue = useMemo(() => {
@@ -178,7 +183,7 @@ export default function MedicalRecordsPage() {
         <h2 className="text-lg font-display font-bold text-jewel-900 mb-3">Your Records</h2>
 
         {loadingData ? (
-          <p className="text-sm text-jewel-500">Loading...</p>
+          <LoadingState message="Loading..." size="sm" />
         ) : records.length === 0 ? (
           <p className="text-sm text-jewel-500">No records yet.</p>
         ) : (
