@@ -19,6 +19,7 @@ import {
   Stethoscope,
 } from "lucide-react";
 import { MOTION_ENTER, MOTION_EXIT } from "@repo/ui/motion";
+import { useFocusTrap } from "@repo/ui/useFocusTrap";
 
 import { useUser } from "../lib/UserContext";
 import { ROLE_COLORS, ROLE_COLORS_CSS } from "../lib/constants";
@@ -63,40 +64,15 @@ export default function NavBar() {
     };
   }, [profileMenuOpen]);
 
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      const menu = mobileMenuRef.current;
-      if (!menu) return;
-      const focusable = menu.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      );
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      first?.focus();
-      const handleTab = (e: KeyboardEvent) => {
-        if (e.key !== "Tab") return;
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last?.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first?.focus();
-        }
-      };
-      const handleEscape = (e: KeyboardEvent) => {
-        if (e.key === "Escape") {
-          setMobileMenuOpen(false);
-          mobileMenuButtonRef.current?.focus();
-        }
-      };
-      menu.addEventListener("keydown", handleTab);
-      document.addEventListener("keydown", handleEscape);
-      return () => {
-        menu.removeEventListener("keydown", handleTab);
-        document.removeEventListener("keydown", handleEscape);
-      };
-    }
-  }, [mobileMenuOpen]);
+  useFocusTrap(profileMenuRef, profileMenuOpen, {
+    onClose: () => setProfileMenuOpen(false),
+    returnFocus: profileButtonRef,
+  });
+
+  useFocusTrap(mobileMenuRef, mobileMenuOpen, {
+    onClose: () => setMobileMenuOpen(false),
+    returnFocus: mobileMenuButtonRef,
+  });
 
   const isActive = (href: string) => pathname === href;
 
@@ -109,7 +85,7 @@ export default function NavBar() {
     Icon: ComponentType<{ className?: string }>;
     title: string;
   }) => (
-    <Link to={href} aria-label={title}>
+    <Link to={href} aria-label={title} aria-current={isActive(href) ? "page" : undefined}>
       <Tooltip text={title}>
         <div
           className={`min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl transition-all duration-fast ${
@@ -147,7 +123,7 @@ export default function NavBar() {
           shadow-soft
           px-2"
       >
-        <Link to="/" className="flex items-center gap-2 pl-3 pr-2 shrink-0">
+        <Link to="/" aria-label="Modheshwari home" className="flex items-center gap-2 pl-3 pr-2 shrink-0">
           <div className="h-7 w-7 rounded-lg bg-accent flex items-center justify-center text-jewel-900 text-xs font-bold">
             M
           </div>
@@ -406,6 +382,7 @@ function MobileLink({
     <Link
       to={href}
       onClick={onClick}
+      aria-current={isActive ? "page" : undefined}
       className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-fast ${
         isActive
           ? "bg-accent-muted text-accent"
