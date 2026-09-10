@@ -1,9 +1,28 @@
 import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 import { parsePagination, buildPaginationResponse } from "@modheshwari/utils/pagination";
+import { z } from "zod";
 
+import { validateBody } from "../lib/validate";
 import { requireAuth } from "./authMiddleware";
 import { logger } from "../lib/logger";
+
+const CreateMedicalRecordSchema = z.object({
+  userId: z.string().optional(),
+  bloodType: z.string().optional(),
+  allergies: z.string().optional(),
+  conditions: z.string().optional(),
+  medications: z.string().optional(),
+  notes: z.string().optional(),
+});
+
+const UpdateMedicalRecordSchema = z.object({
+  bloodType: z.string().optional(),
+  allergies: z.string().optional(),
+  conditions: z.string().optional(),
+  medications: z.string().optional(),
+  notes: z.string().optional(),
+});
 
 /**
  * Creates a medical record for a user.
@@ -29,8 +48,9 @@ export async function handleCreateMedicalRecord(req: Request): Promise<Response>
         const auth = requireAuth(req);
         if (!auth.ok) return auth.response as Response;
 
-        const body: any = await req.json().catch(() => null);
-        if (!body) return failure("Missing body", "Validation Error", 400);
+        const v = await validateBody(req, CreateMedicalRecordSchema);
+        if (!v.ok) return v.response;
+        const body = v.data;
 
         const targetUserId = body.userId ?? (auth.payload.userId || auth.payload.id);
 
@@ -183,8 +203,9 @@ export async function handleUpdateMedicalRecord(req: Request, id: string): Promi
             return failure("Forbidden", "Forbidden", 403);
         }
 
-        const body: any = await req.json().catch(() => null);
-        if (!body) return failure("Missing body", "Validation Error", 400);
+        const v = await validateBody(req, UpdateMedicalRecordSchema);
+        if (!v.ok) return v.response;
+        const body = v.data;
 
         const updated = await prisma.medicalRecord.update({
             where: { id },

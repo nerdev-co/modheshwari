@@ -1,23 +1,28 @@
-import prisma from '@modheshwari/db';
-import { success, failure } from '@modheshwari/utils/response';
+import prisma from "@modheshwari/db";
+import { success, failure } from "@modheshwari/utils/response";
+import { z } from "zod";
 
-import { requireAuth } from './authMiddleware';
-import resolveRecipients from '../utils/recipientResolver';
-import { TOPICS } from '../kafka/config';
-import { createOutboxEvent } from '../lib/outbox';
-import { logger } from '../lib/logger';
+import { requireAuth } from "./authMiddleware";
+import resolveRecipients from "../utils/recipientResolver";
+import { TOPICS } from "../kafka/config";
+import { createOutboxEvent } from "../lib/outbox";
+import { logger } from "../lib/logger";
+import { validateBody } from "../lib/validate";
+import { NotificationChannelSchema } from "../lib/sharedSchemas";
 
-type Scope = 'gotra' | 'community' | 'family';
+const ScopeSchema = z.enum(["gotra", "community", "family"]);
 
-interface FanoutBody {
-  scope?: string;
-  scopeValue?: string;
-  message?: string;
-  channels?: string[];
-  roleFilter?: string[];
-  preview?: boolean;
-  priority?: string;
-}
+const FanoutNotificationSchema = z.object({
+    scope: ScopeSchema,
+    scopeValue: z.string().min(1, "scopeValue is required"),
+    message: z.string().min(1, "Message is required"),
+    channels: z.array(NotificationChannelSchema).optional().default(["IN_APP"]),
+    roleFilter: z.array(z.string()).optional(),
+    preview: z.boolean().optional().default(false),
+    priority: z.string().optional().default("normal"),
+});
+
+type Scope = "gotra" | "community" | "family";
 
 /**
  * POST /api/notifications/fanout
@@ -26,30 +31,27 @@ interface FanoutBody {
 export async function handleFanoutNotification(req: Request) {
     try {
         const auth = requireAuth(req, [
-            'COMMUNITY_HEAD',
-            'COMMUNITY_SUBHEAD',
-            'GOTRA_HEAD',
-            'FAMILY_HEAD',
+            "COMMUNITY_HEAD",
+            "COMMUNITY_SUBHEAD",
+            "GOTRA_HEAD",
+            "FAMILY_HEAD",
         ]);
 
         if (!auth.ok) return auth.response as Response;
 
-        const raw: unknown = await req.json().catch(() => null);
-        if (!raw || typeof raw !== 'object') return failure('Invalid body', 'Validation Error', 400);
+        const v = await validateBody(req, FanoutNotificationSchema);
+        if (!v.ok) return v.response;
+        const body = v.data;
 
-        const body = raw as FanoutBody;
         const {
             scope,
             scopeValue,
             message,
-            channels = ['IN_APP'],
+            channels = ["IN_APP"],
             roleFilter,
             preview = false,
-            priority = 'normal',
+            priority = "normal",
         } = body;
-
-        if (!scope || !scopeValue || !message) return failure('Missing required fields', 'Validation Error', 400);
-        if (!['gotra', 'community', 'family'].includes(scope)) return failure('Invalid scope', 'Validation Error', 400);
 
         // Cap recipients to avoid accidental blasts
         const MAX_RECIPIENTS = 20000;
@@ -63,36 +65,47 @@ export async function handleFanoutNotification(req: Request) {
             limit: MAX_RECIPIENTS,
         });
 
-        if (!resolved || resolved.count === 0) return failure('No recipients found', 'Not Found', 404);
+        if (!resolved || resolved.count === 0)
+            return failure("No recipients found", "Not Found", 404);
 
         if (preview) {
-            const sample = resolved.recipients.slice(0, 5).map((r) => ({ id: r.id, email: r.email }));
-            return success('Preview', { recipientCount: resolved.count, sample }, 200);
+            const sample = resolved.recipients
+                .slice(0, 5)
+                .map((r) => ({ id: r.id, email: r.email }));
+            return success(
+                "Preview",
+                { recipientCount: resolved.count, sample },
+                200,
+            );
         }
 
         // Enqueue fanout event to Kafka via outbox
         const senderId = auth.payload.userId;
         const fanoutId = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
         await prisma.$transaction(async (tx) => {
-          await createOutboxEvent(tx, {
-            eventType: "notification.fanout",
-            aggregateType: "Fanout",
-            aggregateId: fanoutId,
-            payload: {
-              fanoutId,
-              initiatedBy: senderId,
-              recipientIds: resolved.recipients.map((r) => r.id),
-              channels,
-              message,
-              priority,
-            },
-            topic: TOPICS.NOTIFICATION_EVENTS,
-          });
+            await createOutboxEvent(tx, {
+                eventType: "notification.fanout",
+                aggregateType: "Fanout",
+                aggregateId: fanoutId,
+                payload: {
+                    fanoutId,
+                    initiatedBy: senderId,
+                    recipientIds: resolved.recipients.map((r) => r.id),
+                    channels,
+                    message,
+                    priority,
+                },
+                topic: TOPICS.NOTIFICATION_EVENTS,
+            });
         });
 
-        return success('Fanout queued', { recipientCount: resolved.count }, 202);
+        return success(
+            "Fanout queued",
+            { recipientCount: resolved.count },
+            202,
+        );
     } catch (err) {
-        logger.error('Fanout Error:', err);
-        return failure('Internal server error', 'Unexpected Error', 500);
+        logger.error("Fanout Error:", err);
+        return failure("Internal server error", "Unexpected Error", 500);
     }
 }

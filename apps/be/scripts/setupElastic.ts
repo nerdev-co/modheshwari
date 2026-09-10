@@ -13,16 +13,16 @@ async function ensureIndex(name: string, body: any) {
     const existsResp: any = await elasticClient.indices.exists({ index: name });
     const exists = existsResp && (existsResp.body === true || existsResp === true || existsResp.exists === true);
     if (exists) {
-      console.log(`Index ${name} already exists`);
+      logger.info(`Index ${name} already exists`);
       return;
     }
   } catch {
     // if we can't determine, fall through to creation attempt
   }
 
-  console.log(`Creating index ${name}...`);
+  logger.info(`Creating index ${name}...`);
   await elasticClient.indices.create({ index: name, body });
-  console.log(`Created ${name}`);
+  logger.info(`Created ${name}`);
 }
 
 /**
@@ -30,7 +30,7 @@ async function ensureIndex(name: string, body: any) {
  * @returns {Promise<void>} Description of return value
  */
 async function run() {
-  console.log("Setting up Elasticsearch indices...");
+  logger.info("Setting up Elasticsearch indices...");
 
   // Users index mapping
   const usersMapping = {
@@ -97,7 +97,7 @@ async function run() {
   try {
     await ensureIndex("users", usersMapping);
     await ensureIndex("events", eventsMapping);
-    console.log("Indices are ready.");
+    logger.info("Indices are ready.");
   } catch (err) {
     logger.error("Failed to setup indices:", err);
     process.exit(1);

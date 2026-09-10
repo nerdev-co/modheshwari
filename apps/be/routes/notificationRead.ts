@@ -7,11 +7,19 @@
 
 import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
+import { z } from "zod";
 
 import { createOutboxEvent, createOutboxEvents } from "../lib/outbox";
 import { TOPICS } from "../kafka/config";
 import { requireAuth } from "./authMiddleware";
 import { logger } from "../lib/logger";
+import { validateBody } from "../lib/validate";
+
+const MarkMultipleAsReadSchema = z.object({
+  notificationIds: z
+    .array(z.string())
+    .min(1, "notificationIds must be a non-empty array"),
+});
 
 /**
  * Mark a notification as read
@@ -84,18 +92,15 @@ export async function handleMarkMultipleAsRead(req: Request): Promise<Response> 
     if (!auth.ok) return auth.response;
 
     const userId = auth.payload.userId as string;
-    const body = await req.json();
-    const { notificationIds } = body as { notificationIds: string[] };
-
-    if (!Array.isArray(notificationIds)) {
-      return failure("notificationIds must be an array", null, 400);
-    }
+    const v = await validateBody(req, MarkMultipleAsReadSchema);
+    if (!v.ok) return v.response;
+    const body = v.data;
 
     // Mark read + outbox events in a single transaction
     const updatedNotifications = await prisma.$transaction(async (tx) => {
       await tx.notification.updateMany({
         where: {
-          id: { in: notificationIds },
+          id: { in: body.notificationIds },
           userId,
         },
         data: {
@@ -106,7 +111,7 @@ export async function handleMarkMultipleAsRead(req: Request): Promise<Response> 
 
       const updated = await tx.notification.findMany({
         where: {
-          id: { in: notificationIds },
+          id: { in: body.notificationIds },
           userId,
           read: true,
           readAt: { not: null },

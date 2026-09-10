@@ -8,10 +8,12 @@ import { randomUUID } from "crypto";
 import prisma from "@modheshwari/db";
 import { comparePassword, hashPassword } from "@modheshwari/utils/hash";
 import { signJWT, signRefreshJWT } from "@modheshwari/utils/jwt";
-import { success, failure } from "@modheshwari/utils/response";
+import { failure } from "@modheshwari/utils/response";
 import type { Role as PrismaRole } from "@prisma/client";
+import { z } from "zod";
 
 import { logger } from "../../lib/logger";
+import { validateBody } from "../../lib/validate";
 
 /**
  * Handles user login for a specific role.
@@ -34,19 +36,20 @@ import { logger } from "../../lib/logger";
  *   "user": { "id": 1, "name": "John Doe", "role": "FAMILY_HEAD" }
  * }
  */
+const FHSigninSchema = z.object({
+  email: z.string().email("Invalid email"),
+  password: z.string().min(1, "Password is required"),
+});
+
 export async function handleFHLogin(
   req: Request,
   expectedRole: string,
 ): Promise<Response> {
   try {
-    const body: any = await req.json().catch(() => null);
-    if (!body) return failure("Invalid JSON body", "Bad Request", 400);
+    const v = await validateBody(req, FHSigninSchema);
+    if (!v.ok) return v.response;
+    const body = v.data;
     const { email, password } = body;
-
-    // --- Basic input validation ---
-    if (!email || !password) {
-      return failure("Missing credentials", "Validation Error", 400);
-    }
 
     // --- Fetch user by email and expected role ---
     const user = await prisma.user.findFirst({
@@ -143,6 +146,13 @@ export async function handleFHLogin(
  * @param {string} role - The user role ("FAMILY_HEAD").
  * @returns {Promise<Response>} HTTP JSON response.
  */
+const FHSignupSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  familyName: z.string().min(1, "Family name is required"),
+});
+
 export async function handleFHSignup(
   req: Request,
   role: string,
@@ -159,14 +169,10 @@ export async function handleFHSignup(
     }
     const prismaRole: PrismaRole = "FAMILY_HEAD" as unknown as PrismaRole;
 
-    const body: any = await req.json().catch(() => null);
-    if (!body) return failure("Invalid JSON body", "Bad Request", 400);
-
+    const v = await validateBody(req, FHSignupSchema);
+    if (!v.ok) return v.response;
+    const body = v.data;
     const { name, email, password, familyName } = body;
-
-    // --- Step 1: Input validation ---
-    if (!name || !email || !password || !familyName)
-      return failure("Missing required fields", "Validation Error", 400);
 
     // --- Step 2: Check if email already exists ---
     const existingUser = await prisma.user.findFirst({ where: { email } });
@@ -190,15 +196,26 @@ export async function handleFHSignup(
         },
       });
 
-      // --- Step 5: Create Profile ---
+      // --- Step 6: Create Profile ---
       await tx.profile.create({
         data: {
           userId: u.id,
           status: true,
+          bloodGroup: "O_POS",
         },
       });
 
-      // --- Step 6: Create Family entry ---
+      // --- Step 7: Prompt user to update blood group ---
+      await tx.notification.create({
+        data: {
+          userId: u.id,
+          type: "GENERIC",
+          message:
+            "Welcome! Please update your blood group in your profile settings. This is important for emergency medical matching.",
+        },
+      });
+
+      // --- Step 8: Create Family entry ---
       const f = await tx.family.create({
         data: {
           name: familyName,
@@ -207,7 +224,7 @@ export async function handleFHSignup(
         },
       });
 
-      // --- Step 7: Link Family Head as FamilyMember ---
+      // --- Step 8: Link Family Head as FamilyMember ---
       await tx.familyMember.create({
         data: {
           familyId: f.id,
@@ -219,7 +236,7 @@ export async function handleFHSignup(
       return { user: u, family: f };
     });
 
-    // --- Step 7: Generate JWT token ---
+    // --- Step 9: Generate JWT token ---
     const token = signJWT({ userId: user.id, role: user.role });
     const refreshToken = signRefreshJWT({ userId: user.id });
     const headers = new Headers();

@@ -7,6 +7,7 @@
  * - Falls back to full-text search for unstructured queries
  */
 
+import { z } from "zod";
 import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 import {
@@ -15,6 +16,7 @@ import {
 } from "@modheshwari/utils/pagination";
 import { isRateLimited } from "@modheshwari/utils/rateLimit";
 
+import { validateQuery } from "../lib/validate";
 import {
   parseQuery,
   SearchMode,
@@ -29,6 +31,12 @@ import { logger } from "../lib/logger";
 type CacheEntry = { ts: number; data: any };
 const CACHE_TTL = 60 * 1000; // 60 seconds
 const cache = new Map<string, CacheEntry>();
+
+const SearchQuerySchema = z.object({
+  q: z.string().min(2, "Query too short"),
+  page: z.preprocess((val) => (val === undefined ? 1 : Number(val)), z.number().positive().optional()),
+  limit: z.preprocess((val) => (val === undefined ? 20 : Number(val)), z.number().positive().max(100).optional()),
+});
 
 /**
  * GET /api/search?q=xxx
@@ -58,12 +66,9 @@ const cache = new Map<string, CacheEntry>();
  */
 export async function handleSearch(req: Request): Promise<Response> {
   try {
-    const url = new URL(req.url);
-    const q = (url.searchParams.get("q") || "").trim();
-
-    if (q.length < 2) {
-      return failure("Query too short", "Validation Error", 400);
-    }
+    const queryValidation = validateQuery(req, SearchQuerySchema);
+    if (!queryValidation.ok) return queryValidation.response;
+    const { q, page, limit } = queryValidation.data;
 
     if (
       isRateLimited(req, {
@@ -79,10 +84,10 @@ export async function handleSearch(req: Request): Promise<Response> {
     const parsed = parseQuery(q);
 
     // Parse pagination
-    const { skip, take, page, limit } = parsePagination(
+    const { skip, take, page: finalPage, limit: finalLimit } = parsePagination(
       {
-        page: url.searchParams.get("page"),
-        limit: url.searchParams.get("limit"),
+        page: String(page),
+        limit: String(limit),
       },
       20,
       100,
@@ -103,8 +108,8 @@ export async function handleSearch(req: Request): Promise<Response> {
         buildPaginationResponse(
           paginatedUsers,
           cachedUsers.length,
-          page,
-          limit,
+          finalPage,
+          finalLimit,
         ),
       );
     }
@@ -185,7 +190,7 @@ export async function handleSearch(req: Request): Promise<Response> {
 
         cache.set(cacheKey, { ts: now, data: users });
 
-        return success("Search results", buildPaginationResponse(users, totalHits, page, limit));
+        return success("Search results", buildPaginationResponse(users, totalHits, finalPage, finalLimit));
       } catch (err) {
         logger.warn('Elasticsearch query failed, falling back to DB', err);
         // fall through to DB-based search
@@ -210,7 +215,7 @@ export async function handleSearch(req: Request): Promise<Response> {
 
     return success(
       "Search results",
-      buildPaginationResponse(users, total, page, limit),
+      buildPaginationResponse(users, total, finalPage, finalLimit),
     );
   } catch (err) {
     logger.error("Search Error:", err);

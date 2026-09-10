@@ -336,5 +336,5 @@ import yaml from "js-yaml";
 const specYaml = yaml.dump(specTemplate, { lineWidth: 120 });
 writeFileSync(join(ROOT, "openapi.yaml"), specYaml, "utf-8");
 
-console.log(`✓ Generated OpenAPI spec with ${routes.length} routes`);
-console.log(`  Written to: openapi.yaml`);
+console.info(`✓ Generated OpenAPI spec with ${routes.length} routes`);
+console.info(`  Written to: openapi.yaml`);

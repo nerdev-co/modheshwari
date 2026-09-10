@@ -6,10 +6,13 @@
 import prisma from "@modheshwari/db";
 import { hashPassword, comparePassword } from "@modheshwari/utils/hash";
 import { signJWT, signRefreshJWT } from "@modheshwari/utils/jwt";
-import { success, failure } from "@modheshwari/utils/response";
+import { failure } from "@modheshwari/utils/response";
 import type { Role as PrismaRole } from "@prisma/client";
+import { z } from "zod";
 
 import { logger } from "../../lib/logger";
+import { validateBody } from "../../lib/validate";
+import { BloodGroupSchema } from "../../lib/sharedSchemas";
 
 const ALLOWED_ROLES = [
     "COMMUNITY_HEAD",
@@ -34,6 +37,13 @@ function normalizeRole(raw?: string): AdminRole | undefined {
  * Signup handler for community/admin roles.
  * POST /api/signup/:role
  */
+const AdminSignupSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    gotra: z.string().optional(),
+    bloodGroup: BloodGroupSchema.optional(),
+});
 export async function handleAdminSignup(
     req: Request,
     role: string,
@@ -50,27 +60,10 @@ export async function handleAdminSignup(
         // keep a stable, typed prismaRole before any awaits so narrowing isn't lost
         const prismaRole: PrismaRole = r as PrismaRole;
 
-        const body: any = await req.json().catch(() => null);
-        if (!body) return failure("Invalid JSON body", "Bad Request", 400);
-
+        const v = await validateBody(req, AdminSignupSchema);
+        if (!v.ok) return v.response;
+        const body = v.data;
         const { name, email, password, gotra, bloodGroup } = body;
-        if (!name || !email || !password)
-            return failure("Missing required fields", "Validation Error", 400);
-
-        const validBloodGroups = [
-            "A_POS",
-            "A_NEG",
-            "B_POS",
-            "B_NEG",
-            "AB_POS",
-            "AB_NEG",
-            "O_POS",
-            "O_NEG",
-        ] as const;
-
-        if (bloodGroup && !validBloodGroups.includes(bloodGroup)) {
-            return failure("Invalid blood group", "Validation Error", 400);
-        }
 
         const existing = await prisma.user.findFirst({ where: { email } });
         if (existing)
@@ -90,13 +83,14 @@ export async function handleAdminSignup(
                 },
             });
 
+            const profileData: any = {
+                userId: u.id,
+                gotra: gotra ?? null,
+                status: true,
+            };
+            if (bloodGroup) profileData.bloodGroup = bloodGroup;
             await tx.profile.create({
-                data: {
-                    userId: u.id,
-                    gotra: gotra ?? null,
-                    status: true,
-                    ...(bloodGroup ? { bloodGroup } : {}),
-                },
+                data: profileData,
             });
 
             return u;
@@ -138,6 +132,10 @@ export async function handleAdminSignup(
  * Login handler for community/admin roles.
  * POST /api/login/:role
  */
+const AdminLoginSchema = z.object({
+    email: z.string().email("Invalid email"),
+    password: z.string().min(1, "Password is required"),
+});
 export async function handleAdminLogin(
     req: Request,
     expectedRole: string,
@@ -154,11 +152,10 @@ export async function handleAdminLogin(
         // keep typed value before any await so TypeScript knows it's present
         const prismaRole: PrismaRole = r as unknown as PrismaRole;
 
-        const body: any = await (req as Request).json().catch(() => null);
-        if (!body) return failure("Invalid JSON body", "Bad Request", 400);
+        const v = await validateBody(req, AdminLoginSchema);
+        if (!v.ok) return v.response;
+        const body = v.data;
         const { email, password } = body;
-        if (!email || !password)
-            return failure("Missing credentials", "Validation Error", 400);
 
         const user = await prisma.user.findFirst({
             where: { email, role: prismaRole },

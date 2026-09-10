@@ -2,8 +2,10 @@ import prisma from "@modheshwari/db";
 import { comparePassword, hashPassword } from "@modheshwari/utils/hash";
 import { signJWT } from "@modheshwari/utils/jwt";
 import { success, failure } from "@modheshwari/utils/response";
+import { z } from "zod";
 
 import { logger } from "../../lib/logger";
+import { validateBody } from "../../lib/validate";
 
 /**
  * @description Handles Family Member login flow.
@@ -30,16 +32,17 @@ import { logger } from "../../lib/logger";
  * @param {Request} req - The HTTP request object.
  * @returns {Promise<Response>} HTTP JSON response.
  */
+const MemberSigninSchema = z.object({
+  email: z.string().email("Invalid email"),
+  password: z.string().min(1, "Password is required"),
+});
+
 export async function handleMemberLogin(req: Request) {
   try {
-    const body: any = await req.json().catch(() => null);
-    if (!body) return failure("Invalid JSON body", "Bad Request", 400);
-
+    const v = await validateBody(req, MemberSigninSchema);
+    if (!v.ok) return v.response;
+    const body = v.data;
     const { email, password } = body;
-
-    // --- Step 1: Input validation ---
-    if (!email || !password)
-      return failure("Missing required fields", "Validation Error", 400);
 
     // --- Step 2: Ensure user exists ---
     // --- Fetch user by email ---
@@ -112,16 +115,19 @@ export async function handleMemberLogin(req: Request) {
  * @param {Request} req - Description of req
  * @returns {Promise<Response>} Description of return value
  */
+const MemberSignupSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  familyId: z.string().min(1, "Family ID is required"),
+});
+
 export async function handleMemberSignup(req: Request) {
   try {
-    const body: any = await req.json().catch(() => null);
-    if (!body) return failure("Invalid JSON body", "Bad Request", 400);
-
+    const v = await validateBody(req, MemberSignupSchema);
+    if (!v.ok) return v.response;
+    const body = v.data;
     const { name, email, password, familyId } = body;
-
-    // --- Step 1: Input validation ---
-    if (!name || !email || !password || !familyId)
-      return failure("Missing required fields", "Validation Error", 400);
 
     // --- Step 2: Check if email already exists ---
     const existingUser = await prisma.user.findFirst({ where: { email } });
@@ -147,6 +153,17 @@ export async function handleMemberSignup(req: Request) {
         data: {
           userId: u.id,
           status: true,
+          bloodGroup: "O_POS",
+        },
+      });
+
+      // --- Step 5: Prompt user to update blood group ---
+      await tx.notification.create({
+        data: {
+          userId: u.id,
+          type: "GENERIC",
+          message:
+            "Welcome! Please update your blood group in your profile settings. This is important for emergency medical matching.",
         },
       });
 

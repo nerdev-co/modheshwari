@@ -58,7 +58,7 @@ function generateDocs(
     ],
   });
 
-  console.log(` Added docs for ${isArrow ? "arrow " : ""}function: ${name}`);
+  console.info(` Added docs for ${isArrow ? "arrow " : ""}function: ${name}`);
 }
 
 for (const file of files) {
@@ -85,4 +85,4 @@ for (const file of files) {
 }
 
 await project.save();
-console.log("Auto-generated JSDocs with inferred types!");
+console.info("Auto-generated JSDocs with inferred types!");

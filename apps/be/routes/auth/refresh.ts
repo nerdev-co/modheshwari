@@ -3,7 +3,7 @@ import {
   signJWT,
   signRefreshJWT,
 } from "@modheshwari/utils/jwt";
-import { success, failure } from "@modheshwari/utils/response";
+import { failure } from "@modheshwari/utils/response";
 import prisma from "@modheshwari/db";
 
 /**

@@ -3,9 +3,16 @@ import { randomUUID } from "crypto";
 import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 import { hashPassword } from "@modheshwari/utils/hash";
+import { z } from "zod";
 
 import { requireAuth } from "./authMiddleware";
 import { logger } from "../lib/logger";
+import { validateBody } from "../lib/validate";
+
+const CreateFamilySchema = z.object({
+  name: z.string().min(1, "Family name is required"),
+  uniqueId: z.string().optional(),
+});
 
 /**
  * Create a Family for the authenticated user and make them the head.
@@ -19,10 +26,10 @@ export async function handleCreateFamily(req: any): Promise<Response> {
     if (!authCheck.ok) return authCheck.response as Response;
     const userId = authCheck.payload.userId ?? authCheck.payload.id;
 
-    const body: any = await (req as Request).json().catch(() => null);
-    if (!body) return failure("Invalid JSON body", "Bad Request", 400);
+    const v = await validateBody(req, CreateFamilySchema);
+    if (!v.ok) return v.response;
+    const body = v.data;
     const { name, uniqueId } = body;
-    if (!name) return failure("Missing family name", "Validation Error", 400);
 
     const family = await prisma.family.create({
       data: {
@@ -55,6 +62,15 @@ export async function handleCreateFamily(req: any): Promise<Response> {
  * POST /api/families/:id/members
  * Body: { userId?: string, email?: string, role?: string }
  */
+const AddMemberSchema = z.object({
+  userId: z.string().optional(),
+  email: z.string().email("Invalid email").optional(),
+  role: z.string().optional(),
+}).refine((data) => data.userId || data.email, {
+  message: "Provide userId or email to add",
+  path: ["userId"],
+});
+
 export async function handleAddMember(
   req: any,
   familyId: string,
@@ -70,9 +86,9 @@ export async function handleAddMember(
     if (family.headId !== requesterId)
       return failure("Only family head can add members", "Forbidden", 403);
 
-    const body: any = await (req as Request).json().catch(() => null);
-    if (!body) return failure("Invalid JSON body", "Bad Request", 400);
-
+    const v = await validateBody(req as Request, AddMemberSchema);
+    if (!v.ok) return v.response;
+    const body = v.data;
     const { userId, email, role } = body;
 
     let user = null;
@@ -82,15 +98,13 @@ export async function handleAddMember(
       // email is not unique at the schema level; use findFirst to avoid
       // Prisma validation errors. Consider adding @unique to User.email.
       user = await prisma.user.findFirst({ where: { email } });
-    } else {
-      return failure("Provide userId or email to add", "Validation Error", 400);
     }
 
     if (!user) return failure("User not found", "Not Found", 404);
 
     // Prevent duplicate membership with same role
     const existing = await prisma.familyMember.findFirst({
-      where: { familyId: family.id, userId: user.id, role: role ?? "MEMBER" },
+      where: { familyId: family.id, userId: user.id, role: (role ?? "MEMBER") as any },
     });
     if (existing)
       return failure("User already member with that role", "Conflict", 409);
@@ -99,7 +113,7 @@ export async function handleAddMember(
       data: {
         familyId: family.id,
         userId: user.id,
-        role: role ?? "MEMBER",
+        role: (role ?? "MEMBER") as any,
       },
     });
 
@@ -195,6 +209,11 @@ export async function handleListInvites(
  *   "data": null
  * }
  */
+const ReviewInviteSchema = z.object({
+  action: z.enum(["approve", "reject"]),
+  remarks: z.string().optional(),
+});
+
 export async function handleReviewInvite(
   req: any,
   familyId: string,
@@ -217,17 +236,11 @@ export async function handleReviewInvite(
     if (invite.status !== "PENDING")
       return failure("Invite already reviewed", "Conflict", 409);
 
-    const body: any = await (req as Request).json().catch(() => null);
-    const action = body?.action;
-    const remarks = body?.remarks ?? null;
-
-    if (!action || !["approve", "reject"].includes(action)) {
-      return failure(
-        "Invalid action. Must be 'approve' or 'reject'",
-        "Validation Error",
-        400,
-      );
-    }
+    const v = await validateBody(req as Request, ReviewInviteSchema);
+    if (!v.ok) return v.response;
+    const body = v.data;
+    const { action } = body;
+    const remarks = body.remarks ?? null;
 
     if (action === "approve") {
       // Ensure there's at least an email or invited user

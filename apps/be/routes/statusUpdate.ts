@@ -1,7 +1,20 @@
 import prisma from "@modheshwari/db";
-import { requireAuth } from "./authMiddleware";
 import { success, failure } from "@modheshwari/utils/response";
 import type { Role } from "@prisma/client";
+import { z } from "zod";
+
+import { validateBody } from "../lib/validate";
+import { requireAuth } from "./authMiddleware";
+
+const CreateStatusUpdateSchema = z.object({
+  targetUserId: z.string(),
+  reason: z.string().optional(),
+});
+
+const ReviewStatusUpdateSchema = z.object({
+  status: z.enum(["APPROVED", "REJECTED"]),
+  remarks: z.string().optional(),
+});
 
 // ---------------- CREATE ----------------
 /**
@@ -44,13 +57,9 @@ export async function handleCreateStatusUpdateRequest(req: Request) {
     if (!auth.ok) return auth.response;
     const userId = (auth.payload.userId ?? auth.payload.id) as string;
 
-    const body = (await req.json()) as {
-      targetUserId?: string;
-      reason?: string;
-    };
-
-    const { targetUserId, reason } = body;
-    if (!targetUserId) return failure("targetUserId is required", null, 400);
+    const validation = await validateBody(req, CreateStatusUpdateSchema);
+    if (!validation.ok) return validation.response;
+    const { targetUserId, reason } = validation.data;
 
     // Create request
     const request = await prisma.statusUpdateRequest.create({
@@ -194,13 +203,9 @@ export async function handleReviewStatusUpdateRequest(
     if (!auth.ok) return auth.response;
     const userId = auth.payload.userId as string;
 
-    const body = (await req.json()) as {
-      status?: "APPROVED" | "REJECTED";
-      remarks?: string;
-    };
-
-    const { status, remarks } = body;
-    if (!status) return failure("Status field is required", null, 400);
+    const validation = await validateBody(req, ReviewStatusUpdateSchema);
+    if (!validation.ok) return validation.response;
+    const { status, remarks } = validation.data;
 
     // Wrap approval + profile update in a transaction to prevent race condition
     // where two concurrent approvals both see "all approved" and both update the profile

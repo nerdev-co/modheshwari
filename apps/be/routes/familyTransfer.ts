@@ -1,8 +1,14 @@
+import { z } from "zod";
 import prisma from "@modheshwari/db";
-import { requireAuth } from "./authMiddleware";
 import { success, failure } from "@modheshwari/utils/response";
 
+import { requireAuth } from "./authMiddleware";
+import { validateBody } from "../lib/validate";
 import { logger } from "../lib/logger";
+
+const FamilyTransferSchema = z.object({
+  newFamilyId: z.string().min(1, "newFamilyId is required"),
+});
 
 /**
  * Handles transferring a user to a new family (e.g., due to marriage).
@@ -16,9 +22,10 @@ export async function handleFamilyTransfer(req: Request) {
   if (!auth.ok) return auth.response;
   const userId = (auth.payload.userId ?? auth.payload.id) as string;
 
-  const body = (await req.json()) as { newFamilyId?: string };
+  const v = await validateBody(req, FamilyTransferSchema);
+  if (!v.ok) return v.response;
+  const body = v.data;
   const { newFamilyId } = body;
-  if (!newFamilyId) return failure("newFamilyId is required", null, 400);
 
   try {
     // Verify the target family exists

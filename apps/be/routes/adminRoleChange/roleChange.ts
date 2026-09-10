@@ -1,14 +1,22 @@
 import type { Role } from "@prisma/client";
 import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
+import { z } from "zod";
 
+import { validateBody } from "../../lib/validate";
+import { RoleSchema } from "../../lib/sharedSchemas";
 import { requireAuth } from "../authMiddleware";
-import { ADMIN_ROLES, VALID_ROLES } from "./constants";
+import { ADMIN_ROLES } from "./constants";
 import { checkRoleChangePermission } from "./permissions";
 import { createOutboxEvent } from "../../lib/outbox";
 import { TOPICS } from "../../kafka/config";
 import { logger } from "../../lib/logger";
 import { errorCounter } from "../../lib/metrics";
+
+const ChangeUserRoleSchema = z.object({
+  newRole: RoleSchema,
+  approvalIds: z.string().array().optional(),
+});
 
 const ROLE_CHANGE_RATE_LIMIT = Number(process.env.ROLE_CHANGE_RATE_LIMIT || 5);
 const ROLE_CHANGE_RATE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
@@ -30,18 +38,11 @@ export async function handleChangeUserRole(
     const requesterId = auth.payload.userId || auth.payload.id;
     const requesterRole = auth.payload.role as Role;
 
-    // Parse request body
-    const body: any = await (req as Request).json().catch(() => null);
-    if (!body || !body.newRole) {
-      return failure("Missing newRole in request body", "Validation Error", 400);
-    }
+    const v = await validateBody(req, ChangeUserRoleSchema);
+    if (!v.ok) return v.response;
+    const body = v.data;
 
     const { newRole, approvalIds } = body;
-
-    // Validate newRole
-    if (!VALID_ROLES.includes(newRole)) {
-      return failure("Invalid role specified", "Validation Error", 400);
-    }
 
     // Fetch target user
     const targetUser = await prisma.user.findUnique({

@@ -1,6 +1,8 @@
+import { z } from "zod";
 import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 
+import { validateQuery } from "../lib/validate";
 import { requireAuth } from "./authMiddleware";
 import { logger } from "../lib/logger";
 
@@ -14,10 +16,12 @@ type NearbyRow = {
   distance_m: number;
 };
 
-const DEFAULT_RADIUS_KM = 5;
-const MAX_RADIUS_KM = 100;
-const DEFAULT_LIMIT = 20;
-const MAX_LIMIT = 100;
+const NearbyQuerySchema = z.object({
+  radiusKm: z.preprocess((val) => (val === undefined ? 5 : Number(val)), z.number().positive().max(100)),
+  limit: z.preprocess((val) => (val === undefined ? 20 : Number(val)), z.number().positive().max(100)),
+  lat: z.preprocess((val) => (val === undefined ? undefined : Number(val)), z.number().optional()),
+  lng: z.preprocess((val) => (val === undefined ? undefined : Number(val)), z.number().optional()),
+});
 
 /**
  * GET /api/users/nearby?radiusKm=5&limit=20&lat=..&lng=..
@@ -29,26 +33,12 @@ export async function handleGetNearbyUsers(req: Request): Promise<Response> {
     if (!auth.ok) return auth.response;
     const userId = auth.payload.userId as string;
 
-    const url = new URL(req.url);
+    const queryValidation = validateQuery(req, NearbyQuerySchema);
+    if (!queryValidation.ok) return queryValidation.response;
+    const { radiusKm, limit, lat, lng } = queryValidation.data;
 
-    const radiusKmRaw = url.searchParams.get("radiusKm");
-    const limitRaw = url.searchParams.get("limit");
-    const latRaw = url.searchParams.get("lat");
-    const lngRaw = url.searchParams.get("lng");
-
-    const radiusKm = radiusKmRaw ? Number(radiusKmRaw) : DEFAULT_RADIUS_KM;
-    const limit = limitRaw ? Number(limitRaw) : DEFAULT_LIMIT;
-
-    if (!Number.isFinite(radiusKm) || radiusKm <= 0 || radiusKm > MAX_RADIUS_KM) {
-      return failure("Invalid radiusKm", "Validation Error", 400);
-    }
-
-    if (!Number.isFinite(limit) || limit <= 0 || limit > MAX_LIMIT) {
-      return failure("Invalid limit", "Validation Error", 400);
-    }
-
-    let latitude = latRaw !== null ? Number(latRaw) : undefined;
-    let longitude = lngRaw !== null ? Number(lngRaw) : undefined;
+    let latitude = lat !== undefined ? lat : undefined;
+    let longitude = lng !== undefined ? lng : undefined;
 
     if (latitude === undefined || longitude === undefined) {
       const profile = await prisma.profile.findUnique({

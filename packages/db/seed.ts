@@ -16,6 +16,7 @@ import {
     InviteStatus,
 } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { logger } from "../../apps/be/lib/logger";
 
 const prisma = new PrismaClient();
 
@@ -34,7 +35,7 @@ async function hashPassword() {
  * @returns {Promise<void>} Description of return value
  */
 async function main() {
-    console.log(" Seeding database...");
+    console.info(" Seeding database...");
 
     // Clean in correct order (respecting relations)
     await prisma.notificationDelivery.deleteMany();
@@ -66,7 +67,7 @@ async function main() {
     // ============================================================
     // USERS
     // ============================================================
-    console.log(" Creating users...");
+    console.info(" Creating users...");
 
     const vikram = await prisma.user.create({
         data: {
@@ -213,7 +214,7 @@ async function main() {
     // ============================================================
     // PROFILES
     // ============================================================
-    console.log(" Creating profiles...");
+    console.info(" Creating profiles...");
 
     const profileData: Record<string, { phone: string; address: string; profession: string; gotra: string; location: string; bloodGroup: bloodGroup; lat: number; lng: number }> = {
         vikram: { phone: "9876543210", address: "12 MG Road, Indore", profession: "Advocate", gotra: "Kashyap", location: "Indore", bloodGroup: bloodGroup.A_POS, lat: 22.7196, lng: 75.8577 },
@@ -254,7 +255,7 @@ async function main() {
     // ============================================================
     // MEDICAL RECORDS
     // ============================================================
-    console.log(" Creating medical records...");
+    console.info(" Creating medical records...");
 
     const medicalData = [
         { userId: vikram.id, bloodType: "A+", conditions: "Hypertension", medications: "Amlodipine 5mg", notes: "Regular checkups every 6 months" },
@@ -280,7 +281,7 @@ async function main() {
     // ============================================================
     // FAMILIES
     // ============================================================
-    console.log(" Creating families...");
+    console.info(" Creating families...");
 
     const mehtaFamily = await prisma.family.create({
         data: {
@@ -317,7 +318,7 @@ async function main() {
     // ============================================================
     // FAMILY MEMBERS
     // ============================================================
-    console.log(" Creating family memberships...");
+    console.info(" Creating family memberships...");
 
     await prisma.familyMember.createMany({
         data: [
@@ -340,7 +341,7 @@ async function main() {
     // ============================================================
     // USER RELATIONS (family tree)
     // ============================================================
-    console.log(" Creating user relations...");
+    console.info(" Creating user relations...");
 
     await prisma.userRelation.createMany({
         data: [
@@ -377,7 +378,7 @@ async function main() {
     // ============================================================
     // EVENTS
     // ============================================================
-    console.log(" Creating events...");
+    console.info(" Creating events...");
 
     const diwaliEvent = await prisma.event.create({
         data: {
@@ -415,7 +416,7 @@ async function main() {
     // ============================================================
     // EVENT APPROVALS
     // ============================================================
-    console.log(" Creating event approvals...");
+    console.info(" Creating event approvals...");
 
     // Diwali - pending approvals
     await prisma.eventApproval.createMany({
@@ -447,7 +448,7 @@ async function main() {
     // ============================================================
     // EVENT REGISTRATIONS
     // ============================================================
-    console.log(" Creating event registrations...");
+    console.info(" Creating event registrations...");
 
     await prisma.eventRegistration.createMany({
         data: [
@@ -470,7 +471,7 @@ async function main() {
     // ============================================================
     // PAYMENTS
     // ============================================================
-    console.log(" Creating payments...");
+    console.info(" Creating payments...");
 
     await prisma.payment.createMany({
         data: [
@@ -489,7 +490,7 @@ async function main() {
     // ============================================================
     // RESOURCES
     // ============================================================
-    console.log(" Creating resources...");
+    console.info(" Creating resources...");
 
     const communityHall = await prisma.resource.create({
         data: {
@@ -534,7 +535,7 @@ async function main() {
     // ============================================================
     // RESOURCE REQUESTS
     // ============================================================
-    console.log(" Creating resource requests...");
+    console.info(" Creating resource requests...");
 
     const hallRequest = await prisma.resourceRequest.create({
         data: {
@@ -573,7 +574,7 @@ async function main() {
     // ============================================================
     // RESOURCE REQUEST APPROVALS
     // ============================================================
-    console.log(" Creating resource request approvals...");
+    console.info(" Creating resource request approvals...");
 
     await prisma.resourceRequestApproval.createMany({
         data: [
@@ -591,7 +592,7 @@ async function main() {
     // ============================================================
     // CONVERSATIONS & MESSAGES
     // ============================================================
-    console.log(" Creating conversations...");
+    console.info(" Creating conversations...");
 
     const generalChat = await prisma.conversation.create({
         data: {
@@ -629,7 +630,7 @@ async function main() {
     // ============================================================
     // STATUS UPDATE REQUESTS
     // ============================================================
-    console.log(" Creating status update requests...");
+    console.info(" Creating status update requests...");
 
     const statusReq = await prisma.statusUpdateRequest.create({
         data: {
@@ -654,7 +655,7 @@ async function main() {
     // ============================================================
     // MEMBER INVITES
     // ============================================================
-    console.log(" Creating member invites...");
+    console.info(" Creating member invites...");
 
     await prisma.memberInvite.createMany({
         data: [
@@ -688,7 +689,7 @@ async function main() {
     // ============================================================
     // NOTIFICATIONS
     // ============================================================
-    console.log(" Creating notifications...");
+    console.info(" Creating notifications...");
 
     const notif1 = await prisma.notification.create({
         data: {
@@ -780,7 +781,7 @@ async function main() {
     // ============================================================
     // NOTIFICATION DELIVERIES
     // ============================================================
-    console.log(" Creating notification deliveries...");
+    console.info(" Creating notification deliveries...");
 
     await prisma.notificationDelivery.createMany({
         data: [
@@ -801,7 +802,7 @@ async function main() {
     // ============================================================
     // FANOUT AUDIT
     // ============================================================
-    console.log(" Creating fanout audit...");
+    console.info(" Creating fanout audit...");
 
     await prisma.fanoutAudit.create({
         data: {
@@ -818,7 +819,7 @@ async function main() {
     // ============================================================
     // ROLE CHANGE AUDIT (sample records for the new audit log)
     // ============================================================
-    console.log(" Creating role change audit records...");
+    console.info(" Creating role change audit records...");
 
     await prisma.roleChangeAudit.createMany({
         data: [
@@ -864,12 +865,12 @@ async function main() {
     // ============================================================
     // DONE
     // ============================================================
-    console.log("\nSeeding complete!\n");
+    console.info("\nSeeding complete!\n");
 }
 
 main()
     .catch((e) => {
-        console.error(" Seed failed:", e);
+        logger.error("Seed failed:", e);
         process.exit(1);
     })
     .finally(async () => {

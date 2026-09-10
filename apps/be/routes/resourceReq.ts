@@ -1,3 +1,4 @@
+import { z } from "zod";
 import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 import { isRateLimited } from "@modheshwari/utils/rateLimit";
@@ -7,9 +8,14 @@ import {
     buildPaginationResponse,
 } from "@modheshwari/utils/pagination";
 
+import { validateBody } from "../lib/validate";
 import { requireAuth } from "./authMiddleware";
 import { broadcastNotification } from "../kafka/notificationProducer";
 import { logger } from "../lib/logger";
+
+const CreateResourceRequestSchema = z.object({
+  resource: z.string().min(1, "Resource is required"),
+});
 
 /* =========================================================
    CREATE RESOURCE REQUEST (RATE LIMITED)
@@ -71,11 +77,9 @@ export async function handleCreateResourceRequest(
         if (!auth.ok) return auth.response as Response;
 
         const userId = auth.payload.userId ?? auth.payload.id;
-        const body = (await req.json().catch(() => null)) as any;
-
-        if (!body?.resource) {
-            return failure("Missing resource field", "Validation Error", 400);
-        }
+        const v = await validateBody(req, CreateResourceRequestSchema);
+        if (!v.ok) return v.response;
+        const body = v.data;
 
         /* -------- Identify approvers -------- */
 
@@ -378,6 +382,11 @@ export async function handleGetResourceRequest(
  *   "data": null
  * }
  */
+const ReviewResourceRequestSchema = z.object({
+  action: z.enum(["approve", "reject", "changes"]),
+  remarks: z.string().optional(),
+});
+
 export async function handleReviewResourceRequest(
     req: Request,
     id: string,
@@ -402,11 +411,9 @@ export async function handleReviewResourceRequest(
 
         const reviewerId = auth.payload.userId ?? auth.payload.id;
         const reviewerName = auth.payload.name ?? null;
-        const body = (await req.json().catch(() => null)) as any;
-
-        if (!body?.action) {
-            return failure("Missing action", "Validation Error", 400);
-        }
+        const v = await validateBody(req, ReviewResourceRequestSchema);
+        if (!v.ok) return v.response;
+        const body = v.data;
 
         const statusMap: Record<string, ApprovalStatus> = {
             approve: "APPROVED",
@@ -415,9 +422,6 @@ export async function handleReviewResourceRequest(
         };
 
         const newStatus = statusMap[body.action];
-        if (!newStatus) {
-            return failure("Invalid action", "Bad Request", 400);
-        }
 
         const reqRow = await prisma.$transaction(async (tx) => {
             const approval = await tx.resourceRequestApproval.findFirst({

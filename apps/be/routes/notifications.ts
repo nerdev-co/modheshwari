@@ -3,24 +3,37 @@ import { randomUUID } from "crypto";
 import prisma from "@modheshwari/db";
 import { success, failure } from "@modheshwari/utils/response";
 import { Role, NotificationType, NotificationChannel } from "@prisma/client";
+import getRedisClient from "@modheshwari/redis";
+import { z } from "zod";
 
 import { requireAuth } from "./authMiddleware";
 import { TOPICS } from "../kafka/config";
 import { createOutboxEvent } from "../lib/outbox";
-import getRedisClient from "@modheshwari/redis";
 import { logger } from "../lib/logger";
+import { validateBody } from "../lib/validate";
+import {
+    NotificationChannelSchema,
+    RoleSchema,
+    PrioritySchema,
+} from "../lib/sharedSchemas";
 
-/**
- * Shape of create notification request body
- */
-interface CreateNotificationBody {
-    message: string;
-    type?: NotificationType;
-    channels?: NotificationChannel[];
-    targetRole?: Role;
-    subject?: string;
-    priority?: "low" | "normal" | "high" | "urgent" | "CRITICAL";
-}
+const NotificationTypeSchema = z.enum([
+    "EVENT_APPROVAL",
+    "EVENT_REGISTRATION",
+    "RESOURCE_REQUEST",
+    "PAYMENT_RECEIPT",
+    "GENERIC",
+    "STATUS_UPDATE_REQUEST",
+]);
+
+const CreateNotificationSchema = z.object({
+    message: z.string().min(1, "Message is required"),
+    type: NotificationTypeSchema.optional().default("GENERIC"),
+    channels: z.array(NotificationChannelSchema).optional().default(["IN_APP"]),
+    targetRole: RoleSchema.optional(),
+    subject: z.string().optional(),
+    priority: PrioritySchema.optional().default("normal"),
+});
 
 /**
  * Broadcast a notification to users based on sender's role and scope
@@ -38,20 +51,9 @@ export async function handleCreateNotification(req: Request) {
 
         if (!auth.ok) return auth.response as Response;
 
-        /**
-         * Parse body safely
-         * `req.json()` returns `unknown` in strict TS
-         */
-        const rawBody: unknown = await req.json().catch(() => null);
-
-        const body = rawBody as CreateNotificationBody;
-        if (
-            !body ||
-            typeof body.message !== "string" ||
-            !body.message.trim()
-        ) {
-            return failure("Missing message", "Validation Error", 400);
-        }
+        const v = await validateBody(req, CreateNotificationSchema);
+        if (!v.ok) return v.response;
+        const body = v.data;
 
         const {
             message,
@@ -80,7 +82,11 @@ export async function handleCreateNotification(req: Request) {
                 "FAMILY_HEAD",
                 "MEMBER",
             ],
-            COMMUNITY_SUBHEAD: ["COMMUNITY_HEAD", "COMMUNITY_SUBHEAD", "GOTRA_HEAD"],
+            COMMUNITY_SUBHEAD: [
+                "COMMUNITY_HEAD",
+                "COMMUNITY_SUBHEAD",
+                "GOTRA_HEAD",
+            ],
             GOTRA_HEAD: ["FAMILY_HEAD", "MEMBER"],
             FAMILY_HEAD: ["MEMBER"],
             MEMBER: [],
@@ -183,35 +189,35 @@ export async function handleCreateNotification(req: Request) {
         const recipientIds = users.map((u) => u.id);
 
         const payload = {
-          eventId,
-          message,
-          type,
-          channels,
-          subject: subject ?? null,
-          recipientIds,
-          senderId,
-          priority,
-          timestamp,
-          deliveryStrategy,
-          notificationPriority,
+            eventId,
+            message,
+            type,
+            channels,
+            subject: subject ?? null,
+            recipientIds,
+            senderId,
+            priority,
+            timestamp,
+            deliveryStrategy,
+            notificationPriority,
         };
 
         await prisma.$transaction(async (tx) => {
-          await createOutboxEvent(tx, {
-            eventType: "notification.broadcast",
-            aggregateType: "NotificationBroadcast",
-            aggregateId: eventId,
-            payload,
-            topic: TOPICS.NOTIFICATION_EVENTS,
-          });
+            await createOutboxEvent(tx, {
+                eventType: "notification.broadcast",
+                aggregateType: "NotificationBroadcast",
+                aggregateId: eventId,
+                payload,
+                topic: TOPICS.NOTIFICATION_EVENTS,
+            });
         });
 
         const result = {
-          eventId,
-          recipientCount: recipientIds.length,
-          timestamp,
-          deliveryStrategy,
-          notificationPriority,
+            eventId,
+            recipientCount: recipientIds.length,
+            timestamp,
+            deliveryStrategy,
+            notificationPriority,
         };
 
         // If IN_APP channel requested, publish lightweight realtime preview events to Redis
@@ -220,12 +226,25 @@ export async function handleCreateNotification(req: Request) {
             try {
                 const redis = await getRedisClient();
                 const now = new Date().toISOString();
-                const PREVIEW_TTL = Number(process.env.NOTIFICATION_PREVIEW_TTL_SECONDS || 60);
+                const PREVIEW_TTL = Number(
+                    process.env.NOTIFICATION_PREVIEW_TTL_SECONDS || 60,
+                );
                 const pipeline = redis.multi();
                 for (const u of users) {
-                    const redisPayload = JSON.stringify({ notification: { previewId: eventId, message, subject: subject ?? null, createdAt: now } });
+                    const redisPayload = JSON.stringify({
+                        notification: {
+                            previewId: eventId,
+                            message,
+                            subject: subject ?? null,
+                            createdAt: now,
+                        },
+                    });
                     pipeline.publish(`inapp:${u.id}`, redisPayload);
-                    pipeline.set(`notification_preview:${u.id}:${eventId}`, '1', { EX: PREVIEW_TTL });
+                    pipeline.set(
+                        `notification_preview:${u.id}:${eventId}`,
+                        "1",
+                        { EX: PREVIEW_TTL },
+                    );
                 }
                 await pipeline.exec();
             } catch (err) {
@@ -275,14 +294,26 @@ export async function handleListNotifications(req: Request): Promise<Response> {
         const userId = auth.payload.userId ?? auth.payload.id;
 
         const url = new URL(req.url);
-        const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
-        const limit = Math.min(100, Math.max(1, parseInt(url.searchParams.get("limit") || "50", 10)));
+        const page = Math.max(
+            1,
+            parseInt(url.searchParams.get("page") || "1", 10),
+        );
+        const limit = Math.min(
+            100,
+            Math.max(1, parseInt(url.searchParams.get("limit") || "50", 10)),
+        );
         const skip = (page - 1) * limit;
 
         const [list, total] = await Promise.all([
             prisma.notification.findMany({
                 where: { userId },
-                select: { id: true, type: true, message: true, read: true, createdAt: true },
+                select: {
+                    id: true,
+                    type: true,
+                    message: true,
+                    read: true,
+                    createdAt: true,
+                },
                 orderBy: { createdAt: "desc" },
                 skip,
                 take: limit,
@@ -290,10 +321,19 @@ export async function handleListNotifications(req: Request): Promise<Response> {
             prisma.notification.count({ where: { userId } }),
         ]);
 
-        return success("Notifications fetched", {
-            notifications: list,
-            pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
-        }, 200);
+        return success(
+            "Notifications fetched",
+            {
+                notifications: list,
+                pagination: {
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit),
+                },
+            },
+            200,
+        );
     } catch (err) {
         logger.error("List Notifications Error:", err);
         return failure("Internal server error", "Unexpected Error", 500);

@@ -33,7 +33,7 @@ export function requireAuth(req: Request, allowedRoles?: string[]) {
   const payload: any = getAuthPayload(req);
   if (!payload) {
     return {
-      ok: false,
+      ok: false as const,
       response: new Response(
         JSON.stringify({
           status: "error",
@@ -48,7 +48,7 @@ export function requireAuth(req: Request, allowedRoles?: string[]) {
   if (allowedRoles && Array.isArray(allowedRoles)) {
     if (!allowedRoles.includes(payload.role)) {
       return {
-        ok: false,
+        ok: false as const,
         response: new Response(
           JSON.stringify({ status: "error", message: "Forbidden", data: null }),
           { status: 403, headers: { "Content-Type": "application/json" } },
@@ -57,5 +57,5 @@ export function requireAuth(req: Request, allowedRoles?: string[]) {
     }
   }
 
-  return { ok: true, payload };
+  return { ok: true as const, payload };
 }
