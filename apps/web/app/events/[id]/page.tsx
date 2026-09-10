@@ -14,11 +14,11 @@ import {
     UserCheck,
     UserX,
 } from "lucide-react";
-import { LoaderOne } from "@repo/ui/loading";
+import { LoadingState } from "@repo/ui/loadingState";
+import { EmptyState } from "@repo/ui/emptyState";
 import { NotAuthenticated } from "@repo/ui/notAuthenticated";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
-import { Card } from "@repo/ui/card";
 import { useToast } from "@repo/ui/toast";
 
 import apiFetch from "../../../lib/api";
@@ -255,17 +255,18 @@ export default function EventDetailsPage() {
     if (hydrated && !token) return <NotAuthenticated />;
     if (!hydrated) return null;
 
-    if (loading) return <LoaderOne />;
+    if (loading) return <LoadingState message="Loading event..." />;
 
     if (!event) {
         return (
             <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
-                <div className="text-center">
-                    <h2 className="text-2xl font-display font-bold text-jewel-900 mb-2">{t("events.detail.notFound")}</h2>
-                    <Button variant="ghost" onClick={() => navigate("/events")}>
-                        {t("events.detail.backToEvents")}
-                    </Button>
-                </div>
+                <EmptyState
+                    title={t("events.detail.notFound")}
+                    action={{
+                        label: t("events.detail.backToEvents"),
+                        onClick: () => navigate("/events"),
+                    }}
+                />
             </DreamySunsetBackground>
         );
     }
@@ -274,7 +275,7 @@ export default function EventDetailsPage() {
         <DreamySunsetBackground className="px-6 py-10">
             <div className="max-w-5xl mx-auto">
                 {/* Event Details */}
-                <div className="shadow-jewel p-5 md:p-8">
+                <div className="p-5 md:p-8 bg-surface rounded-2xl border border-border">
                     {/* Header */}
                     <Button
                         variant="secondary"
@@ -414,7 +415,7 @@ export default function EventDetailsPage() {
 
                     {/* Approval Status */}
                     {event.approvals && event.approvals.length > 0 && (
-                        <Card className="mt-6 p-6">
+                        <div className="mt-6 p-6 bg-surface-muted rounded-2xl">
                             <h2 className="text-xl font-display font-bold text-jewel-900 mb-4">{t("events.detail.approvalStatus")}</h2>
                             <div className="space-y-3">
                                 {event.approvals.map((approval) => (
@@ -441,12 +442,12 @@ export default function EventDetailsPage() {
                                     </div>
                                 ))}
                             </div>
-                        </Card>
+                        </div>
                     )}
 
                     {/* Moderation Area */}
                     {isAdmin && (
-                        <Card className="mt-6 bg-jewel-100/60 rounded-2xl p-6">
+                        <div className="mt-6 bg-surface-muted rounded-2xl p-6">
                             <h2 className="text-lg font-display font-bold text-jewel-900 mb-3">{t("events.detail.moderation")}</h2>
                             <p className="text-sm text-jewel-500 mb-4">
                                 {t("events.detail.moderationDescription")}
@@ -502,7 +503,7 @@ export default function EventDetailsPage() {
                                     {t("events.detail.suggestChanges")}
                                 </Button>
                             </div>
-                        </Card>
+                        </div>
                     )}
                 </div>
             </div>
