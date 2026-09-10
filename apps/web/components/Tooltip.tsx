@@ -1,20 +1,7 @@
 "use client";
 
-import { ReactNode, useState, useRef } from "react";
+import { ReactNode, useState, useRef, useId } from "react";
 
-/**
- * Performs  tooltip operation.
- * @param {{ children: React.ReactNode; text: string; className?: string; }} {
- *   children,
- *   text,
- *   className = "",
- * } - Description of {
- *   children,
- *   text,
- *   className = "",
- * }
- * @returns {React.JSX.Element} Description of return value
- */
 export default function Tooltip({
   children,
   text,
@@ -26,13 +13,12 @@ export default function Tooltip({
 }) {
   const [show, setShow] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const tooltipId = useId();
 
-  // Show with delay
   const handleShow = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => setShow(true), 120);
   };
-  // Hide with delay
   const handleHide = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => setShow(false), 80);
@@ -52,11 +38,12 @@ export default function Tooltip({
         if (e.key === "Enter" || e.key === " ") handleShow();
         if (e.key === "Escape") handleHide();
       }}
-      aria-label={text}
+      aria-describedby={show ? tooltipId : undefined}
     >
       {children}
 
       <div
+        id={tooltipId}
         role="tooltip"
         aria-hidden={!show}
         className={`pointer-events-none transition-opacity duration-150 absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 z-50 whitespace-nowrap rounded-md bg-jewel-900 text-jewel-50 text-xs py-1 px-2 shadow-lg ${
