@@ -109,8 +109,9 @@ export default function AdminNotifications() {
                 <h1 className="text-xl font-display font-bold text-jewel-900 mb-4">{t("admin.notifications.heading")}</h1>
 
                 <div className="mb-3">
-                    <label className="text-sm text-jewel-500">{t("admin.notifications.subjectLabel")}</label>
+                    <label htmlFor="admin-notification-subject" className="text-sm text-jewel-500">{t("admin.notifications.subjectLabel")}</label>
                     <input
+                        id="admin-notification-subject"
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
                         className="w-full mt-1 p-2 rounded-xl bg-jewel-50/50 border border-jewel-400/30 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50"
@@ -118,8 +119,9 @@ export default function AdminNotifications() {
                 </div>
 
                 <div className="mb-3">
-                    <label className="text-sm text-jewel-500">{t("admin.notifications.messageLabel")}</label>
+                    <label htmlFor="admin-notification-message" className="text-sm text-jewel-500">{t("admin.notifications.messageLabel")}</label>
                     <textarea
+                        id="admin-notification-message"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         rows={4}

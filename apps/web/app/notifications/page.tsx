@@ -334,10 +334,10 @@ export default function NotificationsPage(): React.ReactElement {
                             </div>
 
                             {/* Channels */}
-                            <div className="space-y-3">
-                                <label className="block text-sm font-medium text-jewel-700">
+                            <fieldset className="space-y-3">
+                                <legend className="block text-sm font-medium text-jewel-700">
                                     Channels
-                                </label>
+                                </legend>
                                 <div className="flex gap-3">
                                     {["IN_APP", "EMAIL", "PUSH"].map((c) => (
                                         <label key={c} className="flex items-center gap-2 text-jewel-700">
@@ -351,7 +351,7 @@ export default function NotificationsPage(): React.ReactElement {
                                         </label>
                                     ))}
                                 </div>
-                            </div>
+                            </fieldset>
 
                             {/* Preview */}
                             {(subject.trim() || message.trim()) && (

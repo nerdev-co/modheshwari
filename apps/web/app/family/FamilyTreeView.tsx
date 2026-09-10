@@ -178,10 +178,11 @@ export default function FamilyTreeView() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                         {/* View Type */}
                         <div>
-                            <label className="block text-sm font-medium text-jewel-600 mb-2">
+                            <label htmlFor="viewType" className="block text-sm font-medium text-jewel-600 mb-2">
                                 View Type
                             </label>
                             <select
+                                id="viewType"
                                 value={view}
                                 onChange={(e) => setView(e.target.value as ViewType)}
                                 className="select"
@@ -194,10 +195,11 @@ export default function FamilyTreeView() {
 
                         {/* Depth */}
                         <div>
-                            <label className="block text-sm font-medium text-jewel-600 mb-2">
+                            <label htmlFor="depth" className="block text-sm font-medium text-jewel-600 mb-2">
                                 Depth: {depth}
                             </label>
                             <input
+                                id="depth"
                                 type="range"
                                 min="1"
                                 max="10"
@@ -237,10 +239,11 @@ export default function FamilyTreeView() {
                         <div className="border-t border-jewel-400/20 pt-4 mt-4">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-jewel-600 mb-2">
+                                    <label htmlFor="targetUserId" className="block text-sm font-medium text-jewel-600 mb-2">
                                         Target User ID
                                     </label>
                                     <input
+                                        id="targetUserId"
                                         type="text"
                                         value={relationshipForm.targetUserId}
                                         onChange={(e) =>
@@ -255,10 +258,11 @@ export default function FamilyTreeView() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-jewel-600 mb-2">
+                                    <label htmlFor="relationType" className="block text-sm font-medium text-jewel-600 mb-2">
                                         Relationship Type
                                     </label>
                                     <select
+                                        id="relationType"
                                         value={relationshipForm.relationType}
                                         onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                                             setRelationshipForm({

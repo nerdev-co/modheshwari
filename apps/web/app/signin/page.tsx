@@ -97,10 +97,10 @@ export default function SigninPage() {
           </div>
 
           <form className="space-y-6" onSubmit={handleLogin}>
-            <div>
-              <label className="block text-xs font-medium text-jewel-700 mb-3">
+            <fieldset>
+              <legend className="block text-xs font-medium text-jewel-700 mb-3">
                 Select Your Role
-              </label>
+              </legend>
               <div className="flex flex-wrap gap-2">
                 {roles.map((r) => (
                   <label
@@ -126,19 +126,19 @@ export default function SigninPage() {
                   </label>
                 ))}
               </div>
-            </div>
+            </fieldset>
 
             <div>
-              <label className="block text-xs font-medium text-jewel-700 mb-2">
+              <label htmlFor="signin-email" className="block text-xs font-medium text-jewel-700 mb-2">
                 Email Address
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
                 <Input
+                  id="signin-email"
                   className="pl-11 pr-4 py-3 rounded-lg"
                   placeholder="your.email@example.com"
                   type="email"
-                  aria-label="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -147,16 +147,16 @@ export default function SigninPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-jewel-700 mb-2">
+              <label htmlFor="signin-password" className="block text-xs font-medium text-jewel-700 mb-2">
                 Password
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
                 <Input
+                  id="signin-password"
                   className="pl-11 pr-4 py-3 rounded-lg"
                   placeholder="Enter your password"
                   type="password"
-                  aria-label="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required

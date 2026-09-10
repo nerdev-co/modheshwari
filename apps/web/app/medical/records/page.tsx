@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState, useId } from "react";
 import { useNavigate } from "react-router-dom";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
@@ -224,10 +224,13 @@ function Field({
   label: string;
   children: React.ReactNode;
 }) {
+  const fieldId = useId();
   return (
     <div className="space-y-1">
-      <label className="text-sm font-medium text-jewel-700">{label}</label>
-      {children}
+      <label htmlFor={fieldId} className="text-sm font-medium text-jewel-700">{label}</label>
+      {React.isValidElement(children)
+        ? React.cloneElement(children as React.ReactElement<{ id?: string }>, { id: fieldId })
+        : children}
     </div>
   );
 }

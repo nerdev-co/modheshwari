@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useId } from "react";
 import { Button } from "@repo/ui/button";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Card } from "@repo/ui/card";
@@ -154,10 +154,12 @@ function LabeledInput({
 }: {
     label: string;
 } & React.InputHTMLAttributes<HTMLInputElement>) {
+    const fieldId = useId();
     return (
         <div>
-            <label className="block text-xs font-medium text-jewel-700 mb-1">{label}</label>
+            <label htmlFor={fieldId} className="block text-xs font-medium text-jewel-700 mb-1">{label}</label>
             <Input
+                id={fieldId}
                 {...props}
                 required={props.required !== false}
             />

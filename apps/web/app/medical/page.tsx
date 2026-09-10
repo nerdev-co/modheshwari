@@ -122,7 +122,7 @@ export default function Medical() {
 
         {/* Search Card */}
         <Card className="p-5 mb-8">
-          <label className="block text-sm text-jewel-700 font-medium mb-2">
+          <label htmlFor="medical-search" className="block text-sm text-jewel-700 font-medium mb-2">
             {t("medical.searchTitle")}
           </label>
           <p className="text-xs text-jewel-400 mb-3">
@@ -131,6 +131,7 @@ export default function Medical() {
 
           <div className="flex gap-3">
             <input
+              id="medical-search"
               type="text"
               placeholder={t("medical.searchPlaceholder")}
               value={searchQuery}

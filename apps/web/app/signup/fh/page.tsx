@@ -93,12 +93,13 @@ export default function SignupPage() {
 
           <div className="space-y-5">
             <div>
-              <label className="block text-xs font-medium text-jewel-700 mb-2">
+              <label htmlFor="fh-fullName" className="block text-xs font-medium text-jewel-700 mb-2">
                 {t("signup.fh.fullNameLabel")}
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
                 <Input
+                  id="fh-fullName"
                   className="pl-11 pr-4 py-3 rounded-lg"
                   placeholder={t("signup.fh.fullNamePlaceholder")}
                   type="text"
@@ -110,12 +111,13 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-jewel-700 mb-2">
+              <label htmlFor="fh-email" className="block text-xs font-medium text-jewel-700 mb-2">
                 {t("signup.fh.emailLabel")}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
                 <Input
+                  id="fh-email"
                   className="pl-11 pr-4 py-3 rounded-lg"
                   placeholder={t("signup.fh.emailPlaceholder")}
                   type="email"
@@ -127,12 +129,13 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-jewel-700 mb-2">
+              <label htmlFor="fh-password" className="block text-xs font-medium text-jewel-700 mb-2">
                 {t("signup.fh.passwordLabel")}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
                 <Input
+                  id="fh-password"
                   className="pl-11 pr-4 py-3 rounded-lg"
                   placeholder={t("signup.fh.passwordPlaceholder")}
                   type="password"
@@ -146,12 +149,13 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-jewel-700 mb-2">
+              <label htmlFor="fh-familyName" className="block text-xs font-medium text-jewel-700 mb-2">
                 {t("signup.fh.familyNameLabel")}
               </label>
               <div className="relative">
                 <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
                 <Input
+                  id="fh-familyName"
                   className="pl-11 pr-4 py-3 rounded-lg"
                   placeholder={t("signup.fh.familyNamePlaceholder")}
                   type="text"
