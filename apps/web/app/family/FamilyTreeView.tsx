@@ -184,7 +184,7 @@ export default function FamilyTreeView() {
                             <select
                                 value={view}
                                 onChange={(e) => setView(e.target.value as ViewType)}
-                                className="w-full px-4 py-2 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-jewel-900 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                                className="select"
                             >
                                 <option value="full">Full Tree</option>
                                 <option value="ancestors">Ancestors</option>
@@ -266,7 +266,7 @@ export default function FamilyTreeView() {
                                                 relationType: e.target.value as "SPOUSE" | "PARENT" | "CHILD" | "SIBLING",
                                             })
                                         }
-                                        className="w-full px-3 py-2 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-jewel-900 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                                        className="select"
                                     >
                                         <option value="SPOUSE">Spouse</option>
                                         <option value="PARENT">Parent</option>

@@ -280,7 +280,7 @@ export default function NotificationsPage(): React.ReactElement {
                                 <select
                                     value={targetRole}
                                     onChange={(e) => setTargetRole(e.target.value)}
-                                    className="bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-3 text-jewel-900 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                                    className="select"
                                 >
                                     <option value="ALL">All users</option>
 
@@ -317,7 +317,7 @@ export default function NotificationsPage(): React.ReactElement {
                                 <select
                                     value={priority}
                                     onChange={(e) => setPriority(e.target.value as Priority)}
-                                    className="bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-3 text-jewel-900 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                                    className="select"
                                 >
                                     <option value="low">Low Priority</option>
                                     <option value="normal">Normal Priority</option>
@@ -371,7 +371,7 @@ export default function NotificationsPage(): React.ReactElement {
                         <select
                             value={filterRead}
                             onChange={(e) => setFilterRead(e.target.value as ReadFilter)}
-                            className="border border-jewel-400/30 bg-jewel-50/50 rounded-xl px-3 py-2 text-sm text-jewel-900 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                            className="select"
                         >
                             <option value="all">All</option>
                             <option value="unread">Unread</option>
@@ -381,7 +381,7 @@ export default function NotificationsPage(): React.ReactElement {
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value as SortBy)}
-                            className="border border-jewel-400/30 bg-jewel-50/50 rounded-xl px-3 py-2 text-sm text-jewel-900 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                            className="select"
                         >
                             <option value="newest">Newest</option>
                             <option value="oldest">Oldest</option>
@@ -391,7 +391,7 @@ export default function NotificationsPage(): React.ReactElement {
                         <select
                             value={selectedType}
                             onChange={(e) => setSelectedType(e.target.value)}
-                            className="border border-jewel-400/30 bg-jewel-50/50 rounded-xl px-3 py-2 text-sm text-jewel-900 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                            className="select"
                         >
                             <option value="all">All types</option>
                             {notificationTypes.map((t) => (

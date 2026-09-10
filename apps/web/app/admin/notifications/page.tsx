@@ -150,7 +150,7 @@ export default function AdminNotifications() {
                         <select
                             value={priority}
                             onChange={(e) => setPriority(e.target.value)}
-                            className="p-2 rounded-xl bg-jewel-50/50 border border-jewel-400/30 text-jewel-900"
+                            className="select"
                         >
                             {PRIORITIES.map((p) => (
                                 <option key={p} value={p}>
@@ -165,7 +165,7 @@ export default function AdminNotifications() {
                         <select
                             value={targetRole}
                             onChange={(e) => setTargetRole(e.target.value || undefined)}
-                            className="p-2 rounded-xl bg-jewel-50/50 border border-jewel-400/30 text-jewel-900"
+                            className="select"
                         >
                             <option value="">{t("admin.notifications.targetRoleAll")}</option>
                             {ROLES.map((r) => (
