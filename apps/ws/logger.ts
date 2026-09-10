@@ -134,8 +134,8 @@ function write(level: LogLevel, msg: unknown, meta?: unknown): void {
 
   const out = envPretty ? formatPretty(level, msg, meta) : formatJSON(level, msg, meta);
   const stream =
-    level === "ERROR" ? console.error : level === "WARN" ? console.warn : console.log;
-  stream(out);
+    level === "ERROR" || level === "WARN" ? process.stderr : process.stdout;
+  stream.write(out + "\n");
 }
 
 export const logger = {

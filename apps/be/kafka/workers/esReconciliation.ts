@@ -1,6 +1,6 @@
 import prisma from "@modheshwari/db";
-import { indexUser, indexEvent } from "../../lib/elasticIndexer";
 
+import { indexUser, indexEvent } from "../../lib/elasticIndexer";
 import { logger } from "../../lib/logger";
 import { elasticsearchReconciliationCount } from "../../lib/metrics";
 

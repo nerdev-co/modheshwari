@@ -1,4 +1,5 @@
 import prisma from "@modheshwari/db";
+
 import { logger } from "./logger";
 
 // Register Prisma middleware to enqueue Elasticsearch indexing events in the outbox.

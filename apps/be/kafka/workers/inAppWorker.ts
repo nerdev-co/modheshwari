@@ -1,7 +1,7 @@
 import type { RedisClientType } from 'redis';
+import getRedisClient from '@modheshwari/redis';
 
 import { createConsumer, TOPICS } from '../config';
-import getRedisClient from '@modheshwari/redis';
 import { ensureIdempotent } from '../../lib/kafkaIdempotency';
 import { logger } from '../../lib/logger';
 

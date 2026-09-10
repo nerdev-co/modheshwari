@@ -1,4 +1,5 @@
 import type { RedisClientType } from "redis";
+
 import { logger } from "../../lib/logger";
 
 export interface FanoutMessage {

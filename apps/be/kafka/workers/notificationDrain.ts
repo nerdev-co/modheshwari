@@ -1,8 +1,8 @@
 import type { RedisClientType } from 'redis';
 import prisma from '@modheshwari/db';
 import { NOTIFICATION_DRAIN_SCAN_COUNT, NOTIFICATION_DRAIN_INTERVAL_MS } from "@modheshwari/config/be";
-
 import getRedisClient from '@modheshwari/redis';
+
 import { errorCounter } from '../../lib/metrics';
 import { logger } from '../../lib/logger';
 
