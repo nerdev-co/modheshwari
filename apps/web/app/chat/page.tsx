@@ -508,7 +508,7 @@ export default function ChatPage() {
                                                             </div>
                                                         )}
                                                     </div>
-                                                    <div className="mt-1 text-[15px] leading-relaxed">
+                                                    <div className="mt-1 text-body-lg leading-relaxed">
                                                         {m.content}
                                                     </div>
                                                     <div className="mt-2 flex items-center justify-between gap-3 text-[11px] text-jewel-400">

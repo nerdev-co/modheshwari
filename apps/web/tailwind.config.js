@@ -52,6 +52,16 @@ export default {
         display: ["var(--font-display)", "sans-serif"],
         sans: ["var(--font-body)", "sans-serif"],
       },
+      fontSize: {
+        caption: ["var(--text-xs)", { lineHeight: "1rem" }],
+        body: ["var(--text-sm)", { lineHeight: "1.25rem" }],
+        "body-lg": ["var(--text-base)", { lineHeight: "1.5rem" }],
+        "heading-sm": ["var(--text-lg)", { lineHeight: "1.75rem" }],
+        heading: ["var(--text-xl)", { lineHeight: "1.75rem" }],
+        "heading-md": ["var(--text-2xl)", { lineHeight: "2rem" }],
+        "heading-lg": ["var(--text-3xl)", { lineHeight: "2.25rem" }],
+        display: ["var(--text-4xl)", { lineHeight: "2.5rem" }],
+      },
       borderRadius: {
         xl: "0.75rem",
         "2xl": "1rem",
