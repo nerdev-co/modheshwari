@@ -109,8 +109,8 @@ export default function SigninPage() {
                       relative px-3 py-2 rounded-lg border cursor-pointer text-xs font-medium transition-all duration-300
                       ${
                         role === r.value
-                          ? "bg-gradient-to-r from-jewel-gold to-jewel-500 text-jewel-deep border-transparent shadow-lg shadow-jewel-gold/25"
-                          : "bg-jewel-50 text-jewel-700 border-jewel-400/30 hover:bg-jewel-100 hover:border-jewel-gold/40"
+                          ? "bg-accent text-on-accent border-transparent shadow-lg shadow-accent/25"
+                          : "bg-surface-muted text-text-primary border-border hover:bg-accent-muted hover:border-accent/40"
                       }
                     `}
                   >
