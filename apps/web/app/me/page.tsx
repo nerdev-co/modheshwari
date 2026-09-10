@@ -30,9 +30,9 @@ function ProfileField({
   if (!value) return null;
 
   return (
-    <div className="p-3 border border-jewel-400/20 rounded-xl bg-jewel-50/50">
-      <div className="text-xs text-jewel-500">{label}</div>
-      <div className="font-medium text-jewel-900">{value}</div>
+    <div className="p-3 border border-border rounded-xl bg-surface-muted">
+      <div className="text-xs text-text-muted">{label}</div>
+      <div className="font-medium text-text-primary">{value}</div>
     </div>
   );
 }
@@ -67,7 +67,7 @@ export default function MePage() {
       Active
     </span>
   ) : (
-    <span className="inline-flex items-center px-2 py-1 text-xs font-semibold rounded bg-jewel-200/50 text-jewel-600 border border-jewel-400/20">
+    <span className="inline-flex items-center px-2 py-1 text-xs font-semibold rounded bg-surface-muted text-text-muted border border-border">
       Inactive
     </span>
   );
@@ -75,7 +75,7 @@ export default function MePage() {
   return (
     <DreamySunsetBackground className="px-6 py-10">
       <div className="max-w-4xl mx-auto">
-        <section className="flex items-center gap-6 py-8 border-b border-jewel-400/20 mb-8">
+        <section className="flex items-center gap-6 py-8 border-b border-border mb-8">
           <div
             className="h-20 w-20 rounded-full flex items-center justify-center text-2xl font-bold text-jewel-deep shadow-lg"
             style={{ background: ROLE_COLORS_CSS[user.role] || "var(--jewel-400)" }}
@@ -138,7 +138,7 @@ export default function MePage() {
                 {user.families.map((fm) => (
                   <li
                     key={fm.id}
-                    className="border border-jewel-400/20 rounded-xl p-3 flex items-center gap-3 bg-jewel-50/50"
+                    className="border border-border rounded-xl p-3 flex items-center gap-3 bg-surface-muted"
                   >
                     <span className="font-semibold text-jewel-700">
                       {fm.family.name}
