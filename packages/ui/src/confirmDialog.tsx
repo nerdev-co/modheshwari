@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { MOTION_ENTER, MOTION_EXIT } from "./motion";
+import { useFocusTrap } from "./useFocusTrap";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -41,40 +42,19 @@ export function ConfirmDialog({
     }
   }, [open]);
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onCancel();
-        return;
-      }
-      if (e.key === "Tab" && dialogRef.current) {
-        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"]), input:not([disabled]), textarea:not([disabled]), select:not([disabled])'
-        );
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last?.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first?.focus();
-        }
-      }
-    },
-    [onCancel],
-  );
+  useFocusTrap(dialogRef, open, {
+    onClose: onCancel,
+    returnFocus: cancelRef,
+  });
 
   useEffect(() => {
     if (open) {
-      document.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
       return () => {
-        document.removeEventListener("keydown", handleKeyDown);
         document.body.style.overflow = "";
       };
     }
-  }, [open, handleKeyDown]);
+  }, [open]);
 
   return (
     <AnimatePresence>
