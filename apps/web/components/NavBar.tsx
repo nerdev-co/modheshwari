@@ -215,7 +215,7 @@ export default function NavBar() {
               <Link
                 to="/notifications"
                 aria-label={t("nav.notifications")}
-                className="md:hidden relative p-2.5 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all"
+                className="md:hidden relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all"
               >
                 <Bell className="h-[18px] w-[18px]" />
                 {unreadCount > 0 && (
@@ -310,7 +310,7 @@ export default function NavBar() {
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-menu"
-            className="md:hidden p-2.5 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all"
+            className="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all"
           >
             {mobileMenuOpen ? <X className="h-[18px] w-[18px]" /> : <Menu className="h-[18px] w-[18px]" />}
           </button>

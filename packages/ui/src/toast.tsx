@@ -128,7 +128,7 @@ function ToastItem({
       <p className="flex-1 text-sm font-medium leading-snug">{toast.message}</p>
       <button
         onClick={() => onDismiss(toast.id)}
-        className="ml-2 text-current opacity-40 hover:opacity-100 transition-opacity active:scale-90"
+        className="ml-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-current opacity-40 hover:opacity-100 transition-opacity active:scale-90"
         aria-label="Dismiss notification"
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
