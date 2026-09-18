@@ -4,13 +4,19 @@
         "home": "होम",
         "contact": "संपर्क",
         "search": "खोजें",
-        "family": "परिवार",
-        "medical": "चिकित्सा",
+        "families": "परिवार",
+        "members": "सदस्य",
+        "gotras": "गोत्र",
+        "events": "कार्यक्रम",
+        "messages": "संदेश",
+        "requests": "अनुरोध",
+        "approvals": "अनुमोदन",
         "resources": "संसाधन",
         "nearby": "निकटतम",
         "calendar": "कैलेंडर",
         "notifications": "सूचनाएं",
         "chat": "संदेश",
+        "activity": "गतिविधि",
         "signIn": "लॉग इन",
         "signOut": "लॉग आउट",
         "editProfile": "प्रोफ़ाइल संपादित करें",
@@ -19,10 +25,12 @@
         "logout": "लॉग आउट",
         "account": "खाता",
         "sections": {
-          "dashboard": "डैशबोर्ड",
+          "overview": "अवलोकन",
           "community": "समुदाय",
-          "wellness": "कल्याण",
-          "tools": "उपकरण"
+          "activity": "गतिविधि",
+          "operations": "संचालन",
+          "discover": "खोजें",
+          "personal": "व्यक्तिगत"
         }
     },
     "landing": {
@@ -64,6 +72,68 @@
         "loading": "लोड हो रहा है...",
         "error": "कुछ गलत हो गया",
         "retry": "पुनः प्रयास करें"
+    },
+    "dashboard": {
+        "title": "डैशबोर्ड",
+        "subtitle": "यहाँ आपके समुदाय में क्या हो रहा है।",
+        "viewDetails": "विवरण देखें",
+        "viewAll": "सभी देखें",
+        "viewAllApprovals": "सभी अनुमोदन देखें",
+        "viewAllActivity": "सभी गतिविधि देखें",
+        "upcomingEvents": "आगामी कार्यक्रम",
+        "pendingApprovals": "लंबित अनुमोदन",
+        "recentActivity": "हाल की गतिविधि",
+        "quickActions": "त्वरित कार्य",
+        "stats": {
+            "members": "सदस्य",
+            "membersTrend": "+१२ इस महीने",
+            "families": "परिवार",
+            "familiesTrend": "+८ इस महीने",
+            "gotras": "गोत्र",
+            "gotrasTrend": "स्थिर",
+            "upcomingEvents": "आगामी कार्यक्रम",
+            "eventsTrend": "३ इस सप्ताह"
+        },
+        "status": {
+            "approved": "स्वीकृत",
+            "pending": "लंबित",
+            "rejected": "अस्वीकृत"
+        },
+        "upcomingEvents": "आगामी कार्यक्रम",
+        "pendingApprovals": "लंबित अनुमोदन",
+        "recentActivity": "हाल की गतिविधि",
+        "quickActions": "त्वरित कार्य",
+        "viewAll": "सभी देखें",
+        "viewAllApprovals": "सभी अनुमोदन देखें",
+        "viewAllActivity": "सभी गतिविधि देखें",
+        "events": {
+            "ganeshChaturthi": "गणेश चतुर्थी उत्सव",
+            "familyGathering": "पारिवारिक सभा",
+            "annualMeeting": "वार्षिक आम बैठक",
+            "communityHall": "सामुदायिक भवन",
+            "mainGround": "मुख्य मैदान",
+            "mainHall": "मुख्य हॉल"
+        },
+        "approvals": {
+            "familyRequest": "परिवार अनुरोध",
+            "resourceRequest": "संसाधन अनुरोध",
+            "memberInvitation": "सदस्य निमंत्रण",
+            "eventCreation": "कार्यक्रम निर्माण"
+        },
+        "activity": {
+            "addedFamilyMember": "एक परिवार सदस्य जोड़ा",
+            "approvedEventRegistration": "कार्यक्रम पंजीकरण स्वीकृत",
+            "submittedResourceRequest": "संसाधन अनुरोध जमा किया",
+            "postedAnnouncement": "सामुदायिक घोषणा पोस्ट की",
+            "requestedFamilyMembership": "परिवार सदस्यता का अनुरोध किया",
+            "registeredForEvent": "कार्यक्रम के लिए पंजीकृत"
+        },
+        "actions": {
+            "addFamily": "परिवार जोड़ें",
+            "createEvent": "कार्यक्रम बनाएं",
+            "requestResource": "संसाधन का अनुरोध करें",
+            "inviteMember": "सदस्य को आमंत्रित करें"
+        }
     },
     "profile": {
         "title": "आपकी प्रोफ़ाइल",

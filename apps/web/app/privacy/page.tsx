@@ -1,6 +1,7 @@
 "use client";
 
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
+
 import { useLocale } from "../../lib/LocaleContext";
 
 export default function Privacy() {

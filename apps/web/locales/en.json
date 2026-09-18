@@ -4,13 +4,19 @@
         "home": "Home",
         "contact": "Contact",
         "search": "Search",
-        "family": "Families",
-        "medical": "Medical",
+        "families": "Families",
+        "members": "Members",
+        "gotras": "Gotras",
+        "events": "Events",
+        "messages": "Messages",
+        "requests": "Requests",
+        "approvals": "Approvals",
         "resources": "Resources",
         "nearby": "Nearby",
         "calendar": "Calendar",
         "notifications": "Notifications",
         "chat": "Messages",
+        "activity": "Activity",
         "signIn": "Sign in",
         "signOut": "Sign out",
         "editProfile": "Edit profile",
@@ -19,10 +25,12 @@
         "logout": "Log out",
         "account": "Account",
         "sections": {
-          "dashboard": "Dashboard",
+          "overview": "Overview",
           "community": "Community",
-          "wellness": "Wellness",
-          "tools": "Tools"
+          "activity": "Activity",
+          "operations": "Operations",
+          "discover": "Discover",
+          "personal": "Personal"
         }
     },
     "landing": {
@@ -64,6 +72,76 @@
         "loading": "Loading...",
         "error": "Something went wrong",
         "retry": "Try again"
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "subtitle": "Here's what's happening in your community.",
+        "viewDetails": "View details",
+        "viewAll": "View all",
+        "viewAllApprovals": "View all approvals",
+        "viewAllActivity": "View all activity",
+        "upcomingEvents": "Upcoming events",
+        "pendingApprovals": "Pending approvals",
+        "recentActivity": "Recent activity",
+        "quickActions": "Quick actions",
+        "stats": {
+            "members": "Members",
+            "membersTrend": "+12 this month",
+            "families": "Families",
+            "familiesTrend": "+8 this month",
+            "gotras": "Gotras",
+            "gotrasTrend": "Stable",
+            "upcomingEvents": "Upcoming events",
+            "eventsTrend": "3 this week"
+        },
+        "status": {
+            "approved": "Approved",
+            "pending": "Pending",
+            "rejected": "Rejected"
+        },
+        "upcomingEvents": "Upcoming Events",
+        "pendingApprovals": "Pending Approvals",
+        "recentActivity": "Recent Activity",
+        "quickActions": "Quick Actions",
+        "viewAll": "View all",
+        "viewAllApprovals": "View all approvals",
+        "viewAllActivity": "View all activity",
+        "events": {
+            "ganeshChaturthi": "Ganesh Chaturthi Celebration",
+            "familyGathering": "Family Gathering",
+            "annualMeeting": "Annual General Meeting",
+            "communityHall": "Community Hall",
+            "mainGround": "Main Ground",
+            "mainHall": "Main Hall"
+        },
+        "approvals": {
+            "familyRequest": "Family Request",
+            "resourceRequest": "Resource Request",
+            "memberInvitation": "Member Invitation",
+            "eventCreation": "Event Creation"
+        },
+        "activity": {
+            "addedFamilyMember": "added a family member",
+            "approvedEventRegistration": "approved event registration",
+            "submittedResourceRequest": "submitted resource request",
+            "postedAnnouncement": "posted community announcement",
+            "requestedFamilyMembership": "requested family membership",
+            "registeredForEvent": "registered for event"
+        },
+        "actions": {
+            "addFamily": "Add family",
+            "createEvent": "Create event",
+            "requestResource": "Request resource",
+            "inviteMember": "Invite member"
+        },
+        "events": {
+            "ganeshChaturthi": "Ganesh Chaturthi Celebration",
+            "familyGathering": "Family Gathering",
+            "annualMeeting": "Annual General Meeting",
+            "communityHall": "Community Hall",
+            "mainGround": "Main Ground",
+            "mainHall": "Main Hall"
+        }
     },
     "profile": {
         "title": "Your Profile",

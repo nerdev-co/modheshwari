@@ -1,16 +1,13 @@
 "use client";
-
 import { ReactNode, useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Home,
-  Phone,
   Users,
   Calendar,
   MessageCircle,
-  Stethoscope,
-  MapPin,
+  HeartPulse,
+  Map,
   Bell,
   Package,
   Search,
@@ -22,16 +19,24 @@ import {
   ChevronRight,
   ChevronLeft,
   LayoutDashboard,
-  ClipboardList,
-  HeartPulse,
-  Map,
-  Inbox,
   HelpCircle,
+  UserCheck,
+  Users2,
+  GitBranch,
+  ClipboardList,
+  CheckCheck,
+  Truck,
+  Compass,
+  Inbox,
+  Activity,
 } from "lucide-react";
-import { MOTION_ENTER, MOTION_EXIT } from "@repo/ui/motion";
+
+import { MOTION_ENTER } from "@repo/ui/motion";
 import { useFocusTrap } from "@repo/ui/useFocusTrap";
+
 import { SunMark } from "./SunMark";
 import { LocaleToggle } from "./LocaleToggle";
+
 import { useUser } from "../lib/UserContext";
 import useNotifications from "../hooks/useNotifications";
 import { useLocale } from "../lib/LocaleContext";
@@ -50,33 +55,46 @@ interface NavItem {
 
 const NAV_SECTIONS: NavSection[] = [
   {
-    label: "nav.sections.main",
+    label: "nav.sections.overview",
     items: [
-      { path: "/", i18nKey: "nav.home", icon: LayoutDashboard },
+      { path: "/dashboard", i18nKey: "nav.dashboard", icon: LayoutDashboard },
     ],
   },
   {
     label: "nav.sections.community",
     items: [
-      { path: "/family", i18nKey: "nav.family", icon: Users, roles: ["family_head", "gotra_head", "member"] },
-      { path: "/chat", i18nKey: "nav.chat", icon: MessageCircle },
-      { path: "/events/calendar", i18nKey: "nav.calendar", icon: Calendar },
+      { path: "/families", i18nKey: "nav.families", icon: Users2 },
+      { path: "/members", i18nKey: "nav.members", icon: UserCheck },
+      { path: "/gotras", i18nKey: "nav.gotras", icon: GitBranch },
+    ],
+  },
+  {
+    label: "nav.sections.activity",
+    items: [
+      { path: "/events", i18nKey: "nav.events", icon: Calendar },
+      { path: "/messages", i18nKey: "nav.messages", icon: MessageCircle },
+    ],
+  },
+  {
+    label: "nav.sections.operations",
+    items: [
+      { path: "/requests", i18nKey: "nav.requests", icon: ClipboardList },
+      { path: "/approvals", i18nKey: "nav.approvals", icon: CheckCheck },
       { path: "/resources", i18nKey: "nav.resources", icon: Package },
     ],
   },
   {
-    label: "nav.sections.wellness",
+    label: "nav.sections.discover",
     items: [
-      { path: "/medical", i18nKey: "nav.medical", icon: HeartPulse },
-      { path: "/nearby", i18nKey: "nav.nearby", icon: Map },
+      { path: "/search", i18nKey: "nav.search", icon: Search },
+      { path: "/nearby", i18nKey: "nav.nearby", icon: Compass },
     ],
   },
   {
-    label: "nav.sections.tools",
+    label: "nav.sections.personal",
     items: [
-      { path: "/search", i18nKey: "nav.search", icon: Search },
-      { path: "/notifications", i18nKey: "nav.notifications", icon: Bell },
-      { path: "/contact", i18nKey: "nav.contact", icon: HelpCircle },
+      { path: "/notifications", i18nKey: "nav.notifications", icon: Inbox },
+      { path: "/activity", i18nKey: "nav.activity", icon: Activity },
     ],
   },
 ];
@@ -160,7 +178,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
 
         <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-4" aria-label="Main navigation">
-          {filteredSections.map((section, sectionIndex) => (
+          {filteredSections.map((section) => (
             <div key={section.label} className="space-y-1">
               {sidebarOpen && (
                 <h3 className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-text-muted">

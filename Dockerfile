@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1
-# Use Node for deps (handles native modules like tree-sitter)
-# Use Bun for building and running
-FROM node:22-slim AS deps
+# Use Bun for dependency installation and build/run
+FROM oven/bun:1.3.11 AS deps
 WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ && rm -rf /var/lib/apt/lists/*
 COPY package.json bun.lock ./
@@ -16,7 +15,7 @@ COPY packages/db/package.json ./packages/db/package.json
 COPY packages/db/schema.prisma ./packages/db/schema.prisma
 COPY packages/config ./packages/config
 COPY packages/redis/package.json ./packages/redis/package.json
-RUN npm install --frozen-lockfile --ignore-scripts=false 2>&1 | tail -20
+RUN bun install --frozen-lockfile 2>&1 | tail -20
 
 FROM oven/bun:1.3.11 AS builder
 WORKDIR /app
@@ -40,7 +39,7 @@ COPY --from=deps /app/packages/db/package.json ./packages/db/package.json
 COPY --from=deps /app/packages/db/schema.prisma ./packages/db/schema.prisma
 COPY --from=deps /app/packages/config ./packages/config
 COPY --from=deps /app/packages/redis/package.json ./packages/redis/package.json
-RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile --production
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder --chown=app:app /app/packages ./packages
 
 FROM runner-base AS runner-be

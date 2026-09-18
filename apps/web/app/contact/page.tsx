@@ -2,6 +2,7 @@
 
 import React, { useCallback, useMemo, useState } from "react";
 import { Bug, HelpCircle, Lightbulb, MessageSquare, Send } from "lucide-react";
+
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
