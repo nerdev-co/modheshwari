@@ -8,6 +8,9 @@ import {
   Mail,
   Lock,
   Users,
+  Loader2,
+  ArrowRight,
+  Shield,
 } from "lucide-react";
 import { MOTION_ENTER } from "@repo/ui/motion";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";

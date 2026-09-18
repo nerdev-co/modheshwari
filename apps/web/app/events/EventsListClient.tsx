@@ -124,12 +124,12 @@ export default function EventsListClient() {
 
   const getStatusConfig = (status: string) => {
     const map: Record<string, { label: string; classes: string }> = {
-      APPROVED: { label: t("events.list.statusApproved"), classes: "bg-jewel-emerald/15 text-jewel-emerald border-jewel-emerald/30" },
-      PENDING: { label: t("events.list.statusPending"), classes: "bg-jewel-gold/15 text-jewel-gold border-jewel-gold/30" },
-      REJECTED: { label: t("events.list.statusRejected"), classes: "bg-jewel-ruby/15 text-jewel-ruby border-jewel-ruby/30" },
-      CANCELLED: { label: t("events.list.statusCancelled"), classes: "bg-jewel-400/15 text-jewel-600 border-jewel-400/30" },
+      APPROVED: { label: t("events.list.statusApproved"), classes: "bg-emerald/15 text-emerald border-emerald/30" },
+      PENDING: { label: t("events.list.statusPending"), classes: "bg-accent/15 text-accent border-accent/30" },
+      REJECTED: { label: t("events.list.statusRejected"), classes: "bg-ruby/15 text-ruby border-ruby/30" },
+      CANCELLED: { label: t("events.list.statusCancelled"), classes: "bg-surface-muted text-text-secondary border-border" },
     };
-    return map[status] || { label: status, classes: "bg-jewel-400/15 text-jewel-600 border-jewel-400/30" };
+    return map[status] || { label: status, classes: "bg-surface-muted text-text-secondary border-border" };
   };
 
   if (hydrated && !token) return <NotAuthenticated />;
@@ -140,8 +140,8 @@ export default function EventsListClient() {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-display font-bold text-jewel-900 tracking-tight">{t("events.list.title")}</h1>
-            <p className="text-sm text-jewel-500 mt-1">{t("events.list.description")}</p>
+            <h1 className="text-3xl font-display font-bold text-text-primary tracking-tight">{t("events.list.title")}</h1>
+            <p className="text-sm text-text-muted mt-1">{t("events.list.description")}</p>
           </div>
           <div className="flex items-center gap-3">
             <Button
@@ -167,8 +167,8 @@ export default function EventsListClient() {
               onClick={() => setFilter(f.value)}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 filter === f.value
-                  ? "bg-jewel-gold/15 text-jewel-gold border border-jewel-gold/30"
-                  : "text-jewel-500 hover:text-jewel-gold border border-transparent"
+                  ? "bg-accent/15 text-accent border border-accent/30"
+                  : "text-text-muted hover:text-accent border border-transparent"
               }`}
             >
               {f.label}
@@ -204,22 +204,22 @@ export default function EventsListClient() {
                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${status.classes}`}>
                       {status.label}
                     </span>
-                    <span className="flex items-center gap-1 text-xs text-jewel-500"><Users className="w-3.5 h-3.5" />{event._count.registrations}</span>
+                    <span className="flex items-center gap-1 text-xs text-text-muted"><Users className="w-3.5 h-3.5" />{event._count.registrations}</span>
                   </div>
 
-                  <h3 className="text-lg font-display font-bold text-jewel-900 mb-2 line-clamp-2">{event.name}</h3>
+                  <h3 className="text-lg font-display font-bold text-text-primary mb-2 line-clamp-2">{event.name}</h3>
 
-                  {event.description && <p className="text-sm text-jewel-600 mb-4 line-clamp-2">{event.description}</p>}
+                  {event.description && <p className="text-sm text-text-secondary mb-4 line-clamp-2">{event.description}</p>}
 
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-xs text-jewel-500"><Calendar className="w-4 h-4 flex-shrink-0" /><span className="truncate">{formatDate(event.date)}</span></div>
-                    {event.venue && (<div className="flex items-center gap-2 text-xs text-jewel-500"><MapPin className="w-4 h-4 flex-shrink-0" /><span className="truncate">{event.venue}</span></div>)}
+                    <div className="flex items-center gap-2 text-xs text-text-muted"><Calendar className="w-4 h-4 flex-shrink-0" /><span className="truncate">{formatDate(event.date)}</span></div>
+                    {event.venue && (<div className="flex items-center gap-2 text-xs text-text-muted"><MapPin className="w-4 h-4 flex-shrink-0" /><span className="truncate">{event.venue}</span></div>)}
                   </div>
 
-                  <div className="mt-4 pt-4 border-t border-jewel-400/20 flex items-center justify-between">
+                  <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-jewel-gold/15 border border-jewel-gold/25 flex items-center justify-center text-jewel-deep font-bold">{initial}</div>
-                      <p className="text-xs text-jewel-500">{t("events.list.organizedBy")} <span className="text-jewel-700 font-medium">{event.createdBy.name}</span></p>
+                      <div className="w-8 h-8 rounded-full bg-accent/15 border border-accent/25 flex items-center justify-center text-jewel-deep font-bold">{initial}</div>
+                      <p className="text-xs text-text-muted">{t("events.list.organizedBy")} <span className="text-text-primary font-medium">{event.createdBy.name}</span></p>
                     </div>
                     <div className="flex items-center gap-2">
                       {isAdmin && (
@@ -246,7 +246,7 @@ export default function EventsListClient() {
                           </Button>
                         </div>
                       )}
-                      <p className="text-xs text-jewel-400">{new Date(event.createdAt).toLocaleDateString()}</p>
+                      <p className="text-xs text-text-muted">{new Date(event.createdAt).toLocaleDateString()}</p>
                     </div>
                   </div>
                 </Card>
