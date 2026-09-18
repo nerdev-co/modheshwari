@@ -11,19 +11,27 @@ export function SunMark({ className = "", size = 32 }: { className?: string; siz
       className={className}
       aria-hidden="true"
     >
-      <circle cx="16" cy="16" r="14" fill="currentColor" opacity="0.15" />
-      <g stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <defs>
+        <linearGradient id="sunGradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="var(--accent)" />
+          <stop offset="50%" stopColor="var(--jewel-gold-light)" />
+          <stop offset="100%" stopColor="var(--accent)" />
+        </linearGradient>
+      </defs>
+      <circle cx="16" cy="16" r="12" fill="url(#sunGradient)" opacity="0.15" />
+      <g stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => (
           <line
             key={angle}
             x1={16}
             y1={16}
-            x2={16 + 12 * Math.cos((angle * Math.PI) / 180)}
-            y2={16 + 12 * Math.sin((angle * Math.PI) / 180)}
+            x2={16 + 10 * Math.cos((angle * Math.PI) / 180)}
+            y2={16 + 10 * Math.sin((angle * Math.PI) / 180)}
           />
         ))}
       </g>
-      <circle cx="16" cy="16" r="5" fill="currentColor" />
+      <circle cx="16" cy="16" r="7" fill="var(--accent)" />
+      <circle cx="16" cy="16" r="3" fill="var(--text-on-accent)" />
     </svg>
   );
 }

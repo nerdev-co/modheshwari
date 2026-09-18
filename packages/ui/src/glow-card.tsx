@@ -23,7 +23,7 @@ export function GlowCard({
       ref={ref}
       onMouseMove={onMove}
       className={`relative overflow-hidden rounded-2xl border border-border
-        bg-surface-muted/60 backdrop-blur-sm
+        bg-surface-raised/60 backdrop-blur-sm
         before:content-[''] before:absolute before:inset-0 before:opacity-0
         hover:before:opacity-100 before:transition-opacity before:duration-300
         before:[background:radial-gradient(250px_circle_at_var(--glow-x)_var(--glow-y),rgba(201,124,28,0.15),transparent_70%)]

@@ -17,7 +17,13 @@
         "profile": "Profile",
         "settings": "Settings",
         "logout": "Log out",
-        "account": "Account"
+        "account": "Account",
+        "sections": {
+          "dashboard": "Dashboard",
+          "community": "Community",
+          "wellness": "Wellness",
+          "tools": "Tools"
+        }
     },
     "landing": {
         "badge": "Modheshwari Community",

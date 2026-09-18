@@ -51,9 +51,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         focus-visible:ring-accent
       `,
       danger: `
-        bg-ruby-500 text-white font-semibold
+        bg-ruby text-white font-semibold
         hover:bg-ruby-600
-        focus-visible:ring-ruby-500
+        focus-visible:ring-ruby
       `,
     };
 

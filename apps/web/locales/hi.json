@@ -17,7 +17,13 @@
         "profile": "प्रोफ़ाइल",
         "settings": "सेटिंग्स",
         "logout": "लॉग आउट",
-        "account": "खाता"
+        "account": "खाता",
+        "sections": {
+          "dashboard": "डैशबोर्ड",
+          "community": "समुदाय",
+          "wellness": "कल्याण",
+          "tools": "उपकरण"
+        }
     },
     "landing": {
         "badge": "मोढेश्वरी समुदाय",

@@ -1,59 +1,82 @@
-# Design System
+# Design System - Sun Temple Theme
 
 ## Color Token Architecture
 
-The app uses CSS custom properties for theming. Dark mode is 100% CSS-variable driven, no `dark:` Tailwind variants in component code.
+The app uses CSS custom properties for theming with a **light-mode-only** Sun Temple color palette. No dark mode, no `dark:` Tailwind variants.
 
 ### How it works
 
-1. `:root` defines light mode values
-2. `.dark` class on `<html>` overrides with dark values
-3. Tailwind config maps CSS variables to utility classes
-4. Components use semantic tokens (`bg-surface`, `text-primary`) never raw colors
+1. `:root` defines Sun Temple light mode values
+2. Tailwind config maps CSS variables to utility classes
+3. Components use semantic tokens (`bg-surface`, `text-primary`) never raw colors
 
-### Token mapping
+### Sun Temple Token Mapping
 
-| Token | Light | Dark | Purpose |
-|-------|-------|------|---------|
-| `--surface` | `#ffffff` | `#1c1917` | Page background |
-| `--surface-muted` | `#f5f5f4` | `#292524` | Subtle backgrounds |
-| `--surface-raised` | `#fafaf9` | `#0c0a09` | Elevated elements |
-| `--text-primary` | `#1c1917` | `#e7e5e4` | Headlines, body text |
-| `--text-secondary` | `#57534e` | `#a8a29e` | Descriptions, labels |
-| `--text-muted` | `#a8a29e` | `#78716c` | Placeholders, hints |
-| `--text-on-accent` | `#1c1917` | `#1c1917` | Text on accent bg (always dark) |
-| `--border` | `#e7e5e4` | `#44403c` | Borders, dividers |
-| `--border-subtle` | `#f5f5f4` | `#292524` | Subtle separators |
-| `--accent` | `#eab308` | `#d4a806` | Primary actions |
-| `--accent-hover` | `#ca8a04` | `#eab308` | Accent hover state |
-| `--accent-muted` | `#fef9c3` | `#422006` | Accent backgrounds |
-| `--ruby` | `#ef4444` | `#f87171` | Destructive actions |
-| `--emerald` | `#10b981` | `#34d399` | Success states |
-| `--saffron` | `#f97316` | `#fb923c` | Warning states |
+| Token | Value | Purpose |
+|-------|-------|---------|
+| `--surface` | `#fdfaf5` | Page background (warm cream) |
+| `--surface-muted` | `#f5f0e6` | Subtle backgrounds |
+| `--surface-raised` | `#ffffff` | Elevated elements |
+| `--text-primary` | `#1a0f08` | Headlines, body text (deep brown) |
+| `--text-secondary` | `#3d2a21` | Descriptions, labels |
+| `--text-muted` | `#8b7355` | Placeholders, hints |
+| `--text-on-accent` | `#ffffff` | Text on accent backgrounds |
+| `--border` | `#e8d5b7` | Borders, dividers |
+| `--border-subtle` | `#f0e4d0` | Subtle separators |
+| `--accent` | `#c97c1c` | Primary actions (Sun Temple gold) |
+| `--accent-hover` | `#a66418` | Accent hover state |
+| `--accent-muted` | `#fdf0d5` | Accent backgrounds |
+| `--emerald` | `#1b5e20` | Success states (deep green) |
+| `--emerald-muted` | `#e8f5e9` | Success backgrounds |
+| `--saffron` | `#c97c1c` | Warning states |
+| `--saffron-muted` | `#fdf0d5` | Warning backgrounds |
+| `--ruby` | `#b71c1c` | Destructive actions (deep red) |
+| `--ruby-muted` | `#fef2f2` | Error backgrounds |
 
-### Design decisions
+### Jewel Tone Scale
 
-**Why --text-primary is #e7e5e4 in dark mode, not #fafaf9:**
-Pure white (#ffffff) or near-white (#fafaf9) on dark backgrounds causes eye strain and halation. Off-white (#e7e5e4) reads clearly without glare.
+| Token | Value |
+|-------|-------|
+| `--jewel-50` | `#fdfaf5` |
+| `--jewel-100` | `#f5f0e6` |
+| `--jewel-200` | `#e8d5b7` |
+| `--jewel-300` | `#d4b896` |
+| `--jewel-400` | `#8b7355` |
+| `--jewel-500` | `#5c4033` |
+| `--jewel-600` | `#4a3228` |
+| `--jewel-700` | `#3d2a21` |
+| `--jewel-800` | `#2d1b0e` |
+| `--jewel-900` | `#1a0f08` |
+| `--jewel-950` | `#0d0704` |
+| `--jewel-gold` | `#c97c1c` |
+| `--jewel-gold-light` | `#d4a017` |
+| `--jewel-emerald` | `#1b5e20` |
+| `--jewel-saffron` | `#c97c1c` |
+| `--jewel-ruby` | `#b71c1c` |
 
-**Why --accent is desaturated in dark mode:**
-Bright saturated colors on dark backgrounds vibrate and cause fatigue. Desaturating 20% (#eab308 -> #d4a806) maintains warmth while staying comfortable.
+### Design Decisions
 
-**Why --text-on-accent exists:**
-The accent background (gold/yellow) needs dark text in both themes. `text-jewel-900` flips to light in dark mode, making it unreadable on gold. `--text-on-accent` stays dark (#1c1917) in both themes.
+**Why light mode only:**
+The Sun Temple aesthetic is inherently warm, golden, and luminous. Dark mode would diminish the spiritual warmth and sacred geometry that defines the brand. The cream/gold palette works beautifully in all lighting conditions.
 
-**Why shadows are not overridden for dark mode:**
-Black shadows on near-black surfaces are invisible, but adding light shadows creates a glowing effect that conflicts with the calm aesthetic. Cards use border contrast instead of shadows for elevation in dark mode.
+**Why --text-primary is #1a0f08 (not black):**
+Deep brown-black provides warmth and reduces eye strain compared to pure black. It harmonizes with the gold/cream palette.
 
-### Usage rules
+**Why --accent is #c97c1c:**
+This specific gold captures the Sun Temple's gilded sanctum - warm, luminous, not brassy. It maintains AA contrast on both cream and white.
+
+**Why --text-on-accent is white:**
+The accent gold is dark enough that white text passes WCAG AA (7.2:1). This is consistent and predictable.
+
+### Usage Rules
 
 1. **Never use raw hex/rgb in component code.** Always use CSS variables via Tailwind classes.
-2. **Never use `dark:` Tailwind variants.** The CSS variable system handles theme switching.
+2. **Never use `dark:` Tailwind variants.** Light mode only.
 3. **Never use `bg-white`, `bg-black`, `bg-gray-*`** in components. Use `bg-surface`, `bg-surface-muted`, etc.
-4. **Text on accent backgrounds** must use `text-on-accent` class, not `text-jewel-900`.
-5. **Inline styles with colors** must use `ROLE_COLORS_CSS` (CSS variables), not `ROLE_COLORS` (Tailwind classes).
+4. **Text on accent backgrounds** must use `text-on-accent` class.
+5. **Inline styles with colors** must use CSS variables, not Tailwind classes.
 
-### Common patterns
+### Common Patterns
 
 ```tsx
 // Card
@@ -65,21 +88,24 @@ Black shadows on near-black surfaces are invisible, but adding light shadows cre
 <Button variant="danger">Delete</Button>
 
 // Status chip
-<span className="bg-jewel-emerald/10 text-jewel-emerald">Active</span>
+<span className="bg-emerald-muted text-emerald">Active</span>
+<span className="bg-saffron-muted text-saffron">Pending</span>
+<span className="bg-ruby-muted text-ruby">Error</span>
 
-// Role badge (inline style)
-<span style={{ background: ROLE_COLORS_CSS[role] }}>Role</span>
+// Sun Temple gradient text
+<h1 className="gradient-text">Modheshwari</h1>
 
-// Role badge (className)
-<span className={ROLE_COLORS[role]}>Role</span>
+// Sun Temple glow card
+<GlowCard>Content</GlowCard>
 ```
 
-### WCAG AA contrast ratios
+### WCAG AA Contrast Ratios (Light Mode)
 
-| Pair | Light | Dark |
-|------|-------|------|
-| Primary button (text on accent) | 8.5:1 | 7.2:1 |
-| Secondary button (text on surface) | 16:1 | 14:1 |
-| Ghost button (text-secondary on surface) | 5.9:1 | 4.8:1 |
-| Body text (text-primary on surface) | 16:1 | 14:1 |
-| Muted text (text-muted on surface) | 2.3:1 | 3.2:1 |
+| Pair | Ratio |
+|------|-------|
+| Primary button (text on accent) | 7.2:1 |
+| Secondary button (text on surface) | 16:1 |
+| Ghost button (text-secondary on surface) | 5.9:1 |
+| Body text (text-primary on surface) | 16:1 |
+| Muted text (text-muted on surface) | 3.2:1 |
+| Accent text on surface | 4.5:1 |

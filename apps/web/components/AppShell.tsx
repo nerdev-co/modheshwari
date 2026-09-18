@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState, useRef } from "react";
+import { ReactNode, useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -20,16 +20,28 @@ import {
   User,
   Settings,
   ChevronRight,
+  ChevronLeft,
+  LayoutDashboard,
+  ClipboardList,
+  HeartPulse,
+  Map,
+  Inbox,
+  HelpCircle,
 } from "lucide-react";
-
-import { MOTION_ENTER } from "@repo/ui/motion";
-import { SunMark } from "./SunMark";
+import { MOTION_ENTER, MOTION_EXIT } from "@repo/ui/motion";
 import { useFocusTrap } from "@repo/ui/useFocusTrap";
+
+import { SunMark } from "./SunMark";
+import { LocaleToggle } from "./LocaleToggle";
 
 import { useUser } from "../lib/UserContext";
 import useNotifications from "../hooks/useNotifications";
-import { LocaleToggle } from "./LocaleToggle";
 import { useLocale } from "../lib/LocaleContext";
+
+interface NavSection {
+  label: string;
+  items: NavItem[];
+}
 
 interface NavItem {
   path: string;
@@ -38,18 +50,41 @@ interface NavItem {
   roles?: string[];
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { path: "/", i18nKey: "nav.home", icon: Home },
-  { path: "/contact", i18nKey: "nav.contact", icon: Phone },
-  { path: "/search", i18nKey: "nav.search", icon: Search },
-  { path: "/family", i18nKey: "nav.family", icon: Users, roles: ["family_head", "gotra_head", "member"] },
-  { path: "/medical", i18nKey: "nav.medical", icon: Stethoscope },
-  { path: "/resources", i18nKey: "nav.resources", icon: Package },
-  { path: "/nearby", i18nKey: "nav.nearby", icon: MapPin },
-  { path: "/events/calendar", i18nKey: "nav.calendar", icon: Calendar },
-  { path: "/chat", i18nKey: "nav.chat", icon: MessageCircle },
-  { path: "/notifications", i18nKey: "nav.notifications", icon: Bell },
+const NAV_SECTIONS: NavSection[] = [
+  {
+    label: "nav.sections.dashboard",
+    items: [
+      { path: "/", i18nKey: "nav.dashboard", icon: LayoutDashboard },
+    ],
+  },
+  {
+    label: "nav.sections.community",
+    items: [
+      { path: "/family", i18nKey: "nav.family", icon: Users, roles: ["family_head", "gotra_head", "member"] },
+      { path: "/chat", i18nKey: "nav.chat", icon: MessageCircle },
+      { path: "/events/calendar", i18nKey: "nav.calendar", icon: Calendar },
+      { path: "/resources", i18nKey: "nav.resources", icon: Package },
+    ],
+  },
+  {
+    label: "nav.sections.wellness",
+    items: [
+      { path: "/medical", i18nKey: "nav.medical", icon: HeartPulse },
+      { path: "/nearby", i18nKey: "nav.nearby", icon: Map },
+    ],
+  },
+  {
+    label: "nav.sections.tools",
+    items: [
+      { path: "/search", i18nKey: "nav.search", icon: Search },
+      { path: "/notifications", i18nKey: "nav.notifications", icon: Bell },
+      { path: "/contact", i18nKey: "nav.contact", icon: HelpCircle },
+    ],
+  },
 ];
+
+const SIDEBAR_WIDTH = 256;
+const SIDEBAR_COLLAPSED_WIDTH = 72;
 
 export function AppShell({ children }: { children: ReactNode }) {
   const location = useLocation();
@@ -57,7 +92,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { user, loading: userLoading, logout } = useUser();
   const { unreadCount } = useNotifications();
   const { t } = useLocale();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -67,15 +102,23 @@ export function AppShell({ children }: { children: ReactNode }) {
   useFocusTrap(sidebarRef, mobileSidebarOpen);
   useFocusTrap(profileButtonRef, profileMenuOpen);
 
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    setMobileSidebarOpen(false);
+  }, [location.pathname]);
+
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";
     return location.pathname.startsWith(path);
   };
 
-  const filteredNav = NAV_ITEMS.filter((item) => {
-    if (!item.roles) return true;
-    return user && item.roles.includes(user.role);
-  });
+  const filteredSections = NAV_SECTIONS.map((section) => ({
+    ...section,
+    items: section.items.filter((item) => {
+      if (!item.roles) return true;
+      return user && item.roles.includes(user.role);
+    }),
+  })).filter((section) => section.items.length > 0);
 
   const handleLogout = () => {
     logout();
@@ -90,49 +133,83 @@ export function AppShell({ children }: { children: ReactNode }) {
     );
   }
 
+  const sidebarWidth = sidebarOpen ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH;
+
   return (
     <div className="flex h-screen bg-surface">
       {/* Desktop Sidebar */}
       <aside
         ref={sidebarRef}
-        className="hidden lg:flex lg:flex-col fixed lg:static inset-y-0 left-0 z-40 w-64 bg-surface-raised border-r border-border transition-transform duration-300 ease-out"
+        className="hidden lg:flex lg:flex-col fixed lg:static inset-y-0 left-0 z-40 bg-surface-raised border-r border-border transition-all duration-300 ease-out overflow-hidden"
+        style={{ width: sidebarWidth }}
+        aria-label="Main navigation"
       >
         <div className="flex h-16 items-center justify-between px-4 border-b border-border">
           <Link to="/" className="flex items-center gap-2" aria-label="Modheshwari Home">
             <SunMark size={28} className="text-accent" />
-            <span className="font-display font-semibold text-xl text-text-primary">Modheshwari</span>
+            {sidebarOpen && (
+              <span className="font-display font-semibold text-xl text-text-primary">Modheshwari</span>
+            )}
           </Link>
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="lg:hidden p-1.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+            aria-expanded={sidebarOpen}
+          >
+            {sidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+          </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1" aria-label="Main navigation">
-          {filteredNav.map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.path);
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-fast ${
-                  active
-                    ? "bg-accent-muted text-accent"
-                    : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
-                }`}
-                aria-current={active ? "page" : undefined}
-              >
-                <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
-                <span>{t(item.i18nKey)}</span>
-              </Link>
-            );
-          })}
+        <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-4" aria-label="Main navigation">
+          {filteredSections.map((section, sectionIndex) => (
+            <div key={section.label} className="space-y-1">
+              {sidebarOpen && (
+                <h3 className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+                  {t(section.label)}
+                </h3>
+              )}
+              {section.items.map((item) => {
+                const Icon = item.icon;
+                const active = isActive(item.path);
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-fast ${
+                      active
+                        ? "bg-accent-muted text-accent"
+                        : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
+                    } relative`}
+                    aria-current={active ? "page" : undefined}
+                    title={sidebarOpen ? undefined : t(item.i18nKey)}
+                  >
+                    <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+                    {sidebarOpen && <span>{t(item.i18nKey)}</span>}
+                    {active && sidebarOpen && (
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: 3 }}
+                        exit={{ width: 0 }}
+                        transition={MOTION_ENTER}
+                        className="absolute left-0 top-1 bottom-1 bg-accent rounded-r-md"
+                      />
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
-        <div className="p-3 border-t border-border">
+        <div className={`p-3 border-t border-border transition-opacity duration-200 ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
           <Link
             to="/me"
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-all duration-fast"
+            title={sidebarOpen ? undefined : t("nav.profile")}
           >
-            <User className="w-5 h-5" aria-hidden="true" />
-            <span>{t("nav.profile")}</span>
+            <User className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+            {sidebarOpen && <span>{t("nav.profile")}</span>}
           </Link>
         </div>
       </aside>
@@ -177,27 +254,34 @@ export function AppShell({ children }: { children: ReactNode }) {
               </button>
             </div>
 
-            <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1" aria-label="Mobile navigation">
-              {filteredNav.map((item) => {
-                const Icon = item.icon;
-                const active = isActive(item.path);
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setMobileSidebarOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-fast ${
-                      active
-                        ? "bg-accent-muted text-accent"
-                        : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
-                    }`}
-                    aria-current={active ? "page" : undefined}
-                  >
-                    <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
-                    <span>{t(item.i18nKey)}</span>
-                  </Link>
-                );
-              })}
+            <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-4" aria-label="Mobile navigation">
+              {filteredSections.map((section) => (
+                <div key={section.label} className="space-y-1">
+                  <h3 className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+                    {t(section.label)}
+                  </h3>
+                  {section.items.map((item) => {
+                    const Icon = item.icon;
+                    const active = isActive(item.path);
+                    return (
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        onClick={() => setMobileSidebarOpen(false)}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-fast ${
+                          active
+                            ? "bg-accent-muted text-accent"
+                            : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
+                        }`}
+                        aria-current={active ? "page" : undefined}
+                      >
+                        <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+                        <span>{t(item.i18nKey)}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              ))}
             </nav>
 
             <div className="p-3 border-t border-border">
@@ -215,7 +299,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </AnimatePresence>
 
       {/* Main Content */}
-      <div className="flex flex-1 flex-col lg:pl-64">
+      <div className="flex flex-1 flex-col lg:pl-[256px]" style={{ marginLeft: sidebarOpen ? 0 : SIDEBAR_COLLAPSED_WIDTH - SIDEBAR_WIDTH }}>
         {/* Top Bar */}
         <header className="sticky top-0 z-30 h-16 bg-surface/80 backdrop-blur-xl border-b border-border">
           <div className="flex h-full items-center justify-between px-4 lg:px-6">
@@ -227,6 +311,30 @@ export function AppShell({ children }: { children: ReactNode }) {
               >
                 <Menu className="w-6 h-6" />
               </button>
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="hidden lg:flex p-1.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+                aria-expanded={sidebarOpen}
+              >
+                {sidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+              </button>
+              {sidebarOpen && (
+                <motion.span
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={MOTION_ENTER}
+                  className="text-sm font-medium text-text-secondary hidden sm:block"
+                >
+                  {(() => {
+                    const activeSection = filteredSections.find((s) =>
+                      s.items.some((item) => isActive(item.path))
+                    );
+                    return activeSection ? t(activeSection.label) : "";
+                  })()}
+                </motion.span>
+              )}
             </div>
 
             <div className="flex items-center gap-3">
@@ -263,10 +371,14 @@ export function AppShell({ children }: { children: ReactNode }) {
                       {user?.name?.charAt(0).toUpperCase() || "U"}
                     </span>
                   </div>
-                  <span className="hidden sm:block text-sm font-medium text-text-primary">
-                    {user?.name || "User"}
-                  </span>
-                  <ChevronRight className="w-4 h-4 text-text-muted" />
+                  {sidebarOpen && (
+                    <>
+                      <span className="hidden sm:block text-sm font-medium text-text-primary">
+                        {user?.name || "User"}
+                      </span>
+                      <ChevronRight className="w-4 h-4 text-text-muted" />
+                    </>
+                  )}
                 </button>
 
                 <AnimatePresence>
@@ -329,4 +441,3 @@ export function AppShell({ children }: { children: ReactNode }) {
     </div>
   );
 }
-
