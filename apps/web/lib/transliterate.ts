@@ -55,7 +55,6 @@ const wordMap: Record<string, string> = {
   "sahab": "साहब",
   "bhai": "भाई",
   "ben": "बेन",
-  "kumar": "कुमार",
   "devi": "देवी",
   "prasad": "प्रसाद",
   "chand": "चंद",
@@ -137,5 +136,5 @@ function basicTransliterate(text: string): string {
  */
 export function formatHindiNumber(num: number): string {
   const hindiDigits = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
-  return num.toString().replace(/\d/g, (d) => hindiDigits[parseInt(d)]);
+  return num.toString().replace(/\d/g, (d) => hindiDigits[Number(d)]);
 }

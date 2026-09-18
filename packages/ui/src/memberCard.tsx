@@ -28,8 +28,8 @@ export function MemberCard({ member, onToggle }: { member: Member; onToggle: (id
           hover:shadow-jewel
           ${
             alive
-              ? "bg-jewel-50/60 border-jewel-400/20"
-              : "bg-jewel-ruby/5 border-jewel-ruby/20"
+              ? "bg-surface-muted/60 border-border"
+              : "bg-ruby-50/60 border-ruby-200/20"
           }
         `}
       >
@@ -41,8 +41,8 @@ export function MemberCard({ member, onToggle }: { member: Member; onToggle: (id
                 text-lg font-bold shrink-0
                 ${
                   alive
-                    ? "bg-jewel-gold/20 text-jewel-gold"
-                    : "bg-jewel-ruby/20 text-jewel-ruby"
+                    ? "bg-accent/20 text-accent"
+                    : "bg-ruby-100/60 text-ruby"
                 }
               `}
             >
@@ -64,8 +64,8 @@ export function MemberCard({ member, onToggle }: { member: Member; onToggle: (id
               text-[11px] px-2 py-1 rounded-full border shrink-0
               ${
                 alive
-                  ? "bg-jewel-emerald/10 text-jewel-emerald border-jewel-emerald/20"
-                  : "bg-jewel-ruby/10 text-jewel-ruby border-jewel-ruby/20"
+                  ? "bg-emerald/10 text-emerald border-emerald/20"
+                  : "bg-ruby/10 text-ruby border-ruby/20"
               }
             `}
           >
@@ -73,7 +73,7 @@ export function MemberCard({ member, onToggle }: { member: Member; onToggle: (id
           </span>
         </div>
 
-        <div className="h-px bg-jewel-400/20 my-4" />
+        <div className="h-px bg-border my-4" />
 
         <Button
           variant={alive ? "danger" : "primary"}

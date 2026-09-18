@@ -14,9 +14,9 @@ export function NotAuthenticated({
     <div
       className={`flex flex-col items-center justify-center min-h-screen text-center px-4 ${className}`}
     >
-      <div className="w-16 h-16 rounded-2xl bg-jewel-gold/20 flex items-center justify-center mb-6">
+      <div className="w-16 h-16 rounded-2xl bg-accent/20 flex items-center justify-center mb-6">
         <svg
-          className="w-8 h-8 text-jewel-gold"
+          className="w-8 h-8 text-accent"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -29,10 +29,10 @@ export function NotAuthenticated({
           />
         </svg>
       </div>
-      <h1 className="text-3xl font-display font-bold text-jewel-900 mb-2">
+      <h1 className="text-3xl font-display font-bold text-text-primary mb-2">
         Not Authenticated
       </h1>
-      <p className="text-jewel-600 mb-6 max-w-md">
+      <p className="text-text-secondary mb-6 max-w-md">
         You are not authorized to view this page. Please sign in to continue.
       </p>
       {children}

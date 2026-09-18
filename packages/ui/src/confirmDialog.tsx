@@ -18,9 +18,9 @@ interface ConfirmDialogProps {
 }
 
 const VARIANT_STYLES: Record<string, string> = {
-  danger: "bg-ruby-500 text-white hover:bg-ruby-600 focus:ring-ruby-500",
-  warning: "bg-accent text-jewel-900 hover:bg-accent-hover focus:ring-accent",
-  info: "bg-accent text-jewel-900 hover:bg-accent-hover focus:ring-accent",
+  danger: "bg-ruby-600 text-white hover:bg-ruby-700 focus:ring-ruby-500",
+  warning: "bg-accent text-on-accent hover:bg-accent-hover focus:ring-accent",
+  info: "bg-accent text-on-accent hover:bg-accent-hover focus:ring-accent",
 };
 
 export function ConfirmDialog({

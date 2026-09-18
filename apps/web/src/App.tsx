@@ -1,8 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { Providers } from "../app/providers";
 import { LocaleProvider } from "../lib/LocaleContext";
-import ThemeInitializer from "../app/themeInitializer";
-import NavBar from "../components/NavBar";
+import { AppShell } from "../components/AppShell";
 
 import Home from "../app/page";
 import SignIn from "../app/signin/page";
@@ -35,7 +34,6 @@ export default function App() {
   return (
     <Providers>
       <LocaleProvider>
-        <ThemeInitializer />
         <a
           href="#main-content"
           aria-label="Skip to main content"
@@ -43,37 +41,38 @@ export default function App() {
         >
           Skip to content
         </a>
-        <NavBar />
-        <main id="main-content" className="relative z-10">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/signup/fh" element={<SignUpFH />} />
-            <Route path="/signup/fm" element={<SignUpFM />} />
-            <Route path="/me" element={<Profile />} />
-            <Route path="/me/edit" element={<ProfileEdit />} />
-            <Route path="/family" element={<Family />} />
-            <Route path="/family/tree" element={<FamilyTree />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/events/:id" element={<EventDetail />} />
-            <Route path="/events/create" element={<EventCreate />} />
-            <Route path="/events/calendar" element={<EventCalendar />} />
-            <Route path="/medical" element={<Medical />} />
-            <Route path="/medical/records" element={<MedicalRecords />} />
-            <Route path="/resources" element={<Resources />} />
-            <Route path="/nearby" element={<Nearby />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/notifications" element={<Notifications />} />
-            <Route path="/admin/notifications" element={<AdminNotifications />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/spec" element={<Spec />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/notAuthenticated" element={<NotAuthenticated />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
+        <AppShell>
+          <main id="main-content" className="relative z-10">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/signup/fh" element={<SignUpFH />} />
+              <Route path="/signup/fm" element={<SignUpFM />} />
+              <Route path="/me" element={<Profile />} />
+              <Route path="/me/edit" element={<ProfileEdit />} />
+              <Route path="/family" element={<Family />} />
+              <Route path="/family/tree" element={<FamilyTree />} />
+              <Route path="/events" element={<Events />} />
+              <Route path="/events/:id" element={<EventDetail />} />
+              <Route path="/events/create" element={<EventCreate />} />
+              <Route path="/events/calendar" element={<EventCalendar />} />
+              <Route path="/medical" element={<Medical />} />
+              <Route path="/medical/records" element={<MedicalRecords />} />
+              <Route path="/resources" element={<Resources />} />
+              <Route path="/nearby" element={<Nearby />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/admin/notifications" element={<AdminNotifications />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/spec" element={<Spec />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/notAuthenticated" element={<NotAuthenticated />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+        </AppShell>
       </LocaleProvider>
     </Providers>
   );

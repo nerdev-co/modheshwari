@@ -22,7 +22,7 @@ export const LoaderOne = () => {
           initial={{ y: 0 }}
           animate={{ y: [0, 10, 0] }}
           transition={createTransition(i)}
-          className="h-4 w-4 rounded-full border border-jewel-400/30 bg-gradient-to-b from-jewel-gold/40 to-jewel-500/40"
+          className="h-4 w-4 rounded-full border border-border bg-gradient-to-b from-accent/40 to-accent/60"
           aria-hidden="true"
         />
       ))}
@@ -45,7 +45,7 @@ export const LoaderTwo = () => {
         initial={{ x: 0 }}
         animate={{ x: [0, 20, 0] }}
         transition={transition(0)}
-        className="h-4 w-4 rounded-full bg-jewel-gold/60 shadow-jewel"
+        className="h-4 w-4 rounded-full bg-accent/60 shadow-jewel"
         aria-hidden="true"
       />
       <motion.div
@@ -78,7 +78,7 @@ export const LoaderThree = () => {
       strokeWidth="1"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-20 w-20 stroke-jewel-500"
+      className="h-20 w-20 stroke-accent"
       role="status"
       aria-live="polite"
       aria-label="Loading"
@@ -102,7 +102,7 @@ export const LoaderThree = () => {
 
 export const LoaderFour = ({ text = "Loading..." }: { text?: string }) => {
   return (
-    <div role="status" aria-live="polite" aria-label={text} className="relative font-bold text-jewel-900 [perspective:1000px]">
+    <div role="status" aria-live="polite" aria-label={text} className="relative font-bold text-text-primary [perspective:1000px]">
       <motion.span
         animate={{
           skewX: [0, -40, 0],
@@ -145,7 +145,7 @@ export const LoaderFour = ({ text = "Loading..." }: { text?: string }) => {
 
 export const LoaderFive = ({ text }: { text: string }) => {
   return (
-    <div role="status" aria-live="polite" aria-label={text} className="font-bold text-jewel-900">
+    <div role="status" aria-live="polite" aria-label={text} className="font-bold text-text-primary">
       {text.split("").map((char, i) => (
         <motion.span
           key={i}
@@ -154,9 +154,9 @@ export const LoaderFive = ({ text }: { text: string }) => {
           animate={{
             scale: [1, 1.1, 1],
             textShadow: [
-              "0 0 0 rgba(201, 162, 39, 0)",
-              "0 0 8px rgba(201, 162, 39, 0.5)",
-              "0 0 0 rgba(201, 162, 39, 0)",
+              "0 0 0 rgba(201, 124, 28, 0)",
+              "0 0 8px rgba(201, 124, 28, 0.5)",
+              "0 0 0 rgba(201, 124, 28, 0)",
             ],
             opacity: [0.5, 1, 0.5],
           }}

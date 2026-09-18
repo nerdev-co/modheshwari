@@ -48,8 +48,8 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const saved = getCookie("locale") as Locale | null;
-    if (saved && (saved === "en" || saved === "hi")) {
+    const saved = getCookie("locale");
+    if (saved === "en" || saved === "hi") {
       setLocaleState(saved);
     }
     setMounted(true);

@@ -1,5 +1,6 @@
 {
     "nav": {
+        "dashboard": "डैशबोर्ड",
         "home": "होम",
         "contact": "संपर्क",
         "search": "खोजें",
@@ -9,11 +10,14 @@
         "nearby": "निकटतम",
         "calendar": "कैलेंडर",
         "notifications": "सूचनाएं",
-        "chat": "चैट",
+        "chat": "संदेश",
         "signIn": "लॉग इन",
         "signOut": "लॉग आउट",
         "editProfile": "प्रोफ़ाइल संपादित करें",
-        "profile": "प्रोफ़ाइल"
+        "profile": "प्रोफ़ाइल",
+        "settings": "सेटिंग्स",
+        "logout": "लॉग आउट",
+        "account": "खाता"
     },
     "landing": {
         "badge": "मोढेश्वरी समुदाय",

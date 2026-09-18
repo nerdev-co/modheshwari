@@ -23,9 +23,9 @@ export function DeleteButton({
     setShowConfirm(true);
   };
 
-  const handleConfirm = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleConfirm = () => {
     setShowConfirm(false);
-    onClick?.(e);
+    onClick?.(undefined as any);
   };
 
   return (

@@ -8,7 +8,27 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@repo/ui": ["../../packages/ui/src"],
+      "@repo/ui/button": ["../../packages/ui/src/button.tsx"],
+      "@repo/ui/card": ["../../packages/ui/src/card.tsx"],
+      "@repo/ui/input": ["../../packages/ui/src/input.tsx"],
+      "@repo/ui/toast": ["../../packages/ui/src/toast.tsx"],
+      "@repo/ui/motion": ["../../packages/ui/src/motion.ts"],
+      "@repo/ui/useFocusTrap": ["../../packages/ui/src/useFocusTrap.ts"],
+      "@repo/ui/dreamySunsetBackground": ["../../packages/ui/src/dreamySunsetBackground.tsx"],
+      "@repo/ui/loading": ["../../packages/ui/src/loading.tsx"],
+      "@repo/ui/emptyState": ["../../packages/ui/src/emptyState.tsx"],
+      "@repo/ui/errorState": ["../../packages/ui/src/errorState.tsx"],
+      "@repo/ui/notAuthenticated": ["../../packages/ui/src/notAuthenticated.tsx"],
+      "@repo/ui/loadingState": ["../../packages/ui/src/loadingState.tsx"],
+      "@repo/ui/colors": ["../../packages/ui/src/colors.ts"],
+      "@repo/ui/confirmDialog": ["../../packages/ui/src/confirmDialog.tsx"],
+      "@repo/ui/deleteButton": ["../../packages/ui/src/deleteButton.tsx"],
+      "@repo/ui/glow-card": ["../../packages/ui/src/glow-card.tsx"],
+      "@repo/ui/memberCard": ["../../packages/ui/src/memberCard.tsx"],
+      "@repo/ui/skeleton": ["../../packages/ui/src/skeleton.tsx"],
+      "@repo/ui/badge": ["../../packages/ui/src/badge.tsx"]
     }
   },
   "include": [

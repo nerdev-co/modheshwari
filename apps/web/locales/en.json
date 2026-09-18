@@ -1,19 +1,23 @@
 {
     "nav": {
+        "dashboard": "Dashboard",
         "home": "Home",
         "contact": "Contact",
         "search": "Search",
-        "family": "Family",
+        "family": "Families",
         "medical": "Medical",
         "resources": "Resources",
         "nearby": "Nearby",
         "calendar": "Calendar",
         "notifications": "Notifications",
-        "chat": "Chat",
+        "chat": "Messages",
         "signIn": "Sign in",
         "signOut": "Sign out",
         "editProfile": "Edit profile",
-        "profile": "Profile"
+        "profile": "Profile",
+        "settings": "Settings",
+        "logout": "Log out",
+        "account": "Account"
     },
     "landing": {
         "badge": "Modheshwari Community",

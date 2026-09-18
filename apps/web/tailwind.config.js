@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: "class",
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -14,6 +13,7 @@ export default {
         surface: {
           DEFAULT: "var(--surface)",
           muted: "var(--surface-muted)",
+          raised: "var(--surface-raised)",
         },
         accent: {
           DEFAULT: "var(--accent)",
@@ -39,18 +39,41 @@ export default {
           ruby: "var(--jewel-ruby)",
         },
         border: "var(--border)",
+        "border-subtle": "var(--border-subtle)",
         "text-primary": "var(--text-primary)",
         "text-secondary": "var(--text-secondary)",
         "text-muted": "var(--text-muted)",
         "text-on-accent": "var(--text-on-accent)",
-        "jewel-deep": "var(--text-primary)",
-        emerald: "var(--emerald)",
-        saffron: "var(--saffron)",
-        ruby: "var(--ruby)",
+        emerald: {
+          DEFAULT: "var(--emerald)",
+          muted: "var(--emerald-muted)",
+          50: "var(--emerald-50)",
+          100: "var(--emerald-100)",
+          500: "var(--emerald-500)",
+          600: "var(--emerald-600)",
+          700: "var(--emerald-700)",
+        },
+        saffron: {
+          DEFAULT: "var(--saffron)",
+          muted: "var(--saffron-muted)",
+          50: "var(--saffron-50)",
+          100: "var(--saffron-100)",
+          500: "var(--saffron-500)",
+          600: "var(--saffron-600)",
+        },
+        ruby: {
+          DEFAULT: "var(--ruby)",
+          muted: "var(--ruby-muted)",
+          50: "var(--ruby-50)",
+          100: "var(--ruby-100)",
+          500: "var(--ruby-500)",
+          600: "var(--ruby-600)",
+        },
       },
       fontFamily: {
         display: ["var(--font-display)", "sans-serif"],
         sans: ["var(--font-body)", "sans-serif"],
+        mono: ["var(--font-mono)", "monospace"],
       },
       fontSize: {
         caption: ["var(--text-xs)", { lineHeight: "1rem" }],
@@ -88,12 +111,14 @@ export default {
         elevated: "0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04)",
         jewel: "0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06)",
         "jewel-lg": "0 4px 12px -2px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.04)",
+        suntemple: "0 0 40px -10px var(--accent), 0 0 80px -20px var(--accent-hover)",
       },
       animation: {
         "fade-in": "fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
         "slide-up": "slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
         "scale-in": "scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
         "spin-slow": "spin 2s linear infinite",
+        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
       keyframes: {
         fadeIn: {
@@ -116,6 +141,10 @@ export default {
         fast: "150ms",
         normal: "200ms",
         slow: "300ms",
+      },
+      backgroundImage: {
+        "suntemple-gradient": "linear-gradient(135deg, var(--accent) 0%, var(--jewel-700) 100%)",
+        "suntemple-radial": "radial-gradient(circle at center, var(--accent-muted) 0%, transparent 70%)",
       },
     },
   },

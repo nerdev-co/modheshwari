@@ -1,32 +1,37 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Mukta:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-body: "Inter", system-ui, sans-serif;
-  --font-display: "Playfair Display", Georgia, serif;
+  --font-display: "Fraunces", serif;
+  --font-body: "Mukta", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
 
-  --surface: #ffffff;
-  --surface-muted: #f5f5f4;
-  --surface-raised: #fafaf9;
+  /* Sun Temple Color Palette - Light Mode Only */
+  --surface: #fdfaf5;
+  --surface-muted: #f5f0e6;
+  --surface-raised: #ffffff;
 
-  --text-primary: #1c1917;
-  --text-secondary: #57534e;
-  --text-muted: #a8a29e;
-  --text-on-accent: #1c1917;
+  --text-primary: #1a0f08;
+  --text-secondary: #3d2a21;
+  --text-muted: #8b7355;
+  --text-on-accent: #ffffff;
 
-  --border: #e7e5e4;
-  --border-subtle: #f5f5f4;
+  --border: #e8d5b7;
+  --border-subtle: #f0e4d0;
 
-  --accent: #eab308;
-  --accent-hover: #ca8a04;
-  --accent-muted: #fef9c3;
+  --accent: #c97c1c;
+  --accent-hover: #a66418;
+  --accent-muted: #fdf0d5;
 
-  --emerald: #10b981;
-  --saffron: #f97316;
-  --ruby: #ef4444;
+  --emerald: #1b5e20;
+  --emerald-muted: #e8f5e9;
+  --saffron: #c97c1c;
+  --saffron-muted: #fdf0d5;
+  --ruby: #b71c1c;
+  --ruby-muted: #fef2f2;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -50,61 +55,23 @@
   --space-20: 5rem;
   --space-24: 6rem;
 
-  --jewel-50: #fafaf9;
-  --jewel-100: #f5f5f4;
-  --jewel-200: #e7e5e4;
-  --jewel-300: #d6d3d1;
-  --jewel-400: #a8a29e;
-  --jewel-500: #78716c;
-  --jewel-600: #57534e;
-  --jewel-700: #44403c;
-  --jewel-800: #292524;
-  --jewel-900: #1c1917;
-  --jewel-950: #0c0a09;
-  --jewel-gold: #eab308;
-  --jewel-gold-light: #facc15;
-  --jewel-emerald: #10b981;
-  --jewel-saffron: #f97316;
-  --jewel-ruby: #ef4444;
-}
-
-.dark {
-  --surface: #1c1917;
-  --surface-muted: #292524;
-  --surface-raised: #0c0a09;
-
-  --text-primary: #e7e5e4;
-  --text-secondary: #a8a29e;
-  --text-muted: #78716c;
-  --text-on-accent: #1c1917;
-
-  --border: #44403c;
-  --border-subtle: #292524;
-
-  --accent: #d4a806;
-  --accent-hover: #eab308;
-  --accent-muted: #422006;
-
-  --emerald: #34d399;
-  --saffron: #fb923c;
-  --ruby: #f87171;
-
-  --jewel-50: #0c0a09;
-  --jewel-100: #1c1917;
-  --jewel-200: #292524;
-  --jewel-300: #44403c;
-  --jewel-400: #78716c;
-  --jewel-500: #a8a29e;
-  --jewel-600: #d6d3d1;
-  --jewel-700: #e7e5e4;
-  --jewel-800: #f5f5f4;
-  --jewel-900: #fafaf9;
-  --jewel-950: #fafaf9;
-  --jewel-gold: #d4a806;
-  --jewel-gold-light: #eab308;
-  --jewel-emerald: #34d399;
-  --jewel-saffron: #fb923c;
-  --jewel-ruby: #f87171;
+  /* Jewel tone scale */
+  --jewel-50: #fdfaf5;
+  --jewel-100: #f5f0e6;
+  --jewel-200: #e8d5b7;
+  --jewel-300: #d4b896;
+  --jewel-400: #8b7355;
+  --jewel-500: #5c4033;
+  --jewel-600: #4a3228;
+  --jewel-700: #3d2a21;
+  --jewel-800: #2d1b0e;
+  --jewel-900: #1a0f08;
+  --jewel-950: #0d0704;
+  --jewel-gold: #c97c1c;
+  --jewel-gold-light: #d4a017;
+  --jewel-emerald: #1b5e20;
+  --jewel-saffron: #c97c1c;
+  --jewel-ruby: #b71c1c;
 }
 
 html,
@@ -118,12 +85,28 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: var(--font-body);
-  transition: background-color 0.2s, color 0.2s;
 }
 
 ::selection {
   background: var(--accent-muted);
   color: var(--text-primary);
+}
+
+/* Sun Temple Background Patterns */
+.suntemple-bg {
+  background-image: 
+    radial-gradient(circle at 25% 25%, var(--accent-muted) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, var(--emerald-muted) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, transparent 0%, var(--surface) 100%);
+  background-size: cover;
+  background-position: center;
+}
+
+.suntemple-pattern {
+  background-image: 
+    linear-gradient(var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 @layer components {
@@ -135,7 +118,7 @@ body {
   .btn-primary {
     @apply btn px-5 py-2.5 text-sm font-semibold;
     background: var(--accent);
-    color: var(--text-primary);
+    color: var(--text-on-accent);
   }
 
   .btn-primary:focus-visible {
@@ -177,9 +160,23 @@ body {
     --tw-ring-color: var(--accent);
   }
 
+  .btn-danger {
+    @apply btn px-5 py-2.5 text-sm font-semibold;
+    background: var(--ruby);
+    color: var(--text-on-accent);
+  }
+
+  .btn-danger:focus-visible {
+    --tw-ring-color: var(--ruby);
+  }
+
+  .btn-danger:hover {
+    background: #991b1b;
+  }
+
   .card {
     @apply rounded-2xl border p-5;
-    background: var(--surface);
+    background: var(--surface-raised);
     border-color: var(--border);
   }
 
@@ -195,8 +192,10 @@ body {
   }
 
   .input:focus {
-    @apply outline-none ring-2 ring-accent/50;
+    @apply outline-none ring-2;
     border-color: var(--accent);
+    --tw-ring-color: var(--accent);
+    --tw-ring-opacity: 0.5;
   }
 
   .input::placeholder {
@@ -213,7 +212,7 @@ body {
 
   select {
     @apply appearance-none pr-10;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2378716c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238b7355' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.75rem center;
   }
@@ -222,11 +221,31 @@ body {
   select:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 2px var(--accent-muted);
+    --tw-ring-color: var(--accent);
+    --tw-ring-opacity: 0.5;
   }
 
   select option {
     background: var(--surface);
     color: var(--text-primary);
+  }
+
+  /* Sun Temple specific utilities */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--jewel-700) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .suntemple-glow {
+    box-shadow: 
+      0 0 40px -10px var(--accent),
+      0 0 80px -20px var(--accent-hover);
   }
 }
 

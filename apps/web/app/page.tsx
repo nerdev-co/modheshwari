@@ -67,14 +67,17 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen">
+      <div className="absolute inset-0 kund-bg opacity-30 pointer-events-none" />
+
       <main className="relative z-10 flex flex-col items-center px-4 sm:px-6 pt-24 pb-16">
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={MOTION_ENTER}
-          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-muted border border-accent/20 mb-8"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-muted border border-accent/20 mb-8"
         >
-          <Sparkles className="w-3.5 h-3.5 text-accent" />
+          <span className="text-accent font-display text-sm">સમાજ</span>
+          <span className="w-1 h-1 rounded-full bg-accent" />
           <span className="text-xs text-accent font-medium">
             {t("landing.badge")}
           </span>
@@ -128,7 +131,7 @@ export default function Home() {
         >
           {stats.map((stat, idx) => (
             <div key={idx} className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-text-primary">
+              <div className="text-2xl sm:text-3xl font-display font-bold text-accent">
                 {stat.value}
               </div>
               <div className="mt-1 text-xs sm:text-sm text-text-muted">
@@ -167,7 +170,7 @@ export default function Home() {
                   <div className={`inline-flex p-2.5 rounded-xl ${feature.color} mb-3`}>
                     <feature.icon className="w-5 h-5" />
                   </div>
-                  <h3 className="text-sm font-semibold text-text-primary mb-1.5">
+                  <h3 className="text-sm font-semibold text-text-primary mb-1.5 font-display">
                     {t(feature.titleKey)}
                   </h3>
                   <p className="text-text-secondary text-sm leading-relaxed">
@@ -185,10 +188,10 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={MOTION_ENTER}
-            className="card-elevated p-8 text-center"
+            className="card-elevated p-8 text-center suryakund-pattern"
           >
-            <div className="w-12 h-12 rounded-full bg-accent-muted mx-auto mb-4 flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-accent" />
+            <div className="w-12 h-12 rounded-full bg-accent mx-auto mb-4 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-on-accent" />
             </div>
             <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary mb-3">
               {t("landing.ctaTitle")}
@@ -204,6 +207,7 @@ export default function Home() {
         </section>
 
         <footer className="mt-20 text-center text-text-muted text-xs pb-8">
+          <p className="font-display text-sm text-accent mb-2">શ્રી સ્કાલપંચ ગુજરાતી મોઢ વાણિક સમાજ</p>
           <p>{t("landing.footer")}</p>
         </footer>
       </main>

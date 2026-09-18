@@ -26,7 +26,7 @@ export function GlowCard({
         bg-surface-muted/60 backdrop-blur-sm
         before:content-[''] before:absolute before:inset-0 before:opacity-0
         hover:before:opacity-100 before:transition-opacity before:duration-300
-        before:[background:radial-gradient(250px_circle_at_var(--glow-x)_var(--glow-y),rgba(201,162,39,0.12),transparent_70%)]
+        before:[background:radial-gradient(250px_circle_at_var(--glow-x)_var(--glow-y),rgba(201,124,28,0.15),transparent_70%)]
         hover:border-accent/40 hover:shadow-jewel transition-all duration-300
         ${className}`}
     >

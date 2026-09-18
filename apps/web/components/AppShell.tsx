@@ -1,0 +1,332 @@
+"use client";
+
+import { ReactNode, useState, useRef } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Home,
+  Phone,
+  Users,
+  Calendar,
+  MessageCircle,
+  Stethoscope,
+  MapPin,
+  Bell,
+  Package,
+  Search,
+  Menu,
+  X,
+  LogOut,
+  User,
+  Settings,
+  ChevronRight,
+} from "lucide-react";
+
+import { MOTION_ENTER } from "@repo/ui/motion";
+import { SunMark } from "./SunMark";
+import { useFocusTrap } from "@repo/ui/useFocusTrap";
+
+import { useUser } from "../lib/UserContext";
+import useNotifications from "../hooks/useNotifications";
+import { LocaleToggle } from "./LocaleToggle";
+import { useLocale } from "../lib/LocaleContext";
+
+interface NavItem {
+  path: string;
+  i18nKey: string;
+  icon: React.ComponentType<{ className?: string }>;
+  roles?: string[];
+}
+
+const NAV_ITEMS: NavItem[] = [
+  { path: "/", i18nKey: "nav.home", icon: Home },
+  { path: "/contact", i18nKey: "nav.contact", icon: Phone },
+  { path: "/search", i18nKey: "nav.search", icon: Search },
+  { path: "/family", i18nKey: "nav.family", icon: Users, roles: ["family_head", "gotra_head", "member"] },
+  { path: "/medical", i18nKey: "nav.medical", icon: Stethoscope },
+  { path: "/resources", i18nKey: "nav.resources", icon: Package },
+  { path: "/nearby", i18nKey: "nav.nearby", icon: MapPin },
+  { path: "/events/calendar", i18nKey: "nav.calendar", icon: Calendar },
+  { path: "/chat", i18nKey: "nav.chat", icon: MessageCircle },
+  { path: "/notifications", i18nKey: "nav.notifications", icon: Bell },
+];
+
+export function AppShell({ children }: { children: ReactNode }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, loading: userLoading, logout } = useUser();
+  const { unreadCount } = useNotifications();
+  const { t } = useLocale();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const profileButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileSidebarRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(sidebarRef, mobileSidebarOpen);
+  useFocusTrap(profileButtonRef, profileMenuOpen);
+
+  const isActive = (path: string) => {
+    if (path === "/") return location.pathname === "/";
+    return location.pathname.startsWith(path);
+  };
+
+  const filteredNav = NAV_ITEMS.filter((item) => {
+    if (!item.roles) return true;
+    return user && item.roles.includes(user.role);
+  });
+
+  const handleLogout = () => {
+    logout();
+    navigate("/signin");
+  };
+
+  if (userLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-accent border-t-transparent" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex h-screen bg-surface">
+      {/* Desktop Sidebar */}
+      <aside
+        ref={sidebarRef}
+        className="hidden lg:flex lg:flex-col fixed lg:static inset-y-0 left-0 z-40 w-64 bg-surface-raised border-r border-border transition-transform duration-300 ease-out"
+      >
+        <div className="flex h-16 items-center justify-between px-4 border-b border-border">
+          <Link to="/" className="flex items-center gap-2" aria-label="Modheshwari Home">
+            <SunMark size={28} className="text-accent" />
+            <span className="font-display font-semibold text-xl text-text-primary">Modheshwari</span>
+          </Link>
+        </div>
+
+        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1" aria-label="Main navigation">
+          {filteredNav.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-fast ${
+                  active
+                    ? "bg-accent-muted text-accent"
+                    : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
+                }`}
+                aria-current={active ? "page" : undefined}
+              >
+                <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+                <span>{t(item.i18nKey)}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="p-3 border-t border-border">
+          <Link
+            to="/me"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-all duration-fast"
+          >
+            <User className="w-5 h-5" aria-hidden="true" />
+            <span>{t("nav.profile")}</span>
+          </Link>
+        </div>
+      </aside>
+
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {mobileSidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={MOTION_ENTER}
+            className="fixed inset-0 z-50 bg-black/50 lg:hidden"
+            onClick={() => setMobileSidebarOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {mobileSidebarOpen && (
+          <motion.aside
+            ref={mobileSidebarRef}
+            initial={{ x: -300 }}
+            animate={{ x: 0 }}
+            exit={{ x: -300 }}
+            transition={MOTION_ENTER}
+            className="fixed inset-y-0 left-0 z-50 w-72 bg-surface-raised border-r border-border lg:hidden"
+            aria-label="Mobile navigation"
+          >
+            <div className="flex h-16 items-center justify-between px-4 border-b border-border">
+              <Link to="/" className="flex items-center gap-2" aria-label="Modheshwari Home">
+                <SunMark size={28} className="text-accent" />
+                <span className="font-display font-semibold text-xl text-text-primary">Modheshwari</span>
+              </Link>
+              <button
+                onClick={() => setMobileSidebarOpen(false)}
+                className="p-2 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                aria-label="Close menu"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1" aria-label="Mobile navigation">
+              {filteredNav.map((item) => {
+                const Icon = item.icon;
+                const active = isActive(item.path);
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setMobileSidebarOpen(false)}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-fast ${
+                      active
+                        ? "bg-accent-muted text-accent"
+                        : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
+                    }`}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+                    <span>{t(item.i18nKey)}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+
+            <div className="p-3 border-t border-border">
+              <Link
+                to="/me"
+                onClick={() => setMobileSidebarOpen(false)}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-all duration-fast"
+              >
+                <User className="w-5 h-5" aria-hidden="true" />
+                <span>{t("nav.profile")}</span>
+              </Link>
+            </div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
+
+      {/* Main Content */}
+      <div className="flex flex-1 flex-col lg:pl-64">
+        {/* Top Bar */}
+        <header className="sticky top-0 z-30 h-16 bg-surface/80 backdrop-blur-xl border-b border-border">
+          <div className="flex h-full items-center justify-between px-4 lg:px-6">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setMobileSidebarOpen(true)}
+                className="lg:hidden p-2 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                aria-label="Open menu"
+              >
+                <Menu className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <LocaleToggle />
+
+              {/* Notifications */}
+              <div className="relative">
+                <Link
+                  to="/notifications"
+                  className="relative p-2 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                  aria-label={t("nav.notifications")}
+                >
+                  <Bell className="w-5 h-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-ruby-500 text-[10px] font-semibold text-white">
+                      {unreadCount > 99 ? "99+" : unreadCount}
+                    </span>
+                  )}
+                </Link>
+              </div>
+
+              {/* Profile Menu */}
+              <div className="relative">
+                <button
+                  ref={profileButtonRef}
+                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                  className="flex items-center gap-2 p-1.5 rounded-xl text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                  aria-expanded={profileMenuOpen}
+                  aria-haspopup="true"
+                  aria-label={t("nav.account")}
+                >
+                  <div className="h-8 w-8 rounded-full bg-accent-muted flex items-center justify-center">
+                    <span className="text-sm font-semibold text-accent">
+                      {user?.name?.charAt(0).toUpperCase() || "U"}
+                    </span>
+                  </div>
+                  <span className="hidden sm:block text-sm font-medium text-text-primary">
+                    {user?.name || "User"}
+                  </span>
+                  <ChevronRight className="w-4 h-4 text-text-muted" />
+                </button>
+
+                <AnimatePresence>
+                  {profileMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={MOTION_ENTER}
+                      className="absolute right-0 mt-2 w-56 origin-top-right rounded-xl bg-surface-raised border border-border shadow-medium p-2"
+                      role="menu"
+                    >
+                      <div className="px-3 py-2 border-b border-border">
+                        <p className="text-sm font-medium text-text-primary">{user?.name}</p>
+                        <p className="text-xs text-text-muted">{user?.email}</p>
+                        <span className="inline-flex mt-1 px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-accent-muted text-accent">
+                          {t(`role.${user?.role?.toLowerCase() || "member"}`)}
+                        </span>
+                      </div>
+                      <Link
+                        to="/me"
+                        onClick={() => setProfileMenuOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                        role="menuitem"
+                      >
+                        <User className="w-4 h-4" />
+                        {t("nav.profile")}
+                      </Link>
+                      <Link
+                        to="/me/edit"
+                        onClick={() => setProfileMenuOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                        role="menuitem"
+                      >
+                        <Settings className="w-4 h-4" />
+                        {t("nav.settings")}
+                      </Link>
+                      <hr className="my-2 border-border" />
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm text-ruby-600 hover:bg-ruby-50 transition-colors"
+                        role="menuitem"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        {t("nav.logout")}
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+}
+
