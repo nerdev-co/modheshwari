@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+
 import { Providers } from "../app/providers";
 import { LocaleProvider } from "../lib/LocaleContext";
 import { AppShell } from "../components/AppShell";

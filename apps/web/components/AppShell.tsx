@@ -30,10 +30,8 @@ import {
 } from "lucide-react";
 import { MOTION_ENTER, MOTION_EXIT } from "@repo/ui/motion";
 import { useFocusTrap } from "@repo/ui/useFocusTrap";
-
 import { SunMark } from "./SunMark";
 import { LocaleToggle } from "./LocaleToggle";
-
 import { useUser } from "../lib/UserContext";
 import useNotifications from "../hooks/useNotifications";
 import { useLocale } from "../lib/LocaleContext";
@@ -52,9 +50,9 @@ interface NavItem {
 
 const NAV_SECTIONS: NavSection[] = [
   {
-    label: "nav.sections.dashboard",
+    label: "nav.sections.main",
     items: [
-      { path: "/", i18nKey: "nav.dashboard", icon: LayoutDashboard },
+      { path: "/", i18nKey: "nav.home", icon: LayoutDashboard },
     ],
   },
   {
