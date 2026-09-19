@@ -1,14 +1,11 @@
 "use client";
+
 import { ReactNode, useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-  Users,
   Calendar,
   MessageCircle,
-  HeartPulse,
-  Map,
-  Bell,
   Package,
   Search,
   Menu,
@@ -19,30 +16,21 @@ import {
   ChevronRight,
   ChevronLeft,
   LayoutDashboard,
-  HelpCircle,
   UserCheck,
   Users2,
   GitBranch,
   ClipboardList,
   CheckCheck,
-  Truck,
   Compass,
   Inbox,
   Activity,
-  Home,
-  BookOpen,
-  Archive,
-  Shield,
-  Mail,
-  Layers,
+  Bell,
 } from "lucide-react";
-
-import { MOTION_ENTER, MOTION_SIDEBAR, SLIDE_IN_LEFT } from "@repo/ui/motion";
+import { MOTION_ENTER, MOTION_SIDEBAR, MOTION_DRAWER } from "@repo/ui/motion";
 import { useFocusTrap } from "@repo/ui/useFocusTrap";
 
 import { SunMark } from "./SunMark";
 import { LocaleToggle } from "./LocaleToggle";
-
 import { useUser } from "../lib/UserContext";
 import useNotifications from "../hooks/useNotifications";
 import { useLocale } from "../lib/LocaleContext";
@@ -117,6 +105,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const profileButtonRef = useRef<HTMLButtonElement>(null);
   const mobileSidebarRef = useRef<HTMLDivElement>(null);
@@ -207,17 +196,19 @@ export function AppShell({ children }: { children: ReactNode }) {
               {section.items.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.path);
+                const isHovered = hoveredItem === item.path;
                 return (
                   <Link
                     key={item.path}
                     to={item.path}
+                    onMouseEnter={() => !sidebarOpen && setHoveredItem(item.path)}
+                    onMouseLeave={() => !sidebarOpen && setHoveredItem(null)}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-fast relative ${
                       active
                         ? "bg-saffron-soft text-saffron"
                         : "text-ink-secondary hover:bg-surface-muted hover:text-ink"
                     }`}
                     aria-current={active ? "page" : undefined}
-                    title={sidebarOpen ? undefined : t(item.i18nKey)}
                   >
                     <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
                     {sidebarOpen && (
@@ -230,13 +221,33 @@ export function AppShell({ children }: { children: ReactNode }) {
                         {t(item.i18nKey)}
                       </motion.span>
                     )}
-                    {active && sidebarOpen && (
+                    {!sidebarOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: isHovered ? 1 : 0, scale: isHovered ? 1 : 0.9 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 150, ease: "easeOut" }}
+                        className="absolute left-full ml-3 px-2 py-1 rounded-lg bg-ink text-ink-inverse text-xs font-medium whitespace-nowrap shadow-lg z-50"
+                      >
+                        {t(item.i18nKey)}
+                      </motion.div>
+                    )}
+                    {active && (
                       <motion.div
                         initial={{ height: 0 }}
                         animate={{ height: "calc(100% - 8px)" }}
                         exit={{ height: 0 }}
                         transition={MOTION_SIDEBAR}
                         className="absolute left-0 top-4 bottom-4 w-1 bg-saffron rounded-r-md"
+                      />
+                    )}
+                    {!sidebarOpen && active && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -4 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -4 }}
+                        transition={MOTION_SIDEBAR}
+                        className="absolute left-full ml-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-saffron"
                       />
                     )}
                   </Link>
@@ -249,11 +260,23 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className={`p-3 border-t border-border transition-opacity duration-200 ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
           <Link
             to="/me"
+            onMouseEnter={() => !sidebarOpen && setHoveredItem("profile")}
+            onMouseLeave={() => !sidebarOpen && setHoveredItem(null)}
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-ink-secondary hover:bg-surface-muted hover:text-ink transition-all duration-fast"
-            title={sidebarOpen ? undefined : t("nav.profile")}
           >
             <User className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
             {sidebarOpen && <span>{t("nav.profile")}</span>}
+            {!sidebarOpen && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: hoveredItem === "profile" ? 1 : 0, scale: hoveredItem === "profile" ? 1 : 0.9 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 150, ease: "easeOut" }}
+                className="absolute left-full ml-3 px-2 py-1 rounded-lg bg-ink text-ink-inverse text-xs font-medium whitespace-nowrap shadow-lg z-50"
+              >
+                {t("nav.profile")}
+              </motion.div>
+            )}
           </Link>
         </div>
       </aside>

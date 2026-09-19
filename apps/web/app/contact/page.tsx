@@ -2,11 +2,11 @@
 
 import React, { useCallback, useMemo, useState } from "react";
 import { Bug, HelpCircle, Lightbulb, MessageSquare, Send } from "lucide-react";
-
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
 import { Input } from "@repo/ui/input";
+
 import { useLocale } from "../../lib/LocaleContext";
 import { API_BASE } from "../../lib/config";
 import apiFetch from "../../lib/api";

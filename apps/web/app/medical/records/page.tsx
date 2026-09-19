@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useMemo, useState, useId } from "react";
 import { useNavigate } from "react-router-dom";
 import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
-import { Card } from "@repo/ui/card";
 import { Input } from "@repo/ui/input";
 import { LoadingState } from "@repo/ui/loadingState";
 

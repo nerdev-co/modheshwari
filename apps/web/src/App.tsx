@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import { Providers } from "../app/providers";
 import { LocaleProvider } from "../lib/LocaleContext";
 import { AppShell } from "../components/AppShell";
-
 import Home from "../app/page";
 import SignIn from "../app/signin/page";
 import SignUp from "../app/signup/page";

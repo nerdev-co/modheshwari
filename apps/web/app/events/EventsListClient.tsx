@@ -14,7 +14,6 @@ import {
   CheckCircle,
   XCircle,
 } from "lucide-react";
-import { motion } from "framer-motion";
 import { LoaderOne } from "@repo/ui/loading";
 import { EmptyState } from "@repo/ui/emptyState";
 import { ErrorState } from "@repo/ui/errorState";
