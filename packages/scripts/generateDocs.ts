@@ -11,6 +11,7 @@ const ROOT = process.cwd();
 
 const project = new Project({
   tsConfigFilePath: path.join(ROOT, "tsconfig.json"),
+  skipAddingFilesFromTsConfig: true,
 });
 
 // Include backend + utils + shared files
@@ -19,8 +20,11 @@ project.addSourceFilesAtPaths([
   "packages/utils/**/*.ts",
   "packages/db/*.ts",
   "packages/ui/**/*.tsx",
-  "apps/web/**/**/*.tsx",
-  "apps/web/**/**/*.ts",
+  "apps/web/app/**/*.tsx",
+  "apps/web/app/**/*.ts",
+  "apps/web/components/**/*.tsx",
+  "apps/web/components/**/*.ts",
+  "apps/web/lib/**/*.ts",
   "apps/ws/**/*.ts",
 ]);
 

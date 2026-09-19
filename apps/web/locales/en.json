@@ -26,12 +26,12 @@
         "account": "Account",
         "view": "View",
         "sections": {
-          "overview": "Overview",
-          "community": "Community",
-          "activity": "Activity",
-          "operations": "Operations",
-          "discover": "Discover",
-          "personal": "Personal"
+            "overview": "Overview",
+            "community": "Community",
+            "activity": "Activity",
+            "operations": "Operations",
+            "discover": "Discover",
+            "personal": "Personal"
         }
     },
     "landing": {
@@ -88,7 +88,7 @@
         "viewAllActivity": "View all activity",
         "upcomingEvents": "Upcoming events",
         "pendingApprovals": "Pending approvals",
-        "recentActivity": "Recent activity",
+        "recentActivity": "Recent Activity",
         "quickActions": "Quick actions",
         "createEvent": "Create event",
         "members": "Members",
@@ -96,8 +96,6 @@
         "gotras": "Gotras",
         "upcoming": "Upcoming",
         "yourFamily": "Your Family",
-        "upcomingEvents": "Upcoming events",
-        "recentActivity": "Recent Activity",
         "ctaTitle": "Explore your community",
         "ctaDescription": "Discover families, connect with members, and participate in events.",
         "exploreFamilies": "Explore Families",
@@ -112,12 +110,8 @@
             "community": "Community",
             "family": "Family"
         },
-        "members": "Members",
         "upcomingEventsLabel": "Upcoming Events",
-        "yourFamily": "Your Family",
         "viewFamily": "View Family",
-        "viewAll": "View all",
-        "createEvent": "Create event",
         "view": "View"
     },
     "profile": {
@@ -130,7 +124,7 @@
         "noFamilies": "No families linked.",
         "activity": "Activity & Notifications",
         "recentLabel": "Recent",
-        "noActivity": "No recent activity.",
+        "noActivity": "No recent activity",
         "editProfile": "Edit profile",
         "signOut": "Sign out",
         "profession": "Profession",
@@ -141,8 +135,8 @@
         "about": "About",
         "family": "Family",
         "recentActivity": "Recent Activity",
-        "connectFamily": "Connect family",
-        "memberSince": "Member since",
+        "connectFamily": "Connect Family",
+        "memberSince": "Member since {{date}}",
         "unnamedMember": "Member",
         "unknownRole": "Unknown Role",
         "noFamilyTitle": "No family connected yet",
@@ -158,14 +152,31 @@
         "familyDescription": "Your family connections and relationships",
         "noFamilyConnected": "No family connected yet",
         "connectFamilyDesc": "Connect your profile to your family to see family members, relationships, events and community activity.",
-        "connectFamily": "Connect Family",
         "addDetails": "Add Details",
         "noPersonalDetails": "No personal details added yet.",
         "contact": "Contact",
         "email": "Email",
         "activityDescription": "Your recent community activity",
-        "noActivity": "No recent activity",
-        "activityWillAppear": "Activity will appear here when you participate in community events, requests, or announcements."
+        "activityWillAppear": "Activity will appear here when you participate in community events, requests, or announcements.",
+        "communitySubtitle": "Member of the Modheshwari community",
+        "joinedPrefix": "Joined",
+        "aboutSubtitle": "A few things about you",
+        "personalLabel": "Personal",
+        "contactLabel": "Contact",
+        "familyConnections": "Your family connections",
+        "noFamilyConnected": "You haven't connected a family yet.",
+        "connectFamilyDesc": "Connect your family to discover relatives, relationships and community activity.",
+        "communityParticipation": "Your community participation",
+        "noActivityYet": "No activity yet",
+        "activityDescription": "Your events, requests, announcements and community participation will appear here.",
+        "memberOfCommunity": "Member of the Modheshwari community",
+        "notSet": "Not set",
+        "personal": "Personal",
+        "contact": "Contact",
+        "aboutDesc": "A few things about you",
+        "noPersonalDetails": "No personal details added yet.",
+        "noContactDetails": "No contact details added yet.",
+        "familyDesc": "Your family connections and relationships"
     },
     "medical": {
         "title": "Medical Dashboard",
@@ -187,6 +198,9 @@
         "name": "Name",
         "email": "Email",
         "notes": "Notes",
+        "loadFailed": "Failed to load medical records.",
+        "loadError": "Could not load medical records.",
+        "createError": "Could not create record.",
         "records": {
             "title": "Medical Records",
             "bloodType": "Blood Type",
@@ -197,18 +211,11 @@
             "yourRecords": "Your Records",
             "noRecordsYet": "No records yet.",
             "loading": "Loading...",
-            "allergies": "Allergies",
-            "notes": "Notes",
-            "blood": "Blood",
-            "loadFailed": "Failed to load records",
-            "loadError": "Could not load medical records.",
-            "createError": "Could not create record.",
             "bloodTypePlaceholder": "e.g. O+",
             "allergiesPlaceholder": "e.g. peanuts, dust",
             "conditionsPlaceholder": "e.g. asthma",
             "medicationsPlaceholder": "e.g. cetirizine",
-            "notesPlaceholder": "Anything important...",
-            "toastSearchFailed": "Failed to search medical records"
+            "notesPlaceholder": "Anything important..."
         }
     },
     "family": {
@@ -305,6 +312,17 @@
         "loadingSpec": "Loading AsyncAPI spec..."
     },
     "signup": {
+        "landing": {
+            "title": "Choose your signup path",
+            "subtitle": "The app has two signup flows. Pick the one that matches your role.",
+            "familyHead": "Family Head",
+            "familyMember": "Family Member",
+            "familyHeadDesc": "Create a new family account and become the primary manager.",
+            "familyMemberDesc": "Request to join an existing family with approval.",
+            "signup": "Signup",
+            "alreadyApproved": "Already approved?",
+            "signIn": "Sign in"
+        },
         "fh": {
             "heading": "Become a Family Head",
             "subtitle": "Create your family account and start managing",
@@ -351,17 +369,6 @@
             "requestSentSubtext": "You'll be able to sign in once approved.",
             "signupFailed": "Signup failed",
             "somethingWentWrong": "Something went wrong"
-        },
-        "landing": {
-            "title": "Choose your signup path",
-            "subtitle": "The app has two signup flows. Pick the one that matches your role.",
-            "familyHead": "Family Head",
-            "familyMember": "Family Member",
-            "familyHeadDesc": "Create a new family account and become the primary manager.",
-            "familyMemberDesc": "Request to join an existing family with approval.",
-            "signup": "Signup",
-            "alreadyApproved": "Already approved?",
-            "signIn": "Sign in"
         }
     },
     "contact": {
@@ -560,7 +567,15 @@
         "filterByText": "Multi-field search",
         "tip": "Tip: Use specific keywords for better results. Contact support if you can't find someone.",
         "placeholder": "Search by name, email, family, occupation or blood group...",
-        "quickSearch": "Quick search:"
+        "quickSearch": "Quick search:",
+        "noResults": "No results found for",
+        "tryDifferent": "Try searching with a different keyword",
+        "resultsFound": "{{count}} result found",
+        "resultsFound_other": "{{count}} results found",
+        "toggleFilters": "Toggle filters",
+        "unknown": "Unknown",
+        "noEmail": "No email",
+        "familyLabel": "Family"
     },
     "notifications": {
         "title": "Notifications",
@@ -621,19 +636,6 @@
         "authFailed": "Sign in unsuccessful. Check your credentials and role.",
         "networkError": "Network error"
     },
-    "signup": {
-        "landing": {
-            "title": "Choose your signup path",
-            "subtitle": "The app has two signup flows. Pick the one that matches your role.",
-            "familyHead": "Family Head",
-            "familyMember": "Family Member",
-            "familyHeadDesc": "Create a new family account and become the primary manager.",
-            "familyMemberDesc": "Request to join an existing family with approval.",
-            "signup": "Signup",
-            "alreadyApproved": "Already approved?",
-            "signIn": "Sign in"
-        }
-    },
     "notFound": {
         "title": "404",
         "description": "The page you're looking for doesn't exist or has been moved.",
@@ -669,74 +671,6 @@
             "viewType": "Use the View Type selector to switch between different tree views",
             "depth": "Adjust Depth to show more or fewer generations",
             "addRelation": "Add relationships using the Add Relation button"
-        }
-    },
-    "search": {
-        "title": "Search Members",
-        "subtitle": "Find family members, check profiles, and connect instantly",
-        "advancedFilters": "Advanced Filters",
-        "byGotra": "By Gotra",
-        "byProfession": "By Profession",
-        "byLocation": "By Location",
-        "byBloodGroup": "By Blood Group",
-        "byRole": "By Role",
-        "textSearch": "Text Search",
-        "filterByGotra": "Filter by gotra/clan",
-        "filterByProfession": "Find by occupation",
-        "filterByLocation": "Search by area/city",
-        "filterByBloodGroup": "Filter by blood type",
-        "filterByRole": "Find by member role",
-        "filterByText": "Multi-field search",
-        "tip": "Tip: Use specific keywords for better results. Contact support if you can't find someone.",
-        "placeholder": "Search by name, email, family, occupation or blood group...",
-        "quickSearch": "Quick search:",
-        "noResults": "No results found for",
-        "tryDifferent": "Try searching with a different keyword",
-        "resultsFound": "{{count}} result found",
-        "resultsFound_other": "{{count}} results found",
-        "toggleFilters": "Toggle filters",
-        "unknown": "Unknown",
-        "noEmail": "No email",
-        "familyLabel": "Family"
-    },
-    "medical": {
-        "title": "Medical Dashboard",
-        "welcome": "Welcome back, {{name}}",
-        "myInfo": "My Medical Information",
-        "bloodGroup": "Blood Group",
-        "allergies": "Allergies",
-        "medicalNotes": "Medical Notes",
-        "noneRecorded": "None recorded",
-        "updateInfo": "Update Medical Info →",
-        "searchTitle": "Search users by blood group",
-        "searchDesc": "Enter blood group (e.g., O+, AB-, B+)",
-        "searchPlaceholder": "e.g. O+, AB-, B+",
-        "search": "Search",
-        "searching": "Searching...",
-        "results": "Search Results",
-        "noResults": "Enter a blood group to search",
-        "noResultsFound": "No users found with this blood group",
-        "name": "Name",
-        "email": "Email",
-        "notes": "Notes",
-        "loadFailed": "Failed to load medical records.",
-        "loadError": "Could not load medical records.",
-        "createError": "Could not create record.",
-        "records": {
-            "title": "Medical Records",
-            "bloodType": "Blood Type",
-            "conditions": "Conditions",
-            "medications": "Medications",
-            "create": "Create",
-            "creating": "Creating...",
-            "yourRecords": "Your Records",
-            "noRecordsYet": "No records yet.",
-            "loading": "Loading...",
-            "bloodTypePlaceholder": "e.g. O+",
-            "allergiesPlaceholder": "e.g. peanuts, dust",
-            "conditionsPlaceholder": "e.g. asthma",
-            "medicationsPlaceholder": "e.g. cetirizine",
-            "notesPlaceholder": "Anything important..."
         }
     }
 }

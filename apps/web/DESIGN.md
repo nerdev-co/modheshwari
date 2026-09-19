@@ -1,111 +1,422 @@
-# Design System - Sun Temple Theme
+# Design System: Modheshwari
 
-## Color Token Architecture
+**Visual Direction**: Refined Indian Editorial / Community Archive
+**Not**: Generic SaaS, "Indian-themed SaaS", purple gradients, glowing buttons, oversized rounded cards
+**Is**: Modern digital institution + editorial typography + subtle Indian visual cues + dense useful information
 
-The app uses CSS custom properties for theming with a **light-mode-only** Sun Temple color palette. No dark mode, no `dark:` Tailwind variants.
+---
 
-### How it works
+## Token Budget (Constraint)
 
-1. `:root` defines Sun Temple light mode values
-2. Tailwind config maps CSS variables to utility classes
-3. Components use semantic tokens (`bg-surface`, `text-primary`) never raw colors
+| Constraint | Value |
+|------------|-------|
+| Accent color | 1 (Saffron `#c97c1c`) |
+| Gray family | 1 (Jewel warm brown scale) |
+| Radius scale | 3 levels (sm, md, lg) + pill |
+| Icon family | 1 (Lucide React) |
+| Stroke weight | 1px borders |
+| Motion curve | 1 (Spring `cubic-bezier(0.16, 1, 0.3, 1)`) |
+| Shadow | Soft only, no elevation stacking |
 
-### Sun Temple Token Mapping
+---
 
-| Token | Value | Purpose |
-|-------|-------|---------|
-| `--surface` | `#fdfaf5` | Page background (warm cream) |
-| `--surface-muted` | `#f5f0e6` | Subtle backgrounds |
-| `--surface-raised` | `#ffffff` | Elevated elements |
-| `--text-primary` | `#1a0f08` | Headlines, body text (deep brown) |
-| `--text-secondary` | `#3d2a21` | Descriptions, labels |
-| `--text-muted` | `#8b7355` | Placeholders, hints |
-| `--text-on-accent` | `#ffffff` | Text on accent backgrounds |
-| `--border` | `#e8d5b7` | Borders, dividers |
+## Typography Scale
+
+| Token | Size | Line Height | Font | Weight | Use |
+|-------|------|-------------|------|--------|-----|
+| `caption` | 12px | 16px | DM Sans | 500 | Labels, metadata, timestamps |
+| `body` | 14px | 20px | DM Sans | 400 | Base body text |
+| `body-lg` | 16px | 24px | DM Sans | 400 | Large body, form labels |
+| `heading-sm` | 18px | 24px | Fraunces | 600 | Small section headings |
+| `heading` | 20px | 28px | Fraunces | 600 | Section headings |
+| `heading-md` | 24px | 32px | Fraunces | 600 | Page headings |
+| `heading-lg` | 30px | 36px | Fraunces | 600 | Large headings |
+| `display` | 36px | 44px | Fraunces | 600/700 | Hero, landing |
+
+**Type Pairing**: Fraunces (display) + DM Sans (body) + IBM Plex Mono (numbers/mono)
+
+**Utilities**:
+```css
+.text-display        { font-family: var(--font-display); font-weight: 600; }
+.text-display-bold   { font-family: var(--font-display); font-weight: 700; }
+.text-body           { font-family: var(--font-body); }
+.text-numbers        { font-family: var(--font-display); font-variant-numeric: tabular-nums; }
+.text-balance        { text-wrap: balance; }
+```
+
+---
+
+## Color Palette (Light Mode Only)
+
+| Token | Value | Use |
+|-------|-------|-----|
+| `--canvas` | `#fdfaf5` | Page background |
+| `--surface` | `#faf7f0` | Card surface |
+| `--surface-raised` | `#ffffff` | Elevated surfaces (modals, dropdowns) |
+| `--surface-muted` | `#f3efe5` | Subtle backgrounds, hover states |
+| `--ink` | `#1a0f08` | Primary text |
+| `--ink-secondary` | `#3d2a21` | Secondary text |
+| `--ink-muted` | `#8b7355` | Muted text, placeholders |
+| `--ink-on-accent` | `#ffffff` | Text on accent |
+| `--border` | `#e8d5b7` | Default borders |
 | `--border-subtle` | `#f0e4d0` | Subtle separators |
-| `--accent` | `#c97c1c` | Primary actions (Sun Temple gold) |
-| `--accent-hover` | `#a66418` | Accent hover state |
-| `--accent-muted` | `#fdf0d5` | Accent backgrounds |
-| `--emerald` | `#1b5e20` | Success states (deep green) |
+| `--border-strong` | `#d4b896` | Strong borders, focus |
+| `--accent` | `#c97c1c` | Primary actions, links, focus |
+| `--accent-hover` | `#a66418` | Hover state |
+| `--accent-muted` | `#fdf0d5` | Accent backgrounds, badges |
+| `--accent-soft` | `#fef7eb` | Softer accent backgrounds |
+| `--emerald` | `#1b5e20` | Success |
 | `--emerald-muted` | `#e8f5e9` | Success backgrounds |
-| `--saffron` | `#c97c1c` | Warning states |
+| `--emerald-soft` | `#f1f8e9` | Soft success |
+| `--saffron` | `#c97c1c` | Warning (same as accent) |
 | `--saffron-muted` | `#fdf0d5` | Warning backgrounds |
-| `--ruby` | `#b71c1c` | Destructive actions (deep red) |
+| `--saffron-soft` | `#fef7eb` | Soft warning |
+| `--ruby` | `#b71c1c` | Destructive, errors |
 | `--ruby-muted` | `#fef2f2` | Error backgrounds |
+| `--ruby-soft` | `#fefafa` | Soft error |
+| `--focus-ring` | `#c97c1c` | Focus rings (saffron) |
 
-### Jewel Tone Scale
+---
+
+## Radius Scale
+
+| Token | Value | Use |
+|-------|-------|-----|
+| `--radius-pill` | `9999px` | Pills, badges, avatar |
+| `--radius-sm` | `0.5rem` (8px) | Inputs, small controls, chips |
+| `--radius-md` | `0.75rem` (12px) | Cards, panels, buttons |
+| `--radius-lg` | `1rem` (16px) | Modals, large panels, sheets |
+
+**CSS Classes**:
+```css
+.radius-pill { border-radius: 9999px; }
+.radius-sm   { border-radius: 0.5rem; }
+.radius-md   { border-radius: 0.75rem; }
+.radius-lg   { border-radius: 1rem; }
+```
+
+---
+
+## Shadow
+
+**Soft only** (no elevation stacking):
+```css
+--shadow-soft: 0 1px 2px 0 rgb(0 0 0 / 0.05), 0 4px 6px -1px rgb(0 0 0 / 0.04);
+```
+
+---
+
+## Motion
 
 | Token | Value |
 |-------|-------|
-| `--jewel-50` | `#fdfaf5` |
-| `--jewel-100` | `#f5f0e6` |
-| `--jewel-200` | `#e8d5b7` |
-| `--jewel-300` | `#d4b896` |
-| `--jewel-400` | `#8b7355` |
-| `--jewel-500` | `#5c4033` |
-| `--jewel-600` | `#4a3228` |
-| `--jewel-700` | `#3d2a21` |
-| `--jewel-800` | `#2d1b0e` |
-| `--jewel-900` | `#1a0f08` |
-| `--jewel-950` | `#0d0704` |
-| `--jewel-gold` | `#c97c1c` |
-| `--jewel-gold-light` | `#d4a017` |
-| `--jewel-emerald` | `#1b5e20` |
-| `--jewel-saffron` | `#c97c1c` |
-| `--jewel-ruby` | `#b71c1c` |
+| Curve | `cubic-bezier(0.16, 1, 0.3, 1)` (Spring) |
+| Fast | 150ms |
+| Normal | 200ms |
+| Slow | 300ms |
+| Page Enter | 400ms |
 
-### Design Decisions
+**Reduced Motion**: Instant state changes (`0.01ms`)
 
-**Why light mode only:**
-The Sun Temple aesthetic is inherently warm, golden, and luminous. Dark mode would diminish the spiritual warmth and sacred geometry that defines the brand. The cream/gold palette works beautifully in all lighting conditions.
+---
 
-**Why --text-primary is #1a0f08 (not black):**
-Deep brown-black provides warmth and reduces eye strain compared to pure black. It harmonizes with the gold/cream palette.
-
-**Why --accent is #c97c1c:**
-This specific gold captures the Sun Temple's gilded sanctum - warm, luminous, not brassy. It maintains AA contrast on both cream and white.
-
-**Why --text-on-accent is white:**
-The accent gold is dark enough that white text passes WCAG AA (7.2:1). This is consistent and predictable.
-
-### Usage Rules
-
-1. **Never use raw hex/rgb in component code.** Always use CSS variables via Tailwind classes.
-2. **Never use `dark:` Tailwind variants.** Light mode only.
-3. **Never use `bg-white`, `bg-black`, `bg-gray-*`** in components. Use `bg-surface`, `bg-surface-muted`, etc.
-4. **Text on accent backgrounds** must use `text-on-accent` class.
-5. **Inline styles with colors** must use CSS variables, not Tailwind classes.
-
-### Common Patterns
+## Status Chips
 
 ```tsx
-// Card
-<Card className="p-6">
+// Active / Approved
+<span className="status-active">Active</span>
 
-// Button
-<Button variant="primary">Save</Button>
-<Button variant="secondary">Cancel</Button>
-<Button variant="danger">Delete</Button>
+// Pending
+<span className="status-pending">Pending</span>
 
-// Status chip
-<span className="bg-emerald-muted text-emerald">Active</span>
-<span className="bg-saffron-muted text-saffron">Pending</span>
-<span className="bg-ruby-muted text-ruby">Error</span>
+// Rejected / Destructive
+<span className="status-rejected">Rejected</span>
 
-// Sun Temple gradient text
-<h1 className="gradient-text">Modheshwari</h1>
-
-// Sun Temple glow card
-<GlowCard>Content</GlowCard>
+// Neutral / Inactive
+<span className="status-neutral">Inactive</span>
 ```
 
-### WCAG AA Contrast Ratios (Light Mode)
+---
 
-| Pair | Ratio |
-|------|-------|
-| Primary button (text on accent) | 7.2:1 |
-| Secondary button (text on surface) | 16:1 |
-| Ghost button (text-secondary on surface) | 5.9:1 |
-| Body text (text-primary on surface) | 16:1 |
-| Muted text (text-muted on surface) | 3.2:1 |
-| Accent text on surface | 4.5:1 |
+## Component Patterns
+
+### Buttons
+Use `@repo/ui/button` exclusively. No raw `className` for buttons.
+
+```tsx
+<Button variant="primary" size="md">Primary</Button>
+<Button variant="secondary" size="md">Secondary</Button>
+<Button variant="ghost" size="sm">Ghost</Button>
+<Button variant="danger" size="md">Danger</Button>
+```
+
+### Cards
+Use sparingly. Prefer editorial layouts (dividers, spacing, typography) over card grids.
+
+```tsx
+// Elevated - for modals, dropdowns, important surfaces
+<Card elevated padded>
+
+// Flat - for content sections (default)
+<Card padded>
+
+// Unpadded - for tables, dense content
+<Card padded={false}>
+```
+
+### Inputs
+Use `@repo/ui/input` or the `.input` CSS class from globals.css.
+
+### Focus Rings
+**Always saffron** (`--focus-ring`). Never blue.
+
+```css
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+```
+
+### Empty States
+**Actionable, not generic**. Always include a primary action.
+
+```tsx
+// Bad
+<p>No activity</p>
+
+// Good
+<div className="text-center py-8">
+  <p className="text-sm text-ink-secondary mb-1">No events yet</p>
+  <p className="text-sm text-ink-muted mb-4 max-w-md mx-auto">
+    Create your first community event to bring people together.
+  </p>
+  <Button onClick={() => navigate("/events/create")}>
+    <Plus className="h-3.5 w-3.5" />
+    Create event
+  </Button>
+</div>
+```
+
+### Avatars
+Role-based color with initials fallback. No "Unknown" literals.
+
+```tsx
+const roleColors: Record<string, string> = {
+  COMMUNITY_HEAD: "bg-saffron",
+  COMMUNITY_SUBHEAD: "bg-jewel-600",
+  GOTRA_HEAD: "bg-emerald",
+  FAMILY_HEAD: "bg-jewel-500",
+  MEMBER: "bg-ink-muted",
+};
+```
+
+---
+
+## Layout Patterns
+
+### Page Structure
+```tsx
+<div className="min-h-screen">
+  <div className="mx-auto max-w-[1100px] px-6 py-10 sm:px-8 lg:px-10 lg:py-14">
+    {/* Header */}
+    <motion.div className="mb-14">...</motion.div>
+    <hr className="editorial-divider" />
+    
+    {/* Sections */}
+    <motion.section className="py-10">...</motion.section>
+    <hr className="editorial-divider" />
+    <motion.section className="py-10">...</motion.section>
+  </div>
+</div>
+```
+
+### Section Header Pattern
+```tsx
+<div className="flex items-start justify-between mb-8">
+  <div>
+    <h2 className="heading text-ink">Section Title</h2>
+    <p className="body text-ink-secondary mt-1">Descriptive subtitle</p>
+  </div>
+  <Button variant="ghost" size="sm">
+    View all <ChevronRight className="h-3 w-3" />
+  </Button>
+</div>
+```
+
+### Dense Table Pattern
+```tsx
+<div className="overflow-x-auto">
+  <table className="w-full text-sm">
+    <thead>
+      <tr className="text-[10px] font-semibold uppercase tracking-wider text-ink-muted">
+        <th className="px-4 py-3 text-left">Column</th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-border-subtle">
+      <tr className="hover:bg-surface-muted transition-colors">
+        <td className="px-4 py-3">Data</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+---
+
+## Sidebar & Navigation
+
+### Collapsed Sidebar
+- Width: 64px
+- Icon-only with **tooltips on hover**
+- Active indicator visible as dot on right edge
+- Section headers hidden
+
+### Expanded Sidebar
+- Width: 256px
+- Labels visible
+- Active state: saffron text + font-semibold
+- Section headers: uppercase, tracking-wider, 10px
+
+### Mobile Drawer
+- Full height, 280px wide
+- Slide-in from left
+- Backdrop overlay
+
+---
+
+## Header / AppShell
+
+### Desktop (≥1024px)
+```
+[Menu] [Sidebar Toggle] | [Global Search] [Locale] [Notifications] [Profile Avatar]
+```
+
+### Mobile (<1024px)
+```
+[Menu] | [Page Title] [Notifications] [Profile Avatar]
+```
+
+### Profile Menu
+- Avatar with initials (role color)
+- Name + email
+- Profile link
+- Settings link
+- Divider
+- Logout (destructive)
+
+---
+
+## Page-Specific Patterns
+
+### Dashboard (`/dashboard`) - Operational
+- Welcome + stats with trends
+- Quick actions
+- Activity feed
+- Upcoming events
+- **No marketing hero**
+
+### Landing (`/`) - Public
+- Marketing hero
+- Feature highlights
+- Community stats
+- CTA to sign in
+
+### Profile (`/me`) - Editorial
+- Large avatar + name + role + member since
+- Personal/Contact fields in two-column layout
+- Family connections as list (not cards)
+- Activity feed (actionable empty state)
+
+### Families (`/families`) - List
+- Create family inline form
+- Families as dense list with role badges
+- Join family info section
+
+### Members (`/members`) - Dense Table
+- Sortable, filterable, paginated
+- Avatar + name + role + gotra + family
+- Inline actions
+
+### Events (`/events`) - Calendar + List Hybrid
+- Filter tabs (All / Approved / Pending)
+- Card grid for approved, list for pending
+- Admin moderation inline
+
+### Resources (`/resources`) - Dense Table
+- Create request inline
+- Requests table with approval chain
+- Admin actions inline
+
+### Medical (`/medical`) - Search + Results Table
+- My info panel
+- Blood group search with quick chips
+- Results as dense table
+
+### Notifications (`/notifications`) - Editorial List
+- Admin broadcast panel (if admin)
+- Filter/sort controls
+- List with read/unread states
+- Mark read/unread actions
+
+### Chat (`/chat`) - Split View
+- Sidebar: conversations list with unread badges
+- Main: message thread with optimistic updates
+- Input at bottom
+
+### Search (`/search`) - Command Palette Style
+- Global search input (⌘K)
+- Recent searches
+- Filter facets
+
+---
+
+## Anti-Patterns (Do Not Do)
+
+| ❌ Don't | ✅ Do |
+|----------|-------|
+| Card grids for everything | Editorial layout with dividers |
+| Blue focus rings | Saffron focus rings |
+| "Unknown" as fallback | Initials or role-appropriate default |
+| Generic "No data" empty states | Actionable empty states with primary CTA |
+| Marketing hero on authenticated routes | Operational dashboard |
+| 5+ font sizes | 8-token typography scale |
+| Mixed spacing tokens | Consistent spacing scale |
+| Inconsistent icon sizes (w-4, w-5, w-6, w-7) | w-4 (inline), w-5 (header), w-6 (hero) |
+| Shadow stacking | Single soft shadow |
+| DreamySunsetBackground on authenticated pages | Plain canvas background |
+| Leaked i18n keys (`nav.sections.main`) | Translated strings |
+
+---
+
+## Implementation Checklist
+
+### Phase 1: AppShell & /me (Current Sprint)
+- [ ] Fix AppShell header: add breadcrumbs, global search, fix profile button
+- [ ] Fix collapsed sidebar: tooltips, active state visible
+- [ ] Redesign /me page: editorial layout, no card overuse
+- [ ] Fix leaked i18n keys in sidebar
+- [ ] Fix focus rings: all saffron
+- [ ] Fix profile avatar: better fallback, role color mapping
+
+### Phase 2: Dashboard & Landing
+- [ ] Move landing page to public `/`
+- [ ] Create `/dashboard` operational page
+- [ ] Redirect authenticated users from `/` to `/dashboard`
+
+### Phase 3: Propagate System
+- [ ] Families page: editorial list
+- [ ] Members page: dense table
+- [ ] Events page: calendar + list hybrid
+- [ ] Resources page: dense table
+- [ ] Medical page: clean data table
+- [ ] Notifications page: editorial list
+- [ ] Chat page: editorial split view
+- [ ] Search page: command palette style
+- [ ] Settings page: editorial forms
+
+### Phase 4: Verification
+- [ ] Run `impeccable` audit
+- [ ] Run `verification-loop`
+- [ ] Test 7 viewports (320, 375, 414, 768, 1024, 1280, 1440)
+- [ ] Lint + typecheck pass
+- [ ] Evidence capture (screenshots, DOM, code)

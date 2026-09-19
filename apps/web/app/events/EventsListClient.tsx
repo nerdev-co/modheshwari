@@ -41,9 +41,9 @@ const fetcher = /**
  * @param {string} url - Description of url
  */
 async (url: string) => {
-  const res = await apiFetch(url);
-  if (!res.ok) throw new Error("Failed to fetch");
-  return res.json();
+  const res = await apiFetch(url, { throwOnError: false });
+  if (res?.ok === false) throw new Error("Failed to fetch");
+  return res;
 };
 
 export default function EventsListClient() {

@@ -26,12 +26,12 @@
         "account": "खाता",
         "view": "देखें",
         "sections": {
-          "overview": "अवलोकन",
-          "community": "समुदाय",
-          "activity": "गतिविधि",
-          "operations": "संचालन",
-          "discover": "खोजें",
-          "personal": "व्यक्तिगत"
+            "overview": "अवलोकन",
+            "community": "समुदाय",
+            "activity": "गतिविधि",
+            "operations": "संचालन",
+            "discover": "खोजें",
+            "personal": "व्यक्तिगत"
         }
     },
     "landing": {
@@ -111,10 +111,7 @@
             "family": "परिवार"
         },
         "upcomingEventsLabel": "आगामी कार्यक्रम",
-        "yourFamily": "आपका परिवार",
         "viewFamily": "परिवार देखें",
-        "viewAll": "सभी देखें",
-        "createEvent": "कार्यक्रम बनाएं",
         "view": "देखें"
     },
     "profile": {
@@ -127,7 +124,7 @@
         "noFamilies": "कोई परिवार जुड़ा नहीं।",
         "activity": "गतिविधि और सूचनाएं",
         "recentLabel": "हाल का",
-        "noActivity": "कोई हालिया गतिविधि नहीं।",
+        "noActivity": "कोई हालिया गतिविधि नहीं",
         "editProfile": "प्रोफ़ाइल संपादित करें",
         "signOut": "लॉग आउट",
         "profession": "व्यवसाय",
@@ -139,7 +136,7 @@
         "family": "परिवार",
         "recentActivity": "हाल की गतिविधि",
         "connectFamily": "परिवार जोड़ें",
-        "memberSince": "सदस्यता प्रारंभ",
+        "memberSince": "सदस्यता प्रारंभ {{date}}",
         "unnamedMember": "सदस्य",
         "unknownRole": "अज्ञात भूमिका",
         "noFamilyTitle": "अभी तक कोई परिवार नहीं जुड़ा",
@@ -155,14 +152,31 @@
         "familyDescription": "आपके पारिवारिक संबंध और रिश्ते",
         "noFamilyConnected": "अभी तक कोई परिवार नहीं जुड़ा",
         "connectFamilyDesc": "अपनी प्रोफ़ाइल को अपने परिवार से जोड़ें ताकि आप परिवार के सदस्य, रिश्ते, कार्यक्रम और सामुदायिक गतिविधियाँ देख सकें।",
-        "connectFamily": "परिवार जोड़ें",
         "addDetails": "विवरण जोड़ें",
         "noPersonalDetails": "अभी तक कोई व्यक्तिगत विवरण नहीं जोड़ा गया।",
         "contact": "संपर्क",
         "email": "ईमेल",
         "activityDescription": "आपकी हालिया सामुदायिक गतिविधि",
-        "noActivity": "कोई हालिया गतिविधि नहीं",
-        "activityWillAppear": "जब आप सामुदायिक कार्यक्रमों, अनुरोधों या घोषणाओं में भाग लेंगे तो गतिविधि यहाँ दिखाई देगी।"
+        "activityWillAppear": "जब आप सामुदायिक कार्यक्रमों, अनुरोधों या घोषणाओं में भाग लेंगे तो गतिविधि यहाँ दिखाई देगी।",
+        "communitySubtitle": "Modheshwari समुदाय के सदस्य",
+        "joinedPrefix": "शामिल हुए",
+        "aboutSubtitle": "आपके बारे में कुछ बातें",
+        "personalLabel": "व्यक्तिगत",
+        "contactLabel": "संपर्क",
+        "familyConnections": "आपके परिवार के संबंध",
+        "noFamilyConnected": "आपने अभी तक कोई परिवार नहीं जोड़ा है।",
+        "connectFamilyDesc": "रिश्तेदारों, संबंधों और सामुदायिक गतिविधि की खोज के लिए अपना परिवार जोड़ें।",
+        "communityParticipation": "आपकी सामुदायिक भागीदारी",
+        "noActivityYet": "अभी तक कोई गतिविधि नहीं",
+        "activityDescription": "आपके कार्यक्रम, अनुरोध, घोषणाएं और सामुदायिक भागीदारी यहाँ दिखाई देगी।",
+        "memberOfCommunity": "Modheshwari समुदाय के सदस्य",
+        "notSet": "सेट नहीं",
+        "personal": "व्यक्तिगत",
+        "contact": "संपर्क",
+        "aboutDesc": "आपके बारे में कुछ बातें",
+        "noPersonalDetails": "अभी तक कोई व्यक्तिगत विवरण नहीं जोड़ा गया।",
+        "noContactDetails": "अभी तक कोई संपर्क विवरण नहीं जोड़ा गया।",
+        "familyDesc": "आपके पारिवारिक संबंध और रिश्ते"
     },
     "medical": {
         "title": "चिकित्सा डैशबोर्ड",
@@ -184,6 +198,9 @@
         "name": "नाम",
         "email": "ईमेल",
         "notes": "नोट्स",
+        "loadFailed": "चिकित्सा रिकॉर्ड लोड करने में विफल।",
+        "loadError": "चिकित्सा रिकॉर्ड लोड नहीं हो सके।",
+        "createError": "रिकॉर्ड बनाने में विफल।",
         "records": {
             "title": "चिकित्सा रिकॉर्ड",
             "bloodType": "रक्त प्रकार",
@@ -194,18 +211,11 @@
             "yourRecords": "आपके रिकॉर्ड",
             "noRecordsYet": "अभी तक कोई रिकॉर्ड नहीं।",
             "loading": "लोड हो रहा है...",
-            "allergies": "एलर्जी",
-            "notes": "नोट्स",
-            "blood": "रक्त",
-            "loadFailed": "रिकॉर्ड लोड करने में विफल",
-            "loadError": "चिकित्सा रिकॉर्ड लोड नहीं हो सके।",
-            "createError": "रिकॉर्ड नहीं बनाया जा सका।",
             "bloodTypePlaceholder": "जैसे O+",
             "allergiesPlaceholder": "जैसे मूंगफली, धूल",
-            "conditionsPlaceholder": "जैसे दमा",
-            "medicationsPlaceholder": "जैसे सेटिरिज़िन",
-            "notesPlaceholder": "कोई महत्वपूर्ण चीज...",
-            "toastSearchFailed": "चिकित्सा रिकॉर्ड खोजने में विफल"
+            "conditionsPlaceholder": "जैसे अस्थमा",
+            "medicationsPlaceholder": "जैसे सेटरिज़िन",
+            "notesPlaceholder": "कुछ महत्वपूर्ण..."
         }
     },
     "family": {
@@ -302,6 +312,17 @@
         "loadingSpec": "AsyncAPI स्पेसिफ़िकेशन लोड हो रहा है..."
     },
     "signup": {
+        "landing": {
+            "title": "अपना साइनअप विकल्प चुनें",
+            "subtitle": "ऐप के दो साइनअप फ्लो हैं। अपनी भूमिका से मैच करने वाला चुनें।",
+            "familyHead": "परिवार प्रमुख",
+            "familyMember": "परिवार के सदस्य",
+            "familyHeadDesc": "एक नया परिवार खाता बनाएं और प्राथमिक प्रबंधक बनें।",
+            "familyMemberDesc": "अनुमोदन के साथ मौजूदा परिवार में शामिल होने का अनुरोध करें।",
+            "signup": "साइनअप",
+            "alreadyApproved": "पहले से स्वीकृत?",
+            "signIn": "लॉग इन करें"
+        },
         "fh": {
             "heading": "परिवार प्रमुख बनें",
             "subtitle": "अपना परिवार खाता बनाएं और प्रबंधन शुरू करें",
@@ -321,7 +342,7 @@
             "feature1": "परिवार के सदस्य प्रबंधन पर पूर्ण नियंत्रण",
             "feature2": "भूमिका-आधारित अनुमतियों के साथ सुरक्षित पहुंच",
             "feature3": "परिवार कार्यक्रमों और चिकित्सा रिकॉर्ड को ट्रैक करें",
-            "secureSignup": "🔒 Modheshwari द्वारा संचालित सुरक्षित साइनअप",
+            "secureSignup": "Modheshwari द्वारा संचालित सुरक्षित साइनअप",
             "signupSuccess": "साइनअप सफल!",
             "signupFailed": "साइनअप विफल",
             "signupError": "साइनअप के दौरान एक त्रुटि हुई"
@@ -348,17 +369,6 @@
             "requestSentSubtext": "स्वीकृति मिलने के बाद आप लॉग इन कर पाएंगे।",
             "signupFailed": "साइनअप विफल",
             "somethingWentWrong": "कुछ गलत हो गया"
-        },
-        "landing": {
-            "title": "अपना साइनअप विकल्प चुनें",
-            "subtitle": "ऐप के दो साइनअप फ्लो हैं। अपनी भूमिका से मैATCH करने वाला चुनें।",
-            "familyHead": "परिवार प्रमुख",
-            "familyMember": "परिवार के सदस्य",
-            "familyHeadDesc": "एक नया परिवार खाता बनाएं और प्राथमिक प्रबंधक बनें।",
-            "familyMemberDesc": "अनुमोदन के साथ मौजूदा परिवार में शामिल होने का अनुरोध करें।",
-            "signup": "साइनअप",
-            "alreadyApproved": "पहले से स्वीकृत?",
-            "signIn": "लॉग इन करें"
         }
     },
     "contact": {
@@ -557,7 +567,15 @@
         "filterByText": "मल्टी-फ़ील्ड खोज",
         "tip": "सुझाव: बेहतर परिणामों के लिए विशिष्ट कीवर्ड का उपयोग करें। यदि आप किसी को नहीं ढूंढ पा रहे हैं तो सहायता से संपर्क करें।",
         "placeholder": "नाम, ईमेल, परिवार, पेशा या रक्त समूह से खोजें...",
-        "quickSearch": "त्वरित खोज:"
+        "quickSearch": "त्वरित खोज:",
+        "noResults": "इसके लिए कोई परिणाम नहीं मिला",
+        "tryDifferent": "अलग कीवर्ड से खोजने का प्रयास करें",
+        "resultsFound": "{{count}} परिणाम मिला",
+        "resultsFound_other": "{{count}} परिणाम मिले",
+        "toggleFilters": "फ़िल्टर टॉगल करें",
+        "unknown": "अज्ञात",
+        "noEmail": "ईमेल नहीं",
+        "familyLabel": "परिवार"
     },
     "notifications": {
         "title": "सूचनाएं",
@@ -618,19 +636,6 @@
         "authFailed": "साइन इन अनसफल। अपने क्रेडेंशियल्स और भूमिका की जांच करें।",
         "networkError": "नेटवर्क त्रुटि"
     },
-    "signup": {
-        "landing": {
-            "title": "अपना साइनअप विकल्प चुनें",
-            "subtitle": "ऐप के दो साइनअप फ्लो हैं। अपनी भूमिका से मैATCH करने वाला चुनें।",
-            "familyHead": "परिवार प्रमुख",
-            "familyMember": "परिवार के सदस्य",
-            "familyHeadDesc": "एक नया परिवार खाता बनाएं और प्राथमिक प्रबंधक बनें।",
-            "familyMemberDesc": "अनुमोदन के साथ मौजूदा परिवार में शामिल होने का अनुरोध करें।",
-            "signup": "साइनअप",
-            "alreadyApproved": "पहले से स्वीकृत?",
-            "signIn": "लॉग इन करें"
-        }
-    },
     "notFound": {
         "title": "404",
         "description": "आप जिस पेज की खोज कर रहे हैं वह मौजूद नहीं है या स्थानांतरित कर दिया गया है।",
@@ -666,74 +671,6 @@
             "viewType": "विभिन्न वृक्ष दृश्यों के बीच स्विच करने के लिए दृश्य प्रकार चयनकर्ता का उपयोग करें",
             "depth": "अधिक या कम पीढ़ियां दिखाने के लिए गहराई को समायोजित करें",
             "addRelation": "संबंध जोड़ने बटन का उपयोग करके संबंध जोड़ें"
-        }
-    },
-    "search": {
-        "title": "सदस्य खोजें",
-        "subtitle": "परिवार के सदस्यों को खोजें, प्रोफ़ाइल देखें और तुरंत जुड़ें",
-        "advancedFilters": "उन्नत फ़िल्टर",
-        "byGotra": "गोत्र के अनुसार",
-        "byProfession": "पेशा के अनुसार",
-        "byLocation": "स्थान के अनुसार",
-        "byBloodGroup": "रक्त समूह के अनुसार",
-        "byRole": "भूमिका के अनुसार",
-        "textSearch": "टेक्स्ट खोज",
-        "filterByGotra": "गोत्र/क्लन के अनुसार फ़िल्टर करें",
-        "filterByProfession": "पेशा के अनुसार खोजें",
-        "filterByLocation": "क्षेत्र/शहर के अनुसार खोजें",
-        "filterByBloodGroup": "रक्त प्रकार के अनुसार फ़िल्टर करें",
-        "filterByRole": "सदस्य भूमिका के अनुसार खोजें",
-        "filterByText": "मल्टी-फ़ील्ड खोज",
-        "tip": "सुझाव: बेहतर परिणामों के लिए विशिष्ट कीवर्ड का उपयोग करें। यदि आप किसी को नहीं ढूंढ पा रहे हैं तो सहायता से संपर्क करें।",
-        "placeholder": "नाम, ईमेल, परिवार, पेशा या रक्त समूह से खोजें...",
-        "quickSearch": "त्वरित खोज:",
-        "noResults": "इसके लिए कोई परिणाम नहीं मिला",
-        "tryDifferent": "अलग कीवर्ड से खोजने का प्रयास करें",
-        "resultsFound": "{{count}} परिणाम मिला",
-        "resultsFound_other": "{{count}} परिणाम मिले",
-        "toggleFilters": "फ़िल्टर टॉगल करें",
-        "unknown": "अज्ञात",
-        "noEmail": "ईमेल नहीं",
-        "familyLabel": "परिवार"
-    },
-    "medical": {
-        "title": "चिकित्सा डैशबोर्ड",
-        "welcome": "वापसी पर स्वागत है, {{name}}",
-        "myInfo": "मेरी चिकित्सा जानकारी",
-        "bloodGroup": "रक्त समूह",
-        "allergies": "एलर्जी",
-        "medicalNotes": "चिकित्सा नोट्स",
-        "noneRecorded": "कोई दर्ज नहीं",
-        "updateInfo": "चिकित्सा जानकारी अपडेट करें →",
-        "searchTitle": "रक्त समूह से उपयोगकर्ता खोजें",
-        "searchDesc": "रक्त समूह दर्ज करें (जैसे, O+, AB-, B+)",
-        "searchPlaceholder": "जैसे O+, AB-, B+",
-        "search": "खोजें",
-        "searching": "खोज रहे हैं...",
-        "results": "खोज परिणाम",
-        "noResults": "रक्त समूह दर्ज करें",
-        "noResultsFound": "इस रक्त समूह के साथ कोई उपयोगकर्ता नहीं मिला",
-        "name": "नाम",
-        "email": "ईमेल",
-        "notes": "नोट्स",
-        "loadFailed": "चिकित्सा रिकॉर्ड लोड करने में विफल।",
-        "loadError": "चिकित्सा रिकॉर्ड लोड नहीं हो सके।",
-        "createError": "रिकॉर्ड बनाने में विफल।",
-        "records": {
-            "title": "चिकित्सा रिकॉर्ड",
-            "bloodType": "रक्त प्रकार",
-            "conditions": "स्थितियां",
-            "medications": "दवाइयां",
-            "create": "बनाएं",
-            "creating": "बनाया जा रहा है...",
-            "yourRecords": "आपके रिकॉर्ड",
-            "noRecordsYet": "अभी तक कोई रिकॉर्ड नहीं।",
-            "loading": "लोड हो रहा है...",
-            "bloodTypePlaceholder": "जैसे O+",
-            "allergiesPlaceholder": "जैसे मूंगफली, धूल",
-            "conditionsPlaceholder": "जैसे अस्थमा",
-            "medicationsPlaceholder": "जैसे सेटरिज़िन",
-            "notesPlaceholder": "कुछ महत्वपूर्ण..."
         }
     }
 }
