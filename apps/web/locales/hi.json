@@ -152,7 +152,22 @@
         "gotra": "गोत्र",
         "location": "स्थान",
         "phone": "फ़ोन",
-        "address": "पता"
+        "address": "पता",
+        "about": "बारे में",
+        "family": "परिवार",
+        "recentActivity": "हाल की गतिविधि",
+        "connectFamily": "परिवार जोड़ें",
+        "memberSince": "सदस्यता प्रारंभ",
+        "unnamedMember": "सदस्य",
+        "unknownRole": "अज्ञात भूमिका",
+        "connectFamily": "परिवार जोड़ें",
+        "noFamilyTitle": "अभी तक कोई परिवार नहीं जुड़ा",
+        "noFamilyDescription": "अपनी प्रोफ़ाइल को अपने परिवार से जोड़ें ताकि आप परिवार के सदस्य, रिश्ते, कार्यक्रम और सामुदायिक गतिविधियाँ देख सकें।",
+        "joined": "शामिल हुए",
+        "noActivityTitle": "कोई हालिया गतिविधि नहीं",
+        "noActivityDescription": "जब कुछ होगा तो सामुदायिक गतिविधि यहाँ दिखाई देगी।",
+        "viewAll": "सभी देखें",
+        "edit": "संपादित करें"
     },
     "medical": {
         "title": "चिकित्सा डैशबोर्ड",

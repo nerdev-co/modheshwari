@@ -19,19 +19,17 @@ export function LoadingState({
       <span className={`inline-flex items-center gap-2 ${className}`}>
         <LoaderOne />
         {message && (
-          <span className="text-sm text-text-secondary">{message}</span>
+          <span className="text-body text-ink-secondary">{message}</span>
         )}
       </span>
     );
   }
 
   return (
-    <div
-      className={`flex flex-col items-center justify-center py-12 ${className}`}
-    >
+    <div className={`flex flex-col items-center justify-center py-12 ${className}`}>
       <LoaderOne />
       {message && (
-        <p className="mt-3 text-sm text-text-secondary">{message}</p>
+        <p className="mt-3 text-body text-ink-secondary">{message}</p>
       )}
     </div>
   );

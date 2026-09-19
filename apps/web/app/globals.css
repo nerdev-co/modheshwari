@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Mukta:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,56 +6,40 @@
 
 :root {
   --font-display: "Fraunces", serif;
-  --font-body: "Mukta", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", monospace;
 
-  /* Sun Temple Color Palette - Light Mode Only */
-  --surface: #fdfaf5;
-  --surface-muted: #f5f0e6;
+  /* Refined Indian Editorial / Community Archive Palette */
+  --canvas: #fdfaf5;
+  --surface: #faf7f0;
   --surface-raised: #ffffff;
+  --surface-muted: #f3efe5;
 
-  --text-primary: #1a0f08;
-  --text-secondary: #3d2a21;
-  --text-muted: #8b7355;
-  --text-on-accent: #ffffff;
+  --ink: #1a0f08;
+  --ink-secondary: #3d2a21;
+  --ink-muted: #8b7355;
+  --ink-on-accent: #ffffff;
 
   --border: #e8d5b7;
   --border-subtle: #f0e4d0;
+  --border-strong: #d4b896;
 
-  --accent: #c97c1c;
-  --accent-hover: #a66418;
-  --accent-muted: #fdf0d5;
+  --saffron: #c97c1c;
+  --saffron-hover: #a66418;
+  --saffron-muted: #fdf0d5;
+  --saffron-soft: #fef7eb;
 
   --emerald: #1b5e20;
   --emerald-muted: #e8f5e9;
-  --saffron: #c97c1c;
-  --saffron-muted: #fdf0d5;
+  --emerald-soft: #f1f8e9;
+
   --ruby: #b71c1c;
   --ruby-muted: #fef2f2;
+  --ruby-soft: #fefafa;
 
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
+  --focus-ring: #c97c1c;
 
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.25rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-10: 2.5rem;
-  --space-12: 3rem;
-  --space-16: 4rem;
-  --space-20: 5rem;
-  --space-24: 6rem;
-
-  /* Jewel tone scale */
+  /* Jewel Tone Scale (kept for backward compatibility) */
   --jewel-50: #fdfaf5;
   --jewel-100: #f5f0e6;
   --jewel-200: #e8d5b7;
@@ -80,24 +64,28 @@ body {
 }
 
 body {
-  background: var(--surface);
-  color: var(--text-primary);
+  background: var(--canvas);
+  color: var(--ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: var(--font-body);
 }
 
 ::selection {
-  background: var(--accent-muted);
-  color: var(--text-primary);
+  background: var(--saffron-muted);
+  color: var(--ink);
 }
 
-/* Sun Temple Background Patterns */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 .suntemple-bg {
   background-image: 
-    radial-gradient(circle at 25% 25%, var(--accent-muted) 0%, transparent 50%),
+    radial-gradient(circle at 25% 25%, var(--saffron-muted) 0%, transparent 50%),
     radial-gradient(circle at 75% 75%, var(--emerald-muted) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, transparent 0%, var(--surface) 100%);
+    radial-gradient(circle at 50% 50%, transparent 0%, var(--canvas) 100%);
   background-size: cover;
   background-position: center;
 }
@@ -109,6 +97,18 @@ body {
   background-size: 24px 24px;
 }
 
+.editorial-divider {
+  height: 1px;
+  background: var(--border);
+  border: none;
+}
+
+.editorial-divider-strong {
+  height: 2px;
+  background: var(--ink);
+  border: none;
+}
+
 @layer components {
   .btn {
     @apply inline-flex items-center justify-center gap-2 font-medium rounded-xl transition-all duration-fast;
@@ -117,65 +117,65 @@ body {
 
   .btn-primary {
     @apply btn px-5 py-2.5 text-sm font-semibold;
-    background: var(--accent);
-    color: var(--text-on-accent);
-  }
-
-  .btn-primary:focus-visible {
-    --tw-ring-color: var(--accent);
+    background: var(--saffron);
+    color: var(--ink-on-accent);
   }
 
   .btn-primary:hover {
-    background: var(--accent-hover);
+    background: var(--saffron-hover);
+  }
+
+  .btn-primary:focus-visible {
+    --tw-ring-color: var(--saffron);
   }
 
   .btn-secondary {
     @apply btn px-5 py-2.5 text-sm font-medium;
     background: transparent;
-    color: var(--text-primary);
+    color: var(--ink);
     border: 1px solid var(--border);
   }
 
   .btn-secondary:hover {
     background: var(--surface-muted);
-    border-color: var(--text-muted);
+    border-color: var(--ink-muted);
   }
 
   .btn-secondary:focus-visible {
-    --tw-ring-color: var(--accent);
+    --tw-ring-color: var(--saffron);
   }
 
   .btn-ghost {
     @apply btn px-3 py-2 text-sm;
     background: transparent;
-    color: var(--text-secondary);
+    color: var(--ink-secondary);
   }
 
   .btn-ghost:hover {
     background: var(--surface-muted);
-    color: var(--text-primary);
+    color: var(--ink);
   }
 
   .btn-ghost:focus-visible {
-    --tw-ring-color: var(--accent);
+    --tw-ring-color: var(--saffron);
   }
 
   .btn-danger {
     @apply btn px-5 py-2.5 text-sm font-semibold;
     background: var(--ruby);
-    color: var(--text-on-accent);
-  }
-
-  .btn-danger:focus-visible {
-    --tw-ring-color: var(--ruby);
+    color: var(--ink-on-accent);
   }
 
   .btn-danger:hover {
     background: #991b1b;
   }
 
+  .btn-danger:focus-visible {
+    --tw-ring-color: var(--ruby);
+  }
+
   .card {
-    @apply rounded-2xl border p-5;
+    @apply rounded-xl border p-6;
     background: var(--surface-raised);
     border-color: var(--border);
   }
@@ -186,28 +186,28 @@ body {
 
   .input {
     @apply w-full px-4 py-2.5 text-sm rounded-xl border transition-all duration-fast;
-    background: var(--surface);
+    background: var(--canvas);
     border-color: var(--border);
-    color: var(--text-primary);
+    color: var(--ink);
   }
 
   .input:focus {
     @apply outline-none ring-2;
-    border-color: var(--accent);
-    --tw-ring-color: var(--accent);
-    --tw-ring-opacity: 0.5;
+    border-color: var(--saffron);
+    --tw-ring-color: var(--saffron);
+    --tw-ring-opacity: 0.3;
   }
 
   .input::placeholder {
-    color: var(--text-muted);
+    color: var(--ink-muted);
   }
 
   .input,
   select {
     @apply w-full px-4 py-2.5 text-sm rounded-xl border transition-all duration-fast;
-    background: var(--surface);
+    background: var(--canvas);
     border-color: var(--border);
-    color: var(--text-primary);
+    color: var(--ink);
   }
 
   select {
@@ -219,33 +219,92 @@ body {
 
   .input:focus,
   select:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 2px var(--accent-muted);
-    --tw-ring-color: var(--accent);
-    --tw-ring-opacity: 0.5;
+    border-color: var(--saffron);
+    box-shadow: 0 0 0 2px var(--saffron-muted);
+    --tw-ring-color: var(--saffron);
+    --tw-ring-opacity: 0.3;
   }
 
   select option {
-    background: var(--surface);
-    color: var(--text-primary);
+    background: var(--canvas);
+    color: var(--ink);
   }
 
-  /* Sun Temple specific utilities */
+  /* Radius levels */
+  .radius-pill {
+    border-radius: 9999px;
+  }
+
+  .radius-sm {
+    border-radius: 0.5rem;
+  }
+
+  .radius-md {
+    border-radius: 0.75rem;
+  }
+
+  .radius-lg {
+    border-radius: 1rem;
+  }
+
+  /* Editorial typography utilities */
+  .text-display {
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .text-display-bold {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  .text-body {
+    font-family: var(--font-body);
+  }
+
+  .text-numbers {
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+  }
+
   .text-balance {
     text-wrap: balance;
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--jewel-700) 100%);
+    background: linear-gradient(135deg, var(--saffron) 0%, var(--ink) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  .suntemple-glow {
-    box-shadow: 
-      0 0 40px -10px var(--accent),
-      0 0 80px -20px var(--accent-hover);
+  /* Status chips */
+  .status-active {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border;
+    background: var(--emerald-soft);
+    color: var(--emerald);
+    border-color: var(--emerald);
+  }
+
+  .status-pending {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border;
+    background: var(--saffron-soft);
+    color: var(--saffron);
+    border-color: var(--saffron);
+  }
+
+  .status-rejected {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border;
+    background: var(--ruby-soft);
+    color: var(--ruby);
+    border-color: var(--ruby);
+  }
+
+  .status-neutral {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border;
+    background: var(--surface-muted);
+    color: var(--ink-muted);
+    border-color: var(--border);
   }
 }
 
@@ -257,4 +316,23 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-muted);
 }

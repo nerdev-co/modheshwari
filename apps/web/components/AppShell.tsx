@@ -29,9 +29,15 @@ import {
   Compass,
   Inbox,
   Activity,
+  Home,
+  BookOpen,
+  Archive,
+  Shield,
+  Mail,
+  Layers,
 } from "lucide-react";
 
-import { MOTION_ENTER } from "@repo/ui/motion";
+import { MOTION_ENTER, MOTION_SIDEBAR, SLIDE_IN_LEFT } from "@repo/ui/motion";
 import { useFocusTrap } from "@repo/ui/useFocusTrap";
 
 import { SunMark } from "./SunMark";
@@ -57,7 +63,7 @@ const NAV_SECTIONS: NavSection[] = [
   {
     label: "nav.sections.overview",
     items: [
-      { path: "/dashboard", i18nKey: "nav.dashboard", icon: LayoutDashboard },
+      { path: "/", i18nKey: "nav.dashboard", icon: LayoutDashboard },
     ],
   },
   {
@@ -99,8 +105,8 @@ const NAV_SECTIONS: NavSection[] = [
   },
 ];
 
-const SIDEBAR_WIDTH = 256;
-const SIDEBAR_COLLAPSED_WIDTH = 72;
+const SIDEBAR_WIDTH = 272;
+const SIDEBAR_COLLAPSED_WIDTH = 80;
 
 export function AppShell({ children }: { children: ReactNode }) {
   const location = useLocation();
@@ -118,7 +124,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   useFocusTrap(sidebarRef, mobileSidebarOpen);
   useFocusTrap(profileButtonRef, profileMenuOpen);
 
-  // Close mobile sidebar on route change
   useEffect(() => {
     setMobileSidebarOpen(false);
   }, [location.pathname]);
@@ -143,8 +148,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   if (userLoading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-accent border-t-transparent" />
+      <div className="flex h-screen items-center justify-center bg-canvas">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-saffron border-t-transparent" />
       </div>
     );
   }
@@ -152,24 +157,32 @@ export function AppShell({ children }: { children: ReactNode }) {
   const sidebarWidth = sidebarOpen ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH;
 
   return (
-    <div className="flex h-screen bg-surface">
+    <div className="flex h-screen bg-canvas">
       {/* Desktop Sidebar */}
       <aside
         ref={sidebarRef}
-        className="hidden lg:flex lg:flex-col fixed lg:static inset-y-0 left-0 z-40 bg-surface-raised border-r border-border transition-all duration-300 ease-out overflow-hidden"
+        className="hidden lg:flex lg:flex-col fixed lg:static inset-y-0 left-0 z-40 bg-surface border-r border-border transition-all duration-300 ease-out overflow-hidden"
         style={{ width: sidebarWidth }}
         aria-label="Main navigation"
       >
         <div className="flex h-16 items-center justify-between px-4 border-b border-border">
           <Link to="/" className="flex items-center gap-2" aria-label="Modheshwari Home">
-            <SunMark size={28} className="text-accent" />
+            <SunMark size={28} className="text-saffron" />
             {sidebarOpen && (
-              <span className="font-display font-semibold text-xl text-text-primary">Modheshwari</span>
+              <motion.span
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={MOTION_ENTER}
+                className="font-display-bold text-xl text-ink"
+              >
+                Modheshwari
+              </motion.span>
             )}
           </Link>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="lg:hidden p-1.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+            className="lg:hidden p-1.5 rounded-lg text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
             aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
             aria-expanded={sidebarOpen}
           >
@@ -177,13 +190,19 @@ export function AppShell({ children }: { children: ReactNode }) {
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-4" aria-label="Main navigation">
+        <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-5" aria-label="Main navigation">
           {filteredSections.map((section) => (
             <div key={section.label} className="space-y-1">
               {sidebarOpen && (
-                <h3 className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+                <motion.h3
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={MOTION_ENTER}
+                  className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-ink-muted"
+                >
                   {t(section.label)}
-                </h3>
+                </motion.h3>
               )}
               {section.items.map((item) => {
                 const Icon = item.icon;
@@ -192,23 +211,32 @@ export function AppShell({ children }: { children: ReactNode }) {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-fast ${
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-fast relative ${
                       active
-                        ? "bg-accent-muted text-accent"
-                        : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
-                    } relative`}
+                        ? "bg-saffron-soft text-saffron"
+                        : "text-ink-secondary hover:bg-surface-muted hover:text-ink"
+                    }`}
                     aria-current={active ? "page" : undefined}
                     title={sidebarOpen ? undefined : t(item.i18nKey)}
                   >
                     <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
-                    {sidebarOpen && <span>{t(item.i18nKey)}</span>}
+                    {sidebarOpen && (
+                      <motion.span
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        transition={MOTION_ENTER}
+                      >
+                        {t(item.i18nKey)}
+                      </motion.span>
+                    )}
                     {active && sidebarOpen && (
                       <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: 3 }}
-                        exit={{ width: 0 }}
-                        transition={MOTION_ENTER}
-                        className="absolute left-0 top-1 bottom-1 bg-accent rounded-r-md"
+                        initial={{ height: 0 }}
+                        animate={{ height: "calc(100% - 8px)" }}
+                        exit={{ height: 0 }}
+                        transition={MOTION_SIDEBAR}
+                        className="absolute left-0 top-4 bottom-4 w-1 bg-saffron rounded-r-md"
                       />
                     )}
                   </Link>
@@ -221,7 +249,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className={`p-3 border-t border-border transition-opacity duration-200 ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
           <Link
             to="/me"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-all duration-fast"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-ink-secondary hover:bg-surface-muted hover:text-ink transition-all duration-fast"
             title={sidebarOpen ? undefined : t("nav.profile")}
           >
             <User className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
@@ -252,28 +280,28 @@ export function AppShell({ children }: { children: ReactNode }) {
             initial={{ x: -300 }}
             animate={{ x: 0 }}
             exit={{ x: -300 }}
-            transition={MOTION_ENTER}
-            className="fixed inset-y-0 left-0 z-50 w-72 bg-surface-raised border-r border-border lg:hidden"
+            transition={MOTION_DRAWER}
+            className="fixed inset-y-0 left-0 z-50 w-80 bg-surface border-r border-border lg:hidden"
             aria-label="Mobile navigation"
           >
             <div className="flex h-16 items-center justify-between px-4 border-b border-border">
               <Link to="/" className="flex items-center gap-2" aria-label="Modheshwari Home">
-                <SunMark size={28} className="text-accent" />
-                <span className="font-display font-semibold text-xl text-text-primary">Modheshwari</span>
+                <SunMark size={28} className="text-saffron" />
+                <span className="font-display-bold text-xl text-ink">Modheshwari</span>
               </Link>
               <button
                 onClick={() => setMobileSidebarOpen(false)}
-                className="p-2 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                className="p-2 rounded-lg text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
                 aria-label="Close menu"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-4" aria-label="Mobile navigation">
+            <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5" aria-label="Mobile navigation">
               {filteredSections.map((section) => (
                 <div key={section.label} className="space-y-1">
-                  <h3 className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+                  <h3 className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-ink-muted">
                     {t(section.label)}
                   </h3>
                   {section.items.map((item) => {
@@ -286,8 +314,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                         onClick={() => setMobileSidebarOpen(false)}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-fast ${
                           active
-                            ? "bg-accent-muted text-accent"
-                            : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
+                            ? "bg-saffron-soft text-saffron"
+                            : "text-ink-secondary hover:bg-surface-muted hover:text-ink"
                         }`}
                         aria-current={active ? "page" : undefined}
                       >
@@ -304,7 +332,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Link
                 to="/me"
                 onClick={() => setMobileSidebarOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-all duration-fast"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-ink-secondary hover:bg-surface-muted hover:text-ink transition-all duration-fast"
               >
                 <User className="w-5 h-5" aria-hidden="true" />
                 <span>{t("nav.profile")}</span>
@@ -315,21 +343,21 @@ export function AppShell({ children }: { children: ReactNode }) {
       </AnimatePresence>
 
       {/* Main Content */}
-      <div className="flex flex-1 flex-col lg:pl-[256px]" style={{ marginLeft: sidebarOpen ? 0 : SIDEBAR_COLLAPSED_WIDTH - SIDEBAR_WIDTH }}>
+      <div className="flex flex-1 flex-col lg:pl-[272px]" style={{ marginLeft: sidebarOpen ? 0 : SIDEBAR_COLLAPSED_WIDTH - SIDEBAR_WIDTH }}>
         {/* Top Bar */}
         <header className="sticky top-0 z-30 h-16 bg-surface/80 backdrop-blur-xl border-b border-border">
           <div className="flex h-full items-center justify-between px-4 lg:px-6">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setMobileSidebarOpen(true)}
-                className="lg:hidden p-2 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                className="lg:hidden p-2 rounded-lg text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
                 aria-label="Open menu"
               >
                 <Menu className="w-6 h-6" />
               </button>
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="hidden lg:flex p-1.5 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                className="hidden lg:flex p-1.5 rounded-lg text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
                 aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
                 aria-expanded={sidebarOpen}
               >
@@ -341,7 +369,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
                   transition={MOTION_ENTER}
-                  className="text-sm font-medium text-text-secondary hidden sm:block"
+                  className="text-sm font-medium text-ink-secondary hidden sm:block"
                 >
                   {(() => {
                     const activeSection = filteredSections.find((s) =>
@@ -360,12 +388,12 @@ export function AppShell({ children }: { children: ReactNode }) {
               <div className="relative">
                 <Link
                   to="/notifications"
-                  className="relative p-2 rounded-lg text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                  className="relative p-2 rounded-lg text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
                   aria-label={t("nav.notifications")}
                 >
                   <Bell className="w-5 h-5" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-ruby-500 text-[10px] font-semibold text-white">
+                    <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-saffron text-[10px] font-semibold text-ink-on-accent">
                       {unreadCount > 99 ? "99+" : unreadCount}
                     </span>
                   )}
@@ -377,22 +405,22 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <button
                   ref={profileButtonRef}
                   onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                  className="flex items-center gap-2 p-1.5 rounded-xl text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                  className="flex items-center gap-2 p-1.5 rounded-xl text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
                   aria-expanded={profileMenuOpen}
                   aria-haspopup="true"
                   aria-label={t("nav.account")}
                 >
-                  <div className="h-8 w-8 rounded-full bg-accent-muted flex items-center justify-center">
-                    <span className="text-sm font-semibold text-accent">
+                  <div className="h-8 w-8 rounded-full bg-saffron-soft flex items-center justify-center">
+                    <span className="text-sm font-semibold text-saffron">
                       {user?.name?.charAt(0).toUpperCase() || "U"}
                     </span>
                   </div>
                   {sidebarOpen && (
                     <>
-                      <span className="hidden sm:block text-sm font-medium text-text-primary">
+                      <span className="hidden sm:block text-sm font-medium text-ink">
                         {user?.name || "User"}
                       </span>
-                      <ChevronRight className="w-4 h-4 text-text-muted" />
+                      <ChevronRight className="w-4 h-4 text-ink-muted" />
                     </>
                   )}
                 </button>
@@ -400,24 +428,24 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <AnimatePresence>
                   {profileMenuOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
+                      initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.96 }}
                       transition={MOTION_ENTER}
                       className="absolute right-0 mt-2 w-56 origin-top-right rounded-xl bg-surface-raised border border-border shadow-medium p-2"
                       role="menu"
                     >
                       <div className="px-3 py-2 border-b border-border">
-                        <p className="text-sm font-medium text-text-primary">{user?.name}</p>
-                        <p className="text-xs text-text-muted">{user?.email}</p>
-                        <span className="inline-flex mt-1 px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-accent-muted text-accent">
+                        <p className="text-sm font-medium text-ink">{user?.name}</p>
+                        <p className="text-xs text-ink-muted">{user?.email}</p>
+                        <span className="inline-flex mt-1 px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-saffron-soft text-saffron">
                           {t(`role.${user?.role?.toLowerCase() || "member"}`)}
                         </span>
                       </div>
                       <Link
                         to="/me"
                         onClick={() => setProfileMenuOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
                         role="menuitem"
                       >
                         <User className="w-4 h-4" />
@@ -426,7 +454,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                       <Link
                         to="/me/edit"
                         onClick={() => setProfileMenuOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-text-secondary hover:bg-surface-muted hover:text-text-primary transition-colors"
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
                         role="menuitem"
                       >
                         <Settings className="w-4 h-4" />
@@ -435,7 +463,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                       <hr className="my-2 border-border" />
                       <button
                         onClick={handleLogout}
-                        className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm text-ruby-600 hover:bg-ruby-50 transition-colors"
+                        className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm text-ruby hover:bg-ruby-soft transition-colors"
                         role="menuitem"
                       >
                         <LogOut className="w-4 h-4" />

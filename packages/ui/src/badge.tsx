@@ -28,34 +28,34 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 const variantClasses: Record<BadgeVariant, { base: string; solid: string }> = {
   emerald: {
-    base: "bg-jewel-emerald/10 text-jewel-emerald border-jewel-emerald/20",
-    solid: "bg-jewel-emerald text-jewel-deep",
+    base: "bg-emerald-soft text-emerald border-emerald/30",
+    solid: "bg-emerald text-ink-on-accent",
   },
   gold: {
-    base: "bg-jewel-gold/10 text-jewel-gold border-jewel-gold/20",
-    solid: "bg-jewel-gold text-jewel-deep",
+    base: "bg-saffron-soft text-saffron border-saffron/30",
+    solid: "bg-saffron text-ink-on-accent",
   },
   ruby: {
-    base: "bg-jewel-ruby/10 text-jewel-ruby border-jewel-ruby/20",
-    solid: "bg-jewel-ruby text-white",
+    base: "bg-ruby-soft text-ruby border-ruby/30",
+    solid: "bg-ruby text-ink-on-accent",
   },
   neutral: {
-    base: "bg-jewel-400/10 text-jewel-600 border-jewel-400/20",
-    solid: "bg-jewel-500 text-jewel-deep",
+    base: "bg-surface-muted text-ink-muted border-border",
+    solid: "bg-ink-muted text-ink-on-accent",
   },
   accent: {
-    base: "bg-accent-muted text-accent border-accent/20",
-    solid: "bg-accent text-on-accent",
+    base: "bg-saffron-soft text-saffron border-saffron/30",
+    solid: "bg-saffron text-ink-on-accent",
   },
   surface: {
-    base: "bg-surface-muted text-text-muted border-border",
-    solid: "bg-surface-muted text-text-muted",
+    base: "bg-surface-muted text-ink-muted border-border",
+    solid: "bg-surface-muted text-ink-muted",
   },
 };
 
 const sizeClasses: Record<BadgeSize, string> = {
-  xs: "px-1.5 py-0.5 text-[10px]",
-  sm: "px-2 py-0.5 text-[11px]",
+  xs: "px-2 py-0.5 text-[10px]",
+  sm: "px-2.5 py-0.5 text-[11px]",
   md: "px-3 py-1 text-xs",
   lg: "px-4 py-1.5 text-sm",
 };
@@ -80,6 +80,15 @@ export function Badge({
 }: BadgeProps) {
   const v = variantClasses[variant];
 
+  const dotColors: Record<BadgeVariant, string> = {
+    emerald: "bg-emerald",
+    gold: "bg-saffron",
+    ruby: "bg-ruby",
+    neutral: "bg-ink-muted",
+    accent: "bg-saffron",
+    surface: "bg-ink-muted",
+  };
+
   return (
     <span
       className={cn(
@@ -93,17 +102,7 @@ export function Badge({
       {...rest}
     >
       {dot && (
-        <span
-          className={cn(
-            "w-1.5 h-1.5 rounded-full shrink-0",
-            variant === "emerald" && "bg-jewel-emerald",
-            variant === "gold" && "bg-jewel-gold",
-            variant === "ruby" && "bg-jewel-ruby",
-            variant === "neutral" && "bg-jewel-400",
-            variant === "accent" && "bg-accent",
-            variant === "surface" && "bg-text-muted",
-          )}
-        />
+        <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", dotColors[variant])} />
       )}
       {icon && <span className="shrink-0 [&>svg]:w-3.5 [&>svg]:h-3.5">{icon}</span>}
       {children}

@@ -19,6 +19,16 @@ export const MOTION_PAGE_ENTER: Transition = {
   ease: SPRING_CURVE,
 };
 
+export const MOTION_SIDEBAR: Transition = {
+  duration: 0.3,
+  ease: SPRING_CURVE,
+};
+
+export const MOTION_DRAWER: Transition = {
+  duration: 0.35,
+  ease: SPRING_CURVE,
+};
+
 export const FADE_IN: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
@@ -26,6 +36,11 @@ export const FADE_IN: Variants = {
 
 export const FADE_IN_UP: Variants = {
   hidden: { opacity: 0, y: 8 },
+  visible: { opacity: 1, y: 0 },
+};
+
+export const FADE_IN_DOWN: Variants = {
+  hidden: { opacity: 0, y: -8 },
   visible: { opacity: 1, y: 0 },
 };
 
@@ -37,4 +52,29 @@ export const SCALE_IN: Variants = {
 export const SLIDE_IN_TOP: Variants = {
   hidden: { opacity: 0, y: -8, scale: 0.96 },
   visible: { opacity: 1, y: 0, scale: 1 },
+};
+
+export const SLIDE_IN_LEFT: Variants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: { opacity: 1, x: 0 },
+};
+
+export const SLIDE_IN_RIGHT: Variants = {
+  hidden: { opacity: 0, x: 20 },
+  visible: { opacity: 1, x: 0 },
+};
+
+export const STAGGER_CONTAINER: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+export const STAGGER_ITEM: Variants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: SPRING_CURVE } },
 };

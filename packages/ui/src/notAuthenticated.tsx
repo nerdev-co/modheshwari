@@ -11,12 +11,10 @@ export function NotAuthenticated({
   className = "",
 }: NotAuthenticatedProps): JSX.Element {
   return (
-    <div
-      className={`flex flex-col items-center justify-center min-h-screen text-center px-4 ${className}`}
-    >
-      <div className="w-16 h-16 rounded-2xl bg-accent/20 flex items-center justify-center mb-6">
+    <div className={`flex flex-col items-center justify-center min-h-screen text-center px-4 ${className}`}>
+      <div className="w-16 h-16 rounded-xl bg-saffron/20 flex items-center justify-center mb-6">
         <svg
-          className="w-8 h-8 text-accent"
+          className="w-8 h-8 text-saffron"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -29,10 +27,8 @@ export function NotAuthenticated({
           />
         </svg>
       </div>
-      <h1 className="text-3xl font-display font-bold text-text-primary mb-2">
-        Not Authenticated
-      </h1>
-      <p className="text-text-secondary mb-6 max-w-md">
+      <h1 className="text-display-lg font-display-bold text-ink mb-2">Not Authenticated</h1>
+      <p className="text-body-lg text-ink-secondary mb-6 max-w-md">
         You are not authorized to view this page. Please sign in to continue.
       </p>
       {children}

@@ -35,24 +35,24 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variantClasses: Record<ButtonVariant, string> = {
       primary: `
-        bg-accent text-on-accent font-semibold
-        hover:bg-accent-hover
-        focus-visible:ring-accent
+        bg-saffron text-ink-on-accent font-semibold
+        hover:bg-saffron-hover
+        focus-visible:ring-saffron
       `,
       secondary: `
-        bg-transparent text-text-primary font-medium
+        bg-transparent text-ink font-medium
         border border-border
-        hover:bg-surface-muted hover:border-text-muted
-        focus-visible:ring-accent
+        hover:bg-surface-muted hover:border-ink-muted
+        focus-visible:ring-saffron
       `,
       ghost: `
-        bg-transparent text-text-secondary font-medium
-        hover:bg-surface-muted hover:text-text-primary
-        focus-visible:ring-accent
+        bg-transparent text-ink-secondary font-medium
+        hover:bg-surface-muted hover:text-ink
+        focus-visible:ring-saffron
       `,
       danger: `
-        bg-ruby text-white font-semibold
-        hover:bg-ruby-600
+        bg-ruby text-ink-on-accent font-semibold
+        hover:bg-ruby/90
         focus-visible:ring-ruby
       `,
     };

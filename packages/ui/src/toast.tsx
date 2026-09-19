@@ -44,10 +44,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const toast = useCallback(
-    (
-      message: string,
-      opts?: { variant?: ToastVariant; duration?: number },
-    ) => {
+    (message: string, opts?: { variant?: ToastVariant; duration?: number }) => {
       const id = `toast-${++counterRef.current}`;
       const duration = opts?.duration ?? DEFAULT_DURATION;
       setToasts((prev) => [...prev, { id, message, variant: opts?.variant ?? "info", duration }]);
@@ -76,21 +73,17 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 }
 
 const VARIANT_STYLES: Record<ToastVariant, string> = {
-  success:
-    "bg-emerald/10 border-emerald/20 text-emerald",
-  error:
-    "bg-ruby/10 border-ruby/20 text-ruby",
-  warning:
-    "bg-accent-muted border-accent/20 text-accent",
-  info:
-    "bg-surface-raised border-border text-text-primary",
+  success: "bg-emerald-soft border-emerald/30 text-emerald",
+  error: "bg-ruby-soft border-ruby/30 text-ruby",
+  warning: "bg-saffron-soft border-saffron/30 text-saffron",
+  info: "bg-surface-raised border-border text-ink",
 };
 
 const VARIANT_ICONS: Record<ToastVariant, string> = {
-  success: "\u2713",
-  error: "\u2717",
-  warning: "\u26A0",
-  info: "\u2139",
+  success: "✓",
+  error: "✕",
+  warning: "⚠",
+  info: "ℹ",
 };
 
 function ToastItem({
@@ -125,7 +118,7 @@ function ToastItem({
       <span className="text-base leading-none mt-0.5" aria-hidden="true">
         {VARIANT_ICONS[toast.variant]}
       </span>
-      <p className="flex-1 text-sm font-medium leading-snug">{toast.message}</p>
+      <p className="flex-1 text-body font-medium leading-snug">{toast.message}</p>
       <button
         onClick={() => onDismiss(toast.id)}
         className="ml-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-current opacity-40 hover:opacity-100 transition-opacity active:scale-90"

@@ -21,16 +21,16 @@ export function EmptyState({
   action,
 }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-      <div className="w-12 h-12 rounded-full bg-surface-muted flex items-center justify-center mb-4">
-        <Icon className="w-6 h-6 text-text-muted" />
+    <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+      <div className="w-14 h-14 rounded-full bg-surface-muted flex items-center justify-center mb-4">
+        <Icon className="w-7 h-7 text-ink-muted" />
       </div>
-      <h3 className="text-lg font-semibold text-text-primary mb-1">{title}</h3>
+      <h3 className="text-heading font-display-bold text-ink mb-2">{title}</h3>
       {description && (
-        <p className="text-sm text-text-secondary max-w-sm">{description}</p>
+        <p className="text-body text-ink-secondary max-w-sm">{description}</p>
       )}
       {action && (
-        <Button onClick={action.onClick} className="mt-4">
+        <Button onClick={action.onClick} className="mt-6">
           {action.label}
         </Button>
       )}
