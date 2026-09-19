@@ -44,6 +44,12 @@ const AdminSignupSchema = z.object({
     gotra: z.string().optional(),
     bloodGroup: BloodGroupSchema.optional(),
 });
+/**
+ * Performs handle admin signup operation.
+ * @param {Request} req - Description of req
+ * @param {string} role - Description of role
+ * @returns {Promise<Response>} Description of return value
+ */
 export async function handleAdminSignup(
     req: Request,
     role: string,
@@ -136,6 +142,12 @@ const AdminLoginSchema = z.object({
     email: z.string().email("Invalid email"),
     password: z.string().min(1, "Password is required"),
 });
+/**
+ * Performs handle admin login operation.
+ * @param {Request} req - Description of req
+ * @param {string} expectedRole - Description of expectedRole
+ * @returns {Promise<Response>} Description of return value
+ */
 export async function handleAdminLogin(
     req: Request,
     expectedRole: string,

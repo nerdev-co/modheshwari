@@ -15,6 +15,10 @@ import { useLocale } from "../../lib/LocaleContext";
 import { apiPost } from "../../lib/api";
 import { API_BASE } from "../../lib/config";
 
+/**
+ * Performs  families page operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function FamiliesPage() {
     const navigate = useNavigate();
     const { user, loading, refresh } = useUser();

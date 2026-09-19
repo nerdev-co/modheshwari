@@ -23,6 +23,29 @@ const VARIANT_STYLES: Record<string, string> = {
   info: "bg-accent text-on-accent hover:bg-accent-hover focus:ring-accent",
 };
 
+/**
+ * Performs  confirm dialog operation.
+ * @param {ConfirmDialogProps} {
+ *   open,
+ *   title,
+ *   description,
+ *   confirmLabel = "Confirm",
+ *   cancelLabel = "Cancel",
+ *   variant = "danger",
+ *   onConfirm,
+ *   onCancel,
+ * } - Description of {
+ *   open,
+ *   title,
+ *   description,
+ *   confirmLabel = "Confirm",
+ *   cancelLabel = "Cancel",
+ *   variant = "danger",
+ *   onConfirm,
+ *   onCancel,
+ * }
+ * @returns {any} Description of return value
+ */
 export function ConfirmDialog({
   open,
   title,

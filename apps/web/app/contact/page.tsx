@@ -2,7 +2,6 @@
 
 import React, { useCallback, useMemo, useState } from "react";
 import { Bug, HelpCircle, Lightbulb, MessageSquare, Send } from "lucide-react";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
 import { Input } from "@repo/ui/input";
@@ -29,6 +28,10 @@ const INITIAL_FORM_STATE: ContactFormState = {
     type: "question",
 };
 
+/**
+ * Performs  contact page operation.
+ * @returns {any} Description of return value
+ */
 export default function ContactPage() {
     const { t } = useLocale();
     const [formData, setFormData] = useState(INITIAL_FORM_STATE);
@@ -88,17 +91,17 @@ export default function ContactPage() {
     ];
 
     return (
-        <DreamySunsetBackground className="px-6 py-10">
+        <div className="min-h-screen px-6 py-10">
             <section className="max-w-5xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-14 space-y-4">
-                    <span className="inline-block px-4 py-1.5 rounded-full bg-jewel-100/60 border border-jewel-400/20 text-sm text-jewel-600">
+                    <span className="inline-block px-4 py-1.5 border border-border text-sm text-ink-secondary">
                         {t("contact.badge")}
                     </span>
-                    <h1 className="text-5xl font-display font-bold tracking-tight text-text-primary">
+                    <h1 className="text-5xl font-display font-bold tracking-tight text-ink">
                         {t("contact.heading")}
                     </h1>
-                    <p className="text-jewel-600 max-w-xl mx-auto">
+                    <p className="text-ink-secondary max-w-xl mx-auto">
                         {t("contact.subtitle")}
                     </p>
                 </div>
@@ -113,10 +116,10 @@ export default function ContactPage() {
                                 key={t.value}
                                 variant="secondary"
                                 onClick={() => setFormData((p) => ({ ...p, type: t.value }))}
-                                className={`relative overflow-hidden rounded-2xl p-4 border transition-all
+                                className={`relative overflow-hidden border p-4 transition-all
                   ${active
-                                        ? "bg-jewel-gold/10 border-jewel-gold/40 text-jewel-900 shadow-jewel"
-                                        : "bg-jewel-50/60 border-jewel-400/20 hover:border-jewel-gold/30 text-jewel-600"
+                                        ? "bg-saffron/10 border-saffron text-ink"
+                                        : "bg-surface border-border hover:border-saffron text-ink-secondary"
                                     }
                 `}
                             >
@@ -130,16 +133,16 @@ export default function ContactPage() {
                 </div>
 
                 {/* Form Card */}
-                <Card className="p-8 rounded-3xl">
+                <Card className="p-8 border">
                     {submitted ? (
                         <div className="py-20 text-center">
-                            <div className="w-14 h-14 mx-auto rounded-full bg-jewel-emerald/10 flex items-center justify-center">
-                                <Send className="w-7 h-7 text-jewel-emerald" />
+                            <div className="w-14 h-14 mx-auto rounded-full bg-emerald/10 flex items-center justify-center">
+                                <Send className="w-7 h-7 text-emerald" />
                             </div>
-                            <h2 className="mt-6 text-2xl font-display font-bold text-jewel-900">
+                            <h2 className="mt-6 text-2xl font-display font-bold text-ink">
                                 {t("contact.successHeading")}
                             </h2>
-                            <p className="text-jewel-600 mt-2">
+                            <p className="text-ink-secondary mt-2">
                                 {t("contact.successDescription")}
                             </p>
                         </div>
@@ -176,11 +179,11 @@ export default function ContactPage() {
                                 placeholder={t("contact.messagePlaceholder")}
                                 value={formData.message}
                                 onChange={handleChange}
-                                className="w-full rounded-xl bg-jewel-50/50 border border-jewel-400/30 px-4 py-3 text-sm text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent transition-all resize-none"
+                                className="w-full bg-surface border border-border px-4 py-3 text-sm text-ink placeholder-ink-muted focus:outline-none focus:ring-2 focus:ring-saffron/50 focus:border-transparent transition-all resize-none"
                             />
 
                             {error && (
-                                <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700" role="alert">
+                                <div className="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
                                     {error}
                                 </div>
                             )}
@@ -196,6 +199,6 @@ export default function ContactPage() {
                     )}
                 </Card>
             </section>
-        </DreamySunsetBackground>
+        </div>
     );
 }

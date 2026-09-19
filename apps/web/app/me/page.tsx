@@ -25,9 +25,9 @@ import { useLocale } from "../../lib/LocaleContext";
 
 const ROLE_COLORS: Record<string, string> = {
     COMMUNITY_HEAD: "bg-saffron",
-    COMMUNITY_SUBHEAD: "bg-jewel-600",
+    COMMUNITY_SUBHEAD: "bg-ink-secondary",
     GOTRA_HEAD: "bg-emerald",
-    FAMILY_HEAD: "bg-jewel-500",
+    FAMILY_HEAD: "bg-ink-muted",
     MEMBER: "bg-ink-muted",
 };
 
@@ -39,6 +39,10 @@ const ROLE_LABELS: Record<string, string> = {
     MEMBER: "Member",
 };
 
+/**
+ * Performs  me page operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function MePage() {
     const navigate = useNavigate();
     const { user, loading } = useUser();

@@ -1,34 +1,36 @@
 "use client";
 
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
-
 import { useLocale } from "../../lib/LocaleContext";
 
+/**
+ * Performs  privacy operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function Privacy() {
   const { t } = useLocale();
 
   return (
-    <DreamySunsetBackground className="px-6 py-10">
+    <div className="min-h-screen">
       <div className="max-w-4xl mx-auto">
         <div className="mb-12">
-          <h1 className="text-4xl sm:text-5xl font-display font-bold text-jewel-900 mb-4">
+          <h1 className="text-4xl sm:text-5xl font-display font-bold text-ink mb-4">
             {t("privacy.title")}
           </h1>
-          <p className="text-jewel-gold font-medium">
+          <p className="text-saffron font-medium">
             {t("privacy.lastUpdated")}
           </p>
         </div>
 
-        <div className="bg-jewel-50/80 backdrop-blur-xl rounded-2xl p-8 border border-jewel-400/20 shadow-jewel mb-8">
-          <p className="text-jewel-700 text-lg leading-relaxed">
+        <div className="bg-surface border p-8 border-border mb-8">
+          <p className="text-ink-secondary text-lg leading-relaxed">
             {t("privacy.intro")}
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-jewel-50/80 backdrop-blur-xl rounded-2xl p-6 border border-jewel-400/20 shadow-jewel">
-            <h2 className="text-xl font-display font-bold text-jewel-900 mb-3">{t("privacy.securityTips")}</h2>
-            <ul className="space-y-2 text-jewel-700">
+          <div className="bg-surface border p-6 border-border">
+            <h2 className="text-xl font-display font-bold text-ink mb-3">{t("privacy.securityTips")}</h2>
+            <ul className="space-y-2 text-ink-secondary">
               <li>{t("privacy.useStrongPasswords")}</li>
               <li>{t("privacy.neverSharePassword")}</li>
               <li>{t("privacy.changePasswordRegularly")}</li>
@@ -36,9 +38,9 @@ export default function Privacy() {
             </ul>
           </div>
 
-          <div className="bg-jewel-50/80 backdrop-blur-xl rounded-2xl p-6 border border-jewel-400/20 shadow-jewel">
-            <h2 className="text-xl font-display font-bold text-jewel-900 mb-3">{t("privacy.beforeRequests")}</h2>
-            <ul className="space-y-2 text-jewel-700">
+          <div className="bg-surface border p-6 border-border">
+            <h2 className="text-xl font-display font-bold text-ink mb-3">{t("privacy.beforeRequests")}</h2>
+            <ul className="space-y-2 text-ink-secondary">
               <li>{t("privacy.discussWithFamily")}</li>
               <li>{t("privacy.speakWithPeers")}</li>
               <li>{t("privacy.considerCommunityImpact")}</li>
@@ -47,23 +49,23 @@ export default function Privacy() {
           </div>
         </div>
 
-        <div className="bg-jewel-gold/10 rounded-2xl p-8 border-2 border-jewel-gold/30">
+        <div className="bg-saffron/10 p-8 border border-saffron/30">
           <div className="flex items-start gap-4">
             <div>
-              <h3 className="text-xl font-display font-bold text-jewel-900 mb-2">{t("privacy.important")}</h3>
-              <p className="text-jewel-700">
+              <h3 className="text-xl font-display font-bold text-ink mb-2">{t("privacy.important")}</h3>
+              <p className="text-ink-secondary">
                 {t("privacy.importantMessage")}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-jewel-400/20 text-center">
-          <p className="text-jewel-500 text-sm">
+        <div className="mt-12 pt-8 border-t border-border text-center">
+          <p className="text-ink-muted text-sm">
             {t("privacy.contactText")}
           </p>
         </div>
       </div>
-    </DreamySunsetBackground>
+    </div>
   );
 }

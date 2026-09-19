@@ -2,7 +2,6 @@
 
 import React, { useCallback, useEffect, useMemo, useState, useId } from "react";
 import { useNavigate } from "react-router-dom";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { Input } from "@repo/ui/input";
 import { LoadingState } from "@repo/ui/loadingState";
@@ -39,6 +38,10 @@ const EMPTY_FORM: FormState = {
   notes: "",
 };
 
+/**
+ * Performs  medical records page operation.
+ * @returns {any} Description of return value
+ */
 export default function MedicalRecordsPage() {
   const { user, loading } = useUser();
   const { t } = useLocale();
@@ -54,9 +57,9 @@ export default function MedicalRecordsPage() {
   }, [user, loading, navigate]);
 
   if (loading) return (
-    <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
+    <div className="min-h-screen px-6 py-10 flex items-center justify-center">
       <LoadingState message={t("common.loading")} />
-    </DreamySunsetBackground>
+    </div>
   );
   if (!user) return null;
 
@@ -116,12 +119,12 @@ export default function MedicalRecordsPage() {
   }
 
   return (
-    <DreamySunsetBackground className="px-6 py-10">
+    <div className="min-h-screen px-6 py-10">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-display font-bold text-jewel-900 mb-4">{t("medical.records.title")}</h1>
+        <h1 className="text-2xl font-display font-bold text-ink mb-4">{t("medical.records.title")}</h1>
 
         {error && (
-          <div className="mb-4 rounded-xl border border-jewel-ruby/30 bg-jewel-ruby/10 px-4 py-3 text-sm text-jewel-ruby">
+          <div className="mb-4 rounded-xl border border-ruby/30 bg-ruby/10 px-4 py-3 text-sm text-ruby">
             {error}
           </div>
         )}
@@ -167,7 +170,7 @@ export default function MedicalRecordsPage() {
             <textarea
               value={form.notes}
               onChange={(e) => updateField("notes", e.target.value)}
-              className="w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 min-h-[100px] resize-none"
+              className="w-full rounded-xl border border-ink-muted/30 bg-surface px-3 py-2 text-ink placeholder-ink-muted focus:outline-none focus:ring-2 focus:ring-saffron/50 min-h-[100px] resize-none"
               placeholder={t("medical.records.notesPlaceholder")}
               aria-label={t("medical.records.notes")}
             />
@@ -181,12 +184,12 @@ export default function MedicalRecordsPage() {
           </Button>
         </form>
 
-        <h2 className="text-lg font-display font-bold text-jewel-900 mb-3">{t("medical.records.yourRecords")}</h2>
+        <h2 className="text-lg font-display font-bold text-ink mb-3">{t("medical.records.yourRecords")}</h2>
 
         {loadingData ? (
           <LoadingState message={t("common.loading")} size="sm" />
         ) : records.length === 0 ? (
-          <p className="text-sm text-jewel-500">{t("medical.records.noRecordsYet")}</p>
+          <p className="text-sm text-ink-muted">{t("medical.records.noRecordsYet")}</p>
         ) : (
           <ul className="space-y-4">
             {records.map((r) => (
@@ -197,7 +200,7 @@ export default function MedicalRecordsPage() {
                 <Row label={t("medical.records.medications")} value={r.medications} />
                 {r.notes && <Row label={t("medical.records.notes")} value={r.notes} />}
 
-                <div className="mt-3 text-xs text-jewel-500">
+                <div className="mt-3 text-xs text-ink-muted">
                   {new Date(r.createdAt).toLocaleString()}
                 </div>
               </li>
@@ -205,7 +208,7 @@ export default function MedicalRecordsPage() {
           </ul>
         )}
       </div>
-    </DreamySunsetBackground>
+    </div>
   );
 }
 
@@ -228,7 +231,7 @@ function Field({
   const fieldId = useId();
   return (
     <div className="space-y-1">
-      <label htmlFor={fieldId} className="text-sm font-medium text-jewel-700">{label}</label>
+      <label htmlFor={fieldId} className="text-sm font-medium text-ink-secondary">{label}</label>
       {React.isValidElement(children)
         ? React.cloneElement(children as React.ReactElement<{ id?: string }>, { id: fieldId })
         : children}
@@ -236,11 +239,16 @@ function Field({
   );
 }
 
+/**
+ * Performs  row operation.
+ * @param {{ label: string; value?: string; }} { label, value } - Description of { label, value }
+ * @returns {any} Description of return value
+ */
 function Row({ label, value }: { label: string; value?: string }) {
   return (
     <div className="text-sm">
-      <span className="font-semibold text-jewel-800">{label}:</span>{" "}
-      <span className="text-jewel-600">{value?.trim() || "\u2014"}</span>
+      <span className="font-semibold text-ink">{label}:</span>{" "}
+      <span className="text-ink-secondary">{value?.trim() || "\u2014"}</span>
     </div>
   );
 }

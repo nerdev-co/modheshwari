@@ -10,6 +10,19 @@ interface LoadingStateProps {
   className?: string;
 }
 
+/**
+ * Performs  loading state operation.
+ * @param {LoadingStateProps} {
+ *   message,
+ *   size = "md",
+ *   className = "",
+ * } - Description of {
+ *   message,
+ *   size = "md",
+ *   className = "",
+ * }
+ * @returns {any} Description of return value
+ */
 export function LoadingState({
   message,
   size = "md",

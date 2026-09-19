@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { LoadingState } from "@repo/ui/loadingState";
 import { MOTION_PAGE_ENTER } from "@repo/ui/motion";
 
@@ -12,6 +11,10 @@ import SearchInput from "./SearchInput";
 import { useUser } from "../../lib/UserContext";
 import { useLocale } from "../../lib/LocaleContext";
 
+/**
+ * Performs  search page operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function SearchPage() {
   const { user, loading } = useUser();
   const { t } = useLocale();
@@ -39,14 +42,14 @@ export default function SearchPage() {
   }, []);
 
   if (loading) return (
-    <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
+    <div className="min-h-screen px-6 py-10 flex items-center justify-center">
       <LoadingState message={t("common.loading")} />
-    </DreamySunsetBackground>
+    </div>
   );
   if (!user) return null;
 
   return (
-    <DreamySunsetBackground className="px-6 py-10">
+    <div className="min-h-screen px-6 py-10">
       <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -54,15 +57,15 @@ export default function SearchPage() {
           transition={MOTION_PAGE_ENTER}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-jewel-gold/15 border border-jewel-gold/25 mb-6">
-            <Search className="w-8 h-8 text-jewel-gold" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-saffron/15 border border-saffron/25 mb-6">
+            <Search className="w-8 h-8 text-saffron" />
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-display font-bold text-jewel-900 mb-4">
+          <h1 className="text-4xl sm:text-5xl font-display font-bold text-ink mb-4">
             {t("search.title")}
           </h1>
 
-          <p className="text-jewel-500 text-lg">
+          <p className="text-ink-muted text-lg">
             {t("search.subtitle")}
           </p>
         </motion.div>
@@ -71,7 +74,7 @@ export default function SearchPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...MOTION_PAGE_ENTER, delay: 0.2 }}
-          className="bg-jewel-50/80 backdrop-blur-2xl rounded-2xl p-8 border border-jewel-400/20 shadow-jewel"
+          className="bg-surface backdrop-blur-2xl rounded-xl p-8 border border-border"
         >
           <div className="relative mb-6">
             <SearchInput
@@ -80,13 +83,13 @@ export default function SearchPage() {
             />
           </div>
 
-          <div className="flex items-center justify-center gap-2 text-sm text-jewel-400">
+          <div className="flex items-center justify-center gap-2 text-sm text-ink-muted">
             <span>{t("search.quickSearch")}</span>
-            <kbd className="px-2 py-1 bg-jewel-50/50 border border-jewel-400/30 rounded text-xs font-mono text-jewel-500 shadow-sm">
+            <kbd className="px-2 py-1 bg-surface border border-border rounded text-xs font-mono text-ink-muted shadow-sm">
               {isMac ? "\u2318" : "Ctrl"}
             </kbd>
-            <span className="text-jewel-300">+</span>
-            <kbd className="px-2 py-1 bg-jewel-50/50 border border-jewel-400/30 rounded text-xs font-mono text-jewel-500 shadow-sm">
+            <span className="text-ink-muted">+</span>
+            <kbd className="px-2 py-1 bg-surface border border-border rounded text-xs font-mono text-ink-muted shadow-sm">
               K
             </kbd>
           </div>
@@ -98,8 +101,8 @@ export default function SearchPage() {
           transition={{ ...MOTION_PAGE_ENTER, delay: 0.6 }}
           className="mt-8"
         >
-          <p className="text-sm text-jewel-400 mb-3">{t("search.advancedFilters")}</p>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs text-jewel-500">
+          <p className="text-sm text-ink-muted mb-3">{t("search.advancedFilters")}</p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs text-ink-muted">
             {[
               { label: t("search.byGotra"), desc: t("search.filterByGotra") },
               { label: t("search.byProfession"), desc: t("search.filterByProfession") },
@@ -110,10 +113,10 @@ export default function SearchPage() {
             ].map(({ label, desc }) => (
               <div
                 key={label}
-                className="p-3 bg-jewel-50/60 backdrop-blur-md border border-jewel-400/20 rounded-xl shadow-sm hover:bg-jewel-100/60 transition-all duration-200 cursor-default"
+                className="p-3 bg-surface backdrop-blur-md border border-border rounded-xl shadow-sm hover:bg-surface transition-all duration-200 cursor-default"
               >
-                <span className="font-semibold text-jewel-700">{label}</span>
-                <p className="text-jewel-400 text-xs mt-1">{desc}</p>
+                <span className="font-semibold text-ink-secondary">{label}</span>
+                <p className="text-ink-muted text-xs mt-1">{desc}</p>
               </div>
             ))}
           </div>
@@ -125,11 +128,11 @@ export default function SearchPage() {
           transition={{ ...MOTION_PAGE_ENTER, delay: 0.8 }}
           className="mt-12 text-center"
         >
-          <p className="text-xs text-jewel-400">
+          <p className="text-xs text-ink-muted">
             {t("search.tip")}
           </p>
         </motion.div>
       </div>
-    </DreamySunsetBackground>
+    </div>
   );
 }

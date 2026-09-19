@@ -105,6 +105,11 @@ export function transliterateToDevanagari(text: string): string {
   return basicTransliterate(lower);
 }
 
+/**
+ * Performs basic transliterate operation.
+ * @param {string} text - Description of text
+ * @returns {string} Description of return value
+ */
 function basicTransliterate(text: string): string {
   let result = "";
   let i = 0;

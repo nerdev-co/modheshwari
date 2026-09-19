@@ -387,6 +387,12 @@ const ReviewResourceRequestSchema = z.object({
   remarks: z.string().optional(),
 });
 
+/**
+ * Performs handle review resource request operation.
+ * @param {Request} req - Description of req
+ * @param {string} id - Description of id
+ * @returns {Promise<Response>} Description of return value
+ */
 export async function handleReviewResourceRequest(
     req: Request,
     id: string,

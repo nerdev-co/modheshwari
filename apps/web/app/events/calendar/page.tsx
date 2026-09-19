@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Calendar as CalIcon } from "lucide-react";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { LoadingState } from "@repo/ui/loadingState";
+import { motion } from "framer-motion";
+import { MOTION_PAGE_ENTER } from "@repo/ui/motion";
 
 import apiFetch from "../../../lib/api";
 import { API_BASE } from "../../../lib/config";
@@ -35,6 +36,10 @@ function endOfMonth(d: Date) {
     return new Date(d.getFullYear(), d.getMonth() + 1, 0);
 }
 
+/**
+ * Performs  events calendar operation.
+ * @returns {any} Description of return value
+ */
 export default function EventsCalendar() {
     const { t } = useLocale();
     const { user, loading: authLoading } = useUser();
@@ -118,9 +123,9 @@ export default function EventsCalendar() {
 
     if (authLoading)
         return (
-            <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
+            <div className="flex items-center justify-center min-h-screen">
                 <LoadingState message={t("events.calendar.loading")} />
-            </DreamySunsetBackground>
+            </div>
         );
     if (!user) return null;
 
@@ -168,276 +173,96 @@ export default function EventsCalendar() {
     const dayKeys = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
 
     return (
-        <DreamySunsetBackground className="px-6 py-10">
-            <div className="max-w-6xl mx-auto">
-                <div className="p-6 md:p-8 bg-surface rounded-2xl border border-border">
-                    {/* Header */}
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div className="min-h-screen">
+            <div className="mx-auto max-w-[1100px] px-6 py-10 sm:px-8 lg:px-10 lg:py-14">
+                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={MOTION_PAGE_ENTER} className="mb-14">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                         <div className="flex items-center gap-3">
-                            <CalIcon className="w-6 h-6 text-jewel-gold" />
+                            <CalIcon className="w-5 h-5 text-saffron" />
                             <div>
-                                <h1 className="text-2xl md:text-3xl font-display font-bold text-jewel-900">
-                                    {t("events.calendar.title")}
-                                </h1>
-                                <p className="text-sm text-jewel-500">
-                                    {t("events.calendar.description")}
-                                </p>
+                                <h1 className="font-display text-[36px] font-semibold leading-tight text-ink">{t("events.calendar.title")}</h1>
+                                <p className="text-[15px] text-ink-secondary mt-1">{t("events.calendar.description")}</p>
                             </div>
                         </div>
-
                         <div className="flex items-center gap-2">
-                            <Button
-                                variant="secondary"
-                                size="sm"
-                                aria-label={t("events.calendar.previousMonth")}
-                                onClick={() =>
-                                    setCurrent(
-                                        new Date(
-                                            current.getFullYear(),
-                                            current.getMonth() - 1,
-                                            1,
-                                        ),
-                                    )
-                                }
-                                className="p-2 bg-jewel-50/50 border border-jewel-400/30 rounded-xl hover:bg-jewel-100 transition"
-                            >
-                                <ChevronLeft className="w-5 h-5 text-jewel-900" />
+                            <Button variant="secondary" size="sm" onClick={() => setCurrent(new Date(current.getFullYear(), current.getMonth() - 1, 1))}>
+                                <ChevronLeft className="w-4 h-4" />
                             </Button>
-
-                            <div className="px-4 py-2 bg-jewel-50/50 border border-jewel-400/30 rounded-xl font-medium text-jewel-900">
-                                {current.toLocaleString(undefined, {
-                                    month: "long",
-                                    year: "numeric",
-                                })}
-                            </div>
-
-                            <Button
-                                variant="secondary"
-                                size="sm"
-                                aria-label={t("events.calendar.nextMonth")}
-                                onClick={() =>
-                                    setCurrent(
-                                        new Date(
-                                            current.getFullYear(),
-                                            current.getMonth() + 1,
-                                            1,
-                                        ),
-                                    )
-                                }
-                                className="p-2 bg-jewel-50/50 border border-jewel-400/30 rounded-xl hover:bg-jewel-100 transition"
-                            >
-                                <ChevronRight className="w-5 h-5 text-jewel-900" />
+                            <span className="text-[14px] font-medium text-ink px-3">
+                                {current.toLocaleString(undefined, { month: "long", year: "numeric" })}
+                            </span>
+                            <Button variant="secondary" size="sm" onClick={() => setCurrent(new Date(current.getFullYear(), current.getMonth() + 1, 1))}>
+                                <ChevronRight className="w-4 h-4" />
                             </Button>
                         </div>
                     </div>
+                </motion.div>
 
-                    <div className="lg:flex lg:gap-6">
+                <div className="h-px bg-border" />
+
+                <div className="py-10">
+                    <div className="lg:flex lg:gap-8">
                         <div className="flex-1 min-w-0">
-                            <div className="grid grid-cols-7 gap-2 text-xs font-semibold tracking-wide text-jewel-500 mb-3">
+                            <div className="grid grid-cols-7 gap-1 text-[11px] font-semibold uppercase tracking-wider text-ink-muted mb-3">
                                 {dayKeys.map((d) => (
-                                    <div key={d} className="text-center">
-                                        {t(`events.calendar.${d}`)}
-                                    </div>
+                                    <div key={d} className="text-center py-2">{t(`events.calendar.${d}`)}</div>
                                 ))}
                             </div>
 
-                            <div className="grid grid-cols-7 gap-2 auto-rows-[92px]">
+                            <div className="grid grid-cols-7 gap-1">
                                 {days.map((dayObj, idx) => {
-                                    const key = dayObj.date
-                                        .toISOString()
-                                        .slice(0, 10);
-                                    const dayEvents =
-                                        eventsByDay.get(key) || [];
-                                    const isSelected =
-                                        selectedDate &&
-                                        selectedDate
-                                            .toISOString()
-                                            .slice(0, 10) === key;
-                                    const todayKey = new Date()
-                                        .toISOString()
-                                        .slice(0, 10);
+                                    const key = dayObj.date.toISOString().slice(0, 10);
+                                    const dayEvents = eventsByDay.get(key) || [];
+                                    const isSelected = selectedDate && selectedDate.toISOString().slice(0, 10) === key;
+                                    const todayKey = new Date().toISOString().slice(0, 10);
                                     const isToday = key === todayKey;
 
                                     return (
-                                        <Button
+                                        <button
                                             key={idx}
-                                            variant="secondary"
-                                            size="sm"
                                             type="button"
-                                            onClick={() =>
-                                                setSelectedDate(
-                                                    new Date(dayObj.date),
-                                                )
-                                            }
-                                            className={`relative w-full h-full text-left rounded-xl border transition
-                        ${
-                            dayObj.inMonth
-                                ? "bg-jewel-50/50 border-jewel-400/20 hover:bg-jewel-100/60 hover:shadow-sm flex flex-col"
-                                : "bg-jewel-50/30 border-jewel-400/10 text-jewel-400"
-                        }
-                        ${isSelected ? "ring-2 ring-jewel-gold/40 border-jewel-gold/30 bg-jewel-gold/5" : ""}
-                      `}
+                                            onClick={() => setSelectedDate(new Date(dayObj.date))}
+                                            className={`relative text-left p-2 min-h-[80px] border transition ${
+                                                dayObj.inMonth ? "border-border-subtle hover:bg-surface" : "border-transparent"
+                                            } ${isSelected ? "ring-1 ring-saffron border-saffron" : ""}`}
                                         >
-                                            <div className="absolute top-2 right-2">
-                                                <div
-                                                    className={`h-7 w-7 rounded-full flex items-center justify-center text-sm font-semibold
-                            ${
-                                isToday
-                                    ? "bg-jewel-gold text-jewel-deep"
-                                    : dayObj.inMonth
-                                      ? "text-jewel-900"
-                                      : "text-jewel-400"
-                            }
-                          `}
-                                                >
+                                            <div className="flex justify-end mb-1">
+                                                <span className={`text-[13px] font-medium ${isToday ? "text-saffron" : dayObj.inMonth ? "text-ink" : "text-ink-muted"}`}>
                                                     {dayObj.date.getDate()}
-                                                </div>
+                                                </span>
                                             </div>
-
                                             {dayEvents.length > 0 && (
-                                                <div className="absolute top-2 left-2">
-                                                    <div className="text-[11px] px-2 py-0.5 rounded-full bg-jewel-gold/15 text-jewel-gold border border-jewel-gold/25">
-                                                        {dayEvents.length === 1
-                                                            ? t(
-                                                                  "events.calendar.eventCount_one",
-                                                                  {
-                                                                      count: dayEvents.length,
-                                                                  },
-                                                              )
-                                                            : t(
-                                                                  "events.calendar.eventCount_other",
-                                                                  {
-                                                                      count: dayEvents.length,
-                                                                  },
-                                                              )}
-                                                    </div>
-                                                </div>
+                                                <div className="text-[10px] text-saffron font-medium">{dayEvents.length} event{dayEvents.length > 1 ? "s" : ""}</div>
                                             )}
-
-                                            <div className="absolute left-2 right-2 bottom-2 space-y-1">
-                                                {dayEvents
-                                                    .slice(0, 1)
-                                                    .map((ev: EventItem) => (
-                                                        <div
-                                                            key={ev.id}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                navigate(
-                                                                    `/events/${ev.id}`,
-                                                                );
-                                                            }}
-                                                            title={ev.name}
-                                                            className="text-xs px-2 py-1 rounded-md bg-jewel-50/80 border border-jewel-400/20 text-jewel-900 hover:bg-jewel-100 truncate"
-                                                        >
-                                                            {ev.name}
-                                                        </div>
-                                                    ))}
-                                                <div className="mt-auto space-y-1">
-                                                    {dayEvents.length > 1 && (
-                                                        <div className="text-[11px] text-jewel-400">
-                                                            {t(
-                                                                "events.calendar.moreCount",
-                                                                {
-                                                                    count:
-                                                                        dayEvents.length -
-                                                                        1,
-                                                                },
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </Button>
+                                            {dayEvents.slice(0, 1).map((ev: EventItem) => (
+                                                <div key={ev.id} onClick={(e) => { e.stopPropagation(); navigate(`/events/${ev.id}`); }} title={ev.name}
+                                                    className="text-[11px] text-ink truncate mt-0.5 hover:text-saffron cursor-pointer">{ev.name}</div>
+                                            ))}
+                                        </button>
                                     );
                                 })}
                             </div>
                         </div>
 
-                        <aside className="mt-4 lg:mt-0 lg:w-80 lg:flex-shrink-0">
-                            <div className="bg-surface-muted p-4 rounded-2xl border border-border">
-                                <div className="flex items-center justify-between mb-3">
-                                    <h3 className="text-sm font-display font-bold text-jewel-900">
-                                        {selectedDate
-                                            ? selectedDate.toLocaleDateString(
-                                                  undefined,
-                                                  {
-                                                      weekday: "long",
-                                                      year: "numeric",
-                                                      month: "short",
-                                                      day: "numeric",
-                                                  },
-                                              )
-                                            : t(
-                                                  "events.calendar.upcomingEvents",
-                                              )}
+                        <aside className="mt-6 lg:mt-0 lg:w-72 lg:flex-shrink-0">
+                            <div className="border border-border p-4">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-[14px] font-semibold text-ink">
+                                        {selectedDate ? selectedDate.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" }) : t("events.calendar.upcomingEvents")}
                                     </h3>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => navigate("/events")}
-                                        className="text-xs text-jewel-gold hover:text-jewel-500 hover:underline"
-                                    >
-                                        {t("events.calendar.viewAll")}
-                                    </Button>
+                                    <button onClick={() => navigate("/events")} className="text-[12px] text-saffron hover:text-ink transition-colors">{t("events.calendar.viewAll")}</button>
                                 </div>
-
                                 <div className="space-y-3 max-h-[60vh] overflow-auto">
-                                    {(selectedDate
-                                        ? eventsByDay.get(
-                                              selectedDate
-                                                  .toISOString()
-                                                  .slice(0, 10),
-                                          ) || []
-                                        : events.slice(0, 50)
-                                    ).map((ev) => (
-                                        <div
-                                            key={ev.id}
-                                            className="p-3 rounded-xl bg-jewel-50/50 border border-jewel-400/20 flex items-start justify-between"
-                                        >
-                                            <div className="flex-1">
-                                                <div className="font-medium text-jewel-900">
-                                                    {ev.name}
-                                                </div>
-                                                <div className="text-xs text-jewel-500">
-                                                    {new Date(
-                                                        ev.date,
-                                                    ).toLocaleString()}
-                                                </div>
-                                                {ev.venue && (
-                                                    <div className="text-xs text-jewel-500">
-                                                        {ev.venue}
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="ml-3 flex-shrink-0">
-                                                <Button
-                                                    variant="secondary"
-                                                    onClick={() =>
-                                                        navigate(
-                                                            `/events/${ev.id}`,
-                                                        )
-                                                    }
-                                                >
-                                                    {t("events.calendar.open")}
-                                                </Button>
-                                            </div>
+                                    {(selectedDate ? eventsByDay.get(selectedDate.toISOString().slice(0, 10)) || [] : events.slice(0, 50)).map((ev) => (
+                                        <div key={ev.id} className="py-3 border-b border-border-subtle last:border-0">
+                                            <p className="text-[14px] font-medium text-ink">{ev.name}</p>
+                                            <p className="text-[12px] text-ink-muted">{new Date(ev.date).toLocaleString()}</p>
+                                            {ev.venue && <p className="text-[12px] text-ink-muted">{ev.venue}</p>}
                                         </div>
                                     ))}
-
-                                    {selectedDate &&
-                                        (
-                                            eventsByDay.get(
-                                                selectedDate
-                                                    .toISOString()
-                                                    .slice(0, 10),
-                                            ) || []
-                                        ).length === 0 && (
-                                            <div className="text-sm text-jewel-500">
-                                                {t(
-                                                    "events.calendar.noEventsOnDay",
-                                                )}
-                                            </div>
-                                        )}
+                                    {selectedDate && (eventsByDay.get(selectedDate.toISOString().slice(0, 10)) || []).length === 0 && (
+                                        <p className="text-[13px] text-ink-muted">{t("events.calendar.noEventsOnDay")}</p>
+                                    )}
                                 </div>
                             </div>
                         </aside>
@@ -445,14 +270,11 @@ export default function EventsCalendar() {
 
                     {loading && (
                         <div className="mt-4">
-                            <LoadingState
-                                message={t("events.calendar.loadingEvents")}
-                                size="sm"
-                            />
+                            <LoadingState message={t("events.calendar.loadingEvents")} size="sm" />
                         </div>
                     )}
                 </div>
             </div>
-        </DreamySunsetBackground>
+        </div>
     );
 }

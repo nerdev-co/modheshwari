@@ -37,6 +37,11 @@ const MemberSigninSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
+/**
+ * Performs handle member login operation.
+ * @param {Request} req - Description of req
+ * @returns {Promise<any>} Description of return value
+ */
 export async function handleMemberLogin(req: Request) {
   try {
     const v = await validateBody(req, MemberSigninSchema);
@@ -122,6 +127,11 @@ const MemberSignupSchema = z.object({
   familyId: z.string().min(1, "Family ID is required"),
 });
 
+/**
+ * Performs handle member signup operation.
+ * @param {Request} req - Description of req
+ * @returns {Promise<any>} Description of return value
+ */
 export async function handleMemberSignup(req: Request) {
   try {
     const v = await validateBody(req, MemberSignupSchema);

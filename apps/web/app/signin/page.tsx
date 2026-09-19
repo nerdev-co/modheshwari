@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, Lock, Loader2, ArrowRight } from "lucide-react";
 import { useToast } from "@repo/ui/toast";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { MOTION_ENTER } from "@repo/ui/motion";
 import { Input } from "@repo/ui/input";
@@ -23,6 +22,10 @@ const roles = [
   { label: "signin.communitySubhead", value: "communitysubhead" },
 ];
 
+/**
+ * Performs  signin page operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function SigninPage() {
   const navigate = useNavigate();
   const { t } = useLocale();
@@ -73,34 +76,34 @@ export default function SigninPage() {
   }
 
   return (
-    <DreamySunsetBackground className="flex items-center justify-center min-h-screen px-4 py-12">
+    <div className="flex items-center justify-center min-h-screen px-4 py-12">
       <motion.main
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={MOTION_ENTER}
         className="w-full max-w-md relative z-10"
       >
-        <div className="bg-jewel-50/80 backdrop-blur-xl rounded-2xl p-8 border border-jewel-400/20 shadow-jewel">
+        <div className="bg-surface p-8 border border-border">
           <div className="text-center mb-8">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ ...MOTION_ENTER, delay: 0.1 }}
-              className="inline-flex items-center justify-center h-16 w-16 rounded-xl bg-gradient-to-br from-jewel-gold to-jewel-500 text-jewel-deep text-2xl font-bold shadow-lg shadow-jewel-gold/25 mb-4"
+              className="inline-flex items-center justify-center h-16 w-16 rounded-xl bg-saffron text-white text-2xl font-bold mb-4"
             >
               M
             </motion.div>
-            <h1 className="text-3xl font-display font-bold text-text-primary mb-2">
+            <h1 className="text-3xl font-display font-bold text-ink mb-2">
               {t("signin.title")}
             </h1>
-            <p className="text-sm text-jewel-600">
+            <p className="text-sm text-ink-secondary">
               {t("signin.subtitle")}
             </p>
           </div>
 
           <form className="space-y-6" onSubmit={handleLogin}>
             <fieldset>
-              <legend className="block text-xs font-medium text-jewel-700 mb-3">
+              <legend className="block text-xs font-medium text-ink-secondary mb-3">
                 {t("signin.selectRole")}
               </legend>
               <div className="flex flex-wrap gap-2">
@@ -111,8 +114,8 @@ export default function SigninPage() {
                       relative px-3 py-2 rounded-lg border cursor-pointer text-xs font-medium transition-all duration-300
                       ${
                         role === r.value
-                          ? "bg-accent text-on-accent border-transparent shadow-lg shadow-accent/25"
-                          : "bg-surface-muted text-text-primary border-border hover:bg-accent-muted hover:border-accent/40"
+                          ? "bg-saffron text-white border-transparent"
+                          : "bg-surface-muted text-ink border-border hover:bg-saffron-muted hover:border-saffron/40"
                       }
                     `}
                   >
@@ -131,11 +134,11 @@ export default function SigninPage() {
             </fieldset>
 
             <div>
-              <label htmlFor="signin-email" className="block text-xs font-medium text-jewel-700 mb-2">
+              <label htmlFor="signin-email" className="block text-xs font-medium text-ink-secondary mb-2">
                 {t("signin.emailLabel")}
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-muted" />
                 <Input
                   id="signin-email"
                   className="pl-11 pr-4 py-3 rounded-lg"
@@ -149,11 +152,11 @@ export default function SigninPage() {
             </div>
 
             <div>
-              <label htmlFor="signin-password" className="block text-xs font-medium text-jewel-700 mb-2">
+              <label htmlFor="signin-password" className="block text-xs font-medium text-ink-secondary mb-2">
                 {t("signin.passwordLabel")}
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-muted" />
                 <Input
                   id="signin-password"
                   className="pl-11 pr-4 py-3 rounded-lg"
@@ -167,7 +170,7 @@ export default function SigninPage() {
             </div>
 
             {authError ? (
-              <div className="rounded-lg border border-jewel-ruby/20 bg-jewel-ruby/5 px-4 py-3 text-sm text-jewel-ruby">
+              <div className="rounded-lg border border-ruby/20 bg-ruby/5 px-4 py-3 text-sm text-ruby">
                 {authError}
               </div>
             ) : null}
@@ -187,12 +190,12 @@ export default function SigninPage() {
             </Button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-jewel-400/20">
-            <p className="text-center text-sm text-jewel-600">
+          <div className="mt-6 pt-6 border-t border-border">
+            <p className="text-center text-sm text-ink-secondary">
               {t("signin.noAccount")}{" "}
               <Link
                 to="/signup"
-                className="text-jewel-gold hover:text-jewel-500 font-medium transition-colors"
+                className="text-saffron hover:text-ink font-medium transition-colors"
               >
                 {t("signin.signUp")}
               </Link>
@@ -200,7 +203,7 @@ export default function SigninPage() {
           </div>
 
           <div className="mt-4 text-center">
-            <span className="text-xs text-jewel-400">
+            <span className="text-xs text-ink-muted">
               {t("signin.forgotPassword")}
             </span>
           </div>
@@ -212,11 +215,11 @@ export default function SigninPage() {
           transition={{ ...MOTION_ENTER, delay: 0.3 }}
           className="mt-6 text-center"
         >
-          <p className="text-xs text-jewel-500">
+          <p className="text-xs text-ink-muted">
             🔒 {t("signin.secureSignin")}
           </p>
         </motion.div>
       </motion.main>
-    </DreamySunsetBackground>
+    </div>
   );
 }

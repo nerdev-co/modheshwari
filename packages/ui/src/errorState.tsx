@@ -10,6 +10,17 @@ interface ErrorStateProps {
   onRetry?: () => void;
 }
 
+/**
+ * Performs  error state operation.
+ * @param {ErrorStateProps} {
+ *   message = "Something went wrong. Please try again.",
+ *   onRetry,
+ * } - Description of {
+ *   message = "Something went wrong. Please try again.",
+ *   onRetry,
+ * }
+ * @returns {any} Description of return value
+ */
 export function ErrorState({
   message = "Something went wrong. Please try again.",
   onRetry,

@@ -1,6 +1,12 @@
 import { z } from "zod";
 import { failure } from "@modheshwari/utils/response";
 
+/**
+ * Performs validate body operation.
+ * @param {Request} req - Description of req
+ * @param {import("/Users/nalindalal/modheshwari/node_modules/zod/v4/classic/schemas").ZodType<T, unknown, import("/Users/nalindalal/modheshwari/node_modules/zod/v4/core/schemas").$ZodTypeInternals<T, unknown>>} schema - Description of schema
+ * @returns {Promise<{ ok: true; data: T; } | { ok: false; response: Response; }>} Description of return value
+ */
 export async function validateBody<T>(
   req: Request,
   schema: z.ZodSchema<T>,
@@ -21,6 +27,12 @@ export async function validateBody<T>(
   return { ok: true, data: result.data };
 }
 
+/**
+ * Performs validate query operation.
+ * @param {Request} req - Description of req
+ * @param {import("/Users/nalindalal/modheshwari/node_modules/zod/v4/classic/schemas").ZodType<T, unknown, import("/Users/nalindalal/modheshwari/node_modules/zod/v4/core/schemas").$ZodTypeInternals<T, unknown>>} schema - Description of schema
+ * @returns {{ ok: true; data: T; } | { ok: false; response: Response; }} Description of return value
+ */
 export function validateQuery<T>(
   req: Request,
   schema: z.ZodSchema<T>,

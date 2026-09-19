@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { useToast } from "@repo/ui/toast";
 
@@ -104,34 +103,34 @@ export default function AdminNotifications() {
     if (!authorized) return null;
 
     return (
-        <DreamySunsetBackground className="px-6 py-10">
-            <div className="max-w-3xl mx-auto bg-jewel-50/80 p-6 rounded-3xl border border-jewel-400/20 shadow-jewel">
-                <h1 className="text-xl font-display font-bold text-jewel-900 mb-4">{t("admin.notifications.heading")}</h1>
+        <div className="min-h-screen px-6 py-10">
+            <div className="max-w-3xl mx-auto bg-surface p-6 border border-border">
+                <h1 className="text-xl font-display font-bold text-ink mb-4">{t("admin.notifications.heading")}</h1>
 
                 <div className="mb-3">
-                    <label htmlFor="admin-notification-subject" className="text-sm text-jewel-500">{t("admin.notifications.subjectLabel")}</label>
+                    <label htmlFor="admin-notification-subject" className="text-sm text-ink-muted">{t("admin.notifications.subjectLabel")}</label>
                     <input
                         id="admin-notification-subject"
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
-                        className="w-full mt-1 p-2 rounded-xl bg-jewel-50/50 border border-jewel-400/30 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                        className="w-full mt-1 p-2 bg-surface border border-border text-ink placeholder-ink-muted focus:outline-none focus:ring-2 focus:ring-saffron/50"
                     />
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="admin-notification-message" className="text-sm text-jewel-500">{t("admin.notifications.messageLabel")}</label>
+                    <label htmlFor="admin-notification-message" className="text-sm text-ink-muted">{t("admin.notifications.messageLabel")}</label>
                     <textarea
                         id="admin-notification-message"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         rows={4}
-                        className="w-full mt-1 p-2 rounded-xl bg-jewel-50/50 border border-jewel-400/30 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 resize-none"
+                        className="w-full mt-1 p-2 bg-surface border border-border text-ink placeholder-ink-muted focus:outline-none focus:ring-2 focus:ring-saffron/50 resize-none"
                     />
                 </div>
 
                 <div className="mb-3 flex gap-4">
                     <div>
-                        <div className="text-sm text-jewel-500 mb-1">{t("admin.notifications.channelsLabel")}</div>
+                        <div className="text-sm text-ink-muted mb-1">{t("admin.notifications.channelsLabel")}</div>
                         <div className="flex gap-2">
                             {CHANNELS.map((ch) => (
                                 <label key={ch} className="inline-flex items-center gap-2">
@@ -139,16 +138,16 @@ export default function AdminNotifications() {
                                         type="checkbox"
                                         checked={selectedChannels.includes(ch)}
                                         onChange={() => toggleChannel(ch)}
-                                        className="accent-jewel-gold"
+                                        className="accent-saffron"
                                     />
-                                    <span className="text-sm text-jewel-700">{ch}</span>
+                                    <span className="text-sm text-ink-secondary">{ch}</span>
                                 </label>
                             ))}
                         </div>
                     </div>
 
                     <div>
-                        <div className="text-sm text-jewel-500 mb-1">{t("admin.notifications.priorityLabel")}</div>
+                        <div className="text-sm text-ink-muted mb-1">{t("admin.notifications.priorityLabel")}</div>
                         <select
                             value={priority}
                             onChange={(e) => setPriority(e.target.value)}
@@ -163,7 +162,7 @@ export default function AdminNotifications() {
                     </div>
 
                     <div>
-                        <div className="text-sm text-jewel-500 mb-1">{t("admin.notifications.targetRoleLabel")}</div>
+                        <div className="text-sm text-ink-muted mb-1">{t("admin.notifications.targetRoleLabel")}</div>
                         <select
                             value={targetRole}
                             onChange={(e) => setTargetRole(e.target.value || undefined)}
@@ -192,18 +191,18 @@ export default function AdminNotifications() {
                 </div>
 
                 {result && (
-                    <div className="mt-4 p-3 bg-jewel-100/40 rounded-xl border border-jewel-400/20">
-                        <pre className="text-xs text-jewel-700 overflow-auto">{JSON.stringify(result, null, 2)}</pre>
+                    <div className="mt-4 p-3 bg-surface border border-border">
+                        <pre className="text-xs text-ink-secondary overflow-auto">{JSON.stringify(result, null, 2)}</pre>
                     </div>
                 )}
 
                 {previewOpen && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-jewel-900/30 backdrop-blur-sm">
-                        <div className="bg-jewel-50 p-6 rounded-3xl border border-jewel-400/20 shadow-jewel w-[min(800px,95%)]">
-                            <h2 className="text-lg font-display font-bold text-jewel-900 mb-2">{t("admin.notifications.preview")}</h2>
-                            {subject && <div className="font-bold text-jewel-900 mb-1">{subject}</div>}
-                            <div className="mb-4 text-jewel-800">{message}</div>
-                            <div className="text-sm text-jewel-500 mb-4">
+                    <div className="fixed inset-0 flex items-center justify-center bg-ink/30 backdrop-blur-sm">
+                        <div className="bg-surface p-6 border border-border w-[min(800px,95%)]">
+                            <h2 className="text-lg font-display font-bold text-ink mb-2">{t("admin.notifications.preview")}</h2>
+                            {subject && <div className="font-bold text-ink mb-1">{subject}</div>}
+                            <div className="mb-4 text-ink">{message}</div>
+                            <div className="text-sm text-ink-muted mb-4">
                                 Channels: {selectedChannels.join(", ")} • Priority: {priority}
                             </div>
                             <div className="flex gap-2 justify-end">
@@ -223,6 +222,6 @@ export default function AdminNotifications() {
                     </div>
                 )}
             </div>
-        </DreamySunsetBackground>
+        </div>
     );
 }

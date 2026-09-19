@@ -10,6 +10,23 @@ interface DeleteButtonProps
   confirmMessage?: string;
 }
 
+/**
+ * Performs  delete button operation.
+ * @param {DeleteButtonProps} {
+ *   children = "Delete",
+ *   confirmMessage = "Are you sure you want to delete this?",
+ *   className = "",
+ *   onClick,
+ *   ...rest
+ * } - Description of {
+ *   children = "Delete",
+ *   confirmMessage = "Are you sure you want to delete this?",
+ *   className = "",
+ *   onClick,
+ *   ...rest
+ * }
+ * @returns {any} Description of return value
+ */
 export function DeleteButton({
   children = "Delete",
   confirmMessage = "Are you sure you want to delete this?",

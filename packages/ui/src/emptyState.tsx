@@ -15,6 +15,21 @@ interface EmptyStateProps {
   };
 }
 
+/**
+ * Performs  empty state operation.
+ * @param {EmptyStateProps} {
+ *   icon: Icon = Inbox,
+ *   title,
+ *   description,
+ *   action,
+ * } - Description of {
+ *   icon: Icon = Inbox,
+ *   title,
+ *   description,
+ *   action,
+ * }
+ * @returns {any} Description of return value
+ */
 export function EmptyState({
   icon: Icon = Inbox,
   title,

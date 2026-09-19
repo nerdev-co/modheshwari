@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { LoaderFour } from "@repo/ui/loading";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { useToast } from "@repo/ui/toast";
+import { MOTION_PAGE_ENTER } from "@repo/ui/motion";
 
 import apiFetch from "../../../lib/api";
 import { API_BASE } from "../../../lib/config";
@@ -24,7 +25,6 @@ export default function EditProfilePage() {
     profession: "",
   }));
 
-  // Initialize form from context when user loads
   const [initialized, setInitialized] = useState(false);
   if (user && !initialized) {
     setFormData({
@@ -82,71 +82,77 @@ export default function EditProfilePage() {
 
   if (loading) {
     return (
-      <DreamySunsetBackground className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen">
         <LoaderFour text={t("edit.loadingProfile")} />
-      </DreamySunsetBackground>
+      </div>
     );
   }
 
   return (
-    <DreamySunsetBackground className="px-6 py-10">
-      <div className="max-w-3xl mx-auto">
-        <form
-          onSubmit={handleSubmit}
-          className="bg-jewel-50/80 border border-jewel-400/20 shadow-jewel rounded-2xl p-8"
+    <div className="min-h-screen">
+      <div className="mx-auto max-w-[640px] px-6 py-10 sm:px-8 lg:px-10 lg:py-14">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={MOTION_PAGE_ENTER}
+          className="mb-14"
         >
-          <h1 className="text-2xl font-display font-bold text-jewel-900 mb-6">
+          <h1 className="font-display text-[36px] font-semibold leading-tight text-ink">
             {t("edit.title")}
           </h1>
+        </motion.div>
 
-          <div className="grid grid-cols-1 gap-6">
-            <div>
-              <label htmlFor="bloodGroup" className="block text-sm font-medium text-jewel-700">
-                {t("profile.bloodGroup")}
-              </label>
-              <input
-                type="text"
-                id="bloodGroup"
-                name="bloodGroup"
-                value={formData.bloodGroup}
-                onChange={handleChange}
-                placeholder={t("edit.bloodGroupPlaceholder")}
-                className="mt-1 block w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent"
-              />
-            </div>
+        <div className="h-px bg-border" />
 
-            <div>
-              <label htmlFor="gotra" className="block text-sm font-medium text-jewel-700">
-                {t("profile.gotra")}
-              </label>
-              <input
-                type="text"
-                id="gotra"
-                name="gotra"
-                value={formData.gotra}
-                onChange={handleChange}
-                placeholder={t("edit.gotraPlaceholder")}
-                className="mt-1 block w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="profession" className="block text-sm font-medium text-jewel-700">
-                {t("profile.profession")}
-              </label>
-              <input
-                type="text"
-                id="profession"
-                name="profession"
-                value={formData.profession}
-                onChange={handleChange}
-                placeholder={t("edit.professionPlaceholder")}
-                className="mt-1 block w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-transparent"
-              />
-            </div>
+        <form onSubmit={handleSubmit} className="py-10 space-y-8">
+          <div>
+            <label htmlFor="bloodGroup" className="block text-[13px] font-medium text-ink-muted mb-2">
+              {t("profile.bloodGroup")}
+            </label>
+            <input
+              type="text"
+              id="bloodGroup"
+              name="bloodGroup"
+              value={formData.bloodGroup}
+              onChange={handleChange}
+              placeholder={t("edit.bloodGroupPlaceholder")}
+              className="w-full px-4 py-2.5 text-sm border border-border bg-canvas text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-saffron focus:border-saffron"
+            />
           </div>
 
-          <div className="mt-6 flex gap-3">
+          <div>
+            <label htmlFor="gotra" className="block text-[13px] font-medium text-ink-muted mb-2">
+              {t("profile.gotra")}
+            </label>
+            <input
+              type="text"
+              id="gotra"
+              name="gotra"
+              value={formData.gotra}
+              onChange={handleChange}
+              placeholder={t("edit.gotraPlaceholder")}
+              className="w-full px-4 py-2.5 text-sm border border-border bg-canvas text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-saffron focus:border-saffron"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="profession" className="block text-[13px] font-medium text-ink-muted mb-2">
+              {t("profile.profession")}
+            </label>
+            <input
+              type="text"
+              id="profession"
+              name="profession"
+              value={formData.profession}
+              onChange={handleChange}
+              placeholder={t("edit.professionPlaceholder")}
+              className="w-full px-4 py-2.5 text-sm border border-border bg-canvas text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-saffron focus:border-saffron"
+            />
+          </div>
+
+          <div className="h-px bg-border" />
+
+          <div className="flex gap-3">
             <Button type="submit" disabled={saving}>
               {saving ? t("edit.saving") : t("edit.saveChanges")}
             </Button>
@@ -161,6 +167,6 @@ export default function EditProfilePage() {
           </div>
         </form>
       </div>
-    </DreamySunsetBackground>
+    </div>
   );
 }

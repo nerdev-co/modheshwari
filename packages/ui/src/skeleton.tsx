@@ -20,6 +20,27 @@ const variantDefaults: Record<SkeletonVariant, { width: string; height: string }
   card: { width: "100%", height: "8rem" },
 };
 
+/**
+ * Performs  skeleton operation.
+ * @param {import("/Users/nalindalal/modheshwari/packages/ui/src/skeleton").SkeletonProps} {
+ *   variant = "text",
+ *   width,
+ *   height,
+ *   lines = 1,
+ *   className,
+ *   style,
+ *   ...rest
+ * } - Description of {
+ *   variant = "text",
+ *   width,
+ *   height,
+ *   lines = 1,
+ *   className,
+ *   style,
+ *   ...rest
+ * }
+ * @returns {any} Description of return value
+ */
 export function Skeleton({
   variant = "text",
   width,
@@ -68,6 +89,11 @@ export function Skeleton({
   );
 }
 
+/**
+ * Performs  skeleton card operation.
+ * @param {{ className?: string; }} { className } - Description of { className }
+ * @returns {any} Description of return value
+ */
 export function SkeletonCard({ className }: { className?: string }) {
   return (
     <div className={cn("card p-5 space-y-4", className)}>
@@ -87,6 +113,11 @@ export function SkeletonCard({ className }: { className?: string }) {
   );
 }
 
+/**
+ * Performs  skeleton table operation.
+ * @param {{ rows?: number; cols?: number; }} { rows = 5, cols = 4 } - Description of { rows = 5, cols = 4 }
+ * @returns {any} Description of return value
+ */
 export function SkeletonTable({ rows = 5, cols = 4 }: { rows?: number; cols?: number }) {
   return (
     <div className="space-y-3">

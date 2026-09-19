@@ -71,6 +71,12 @@ const AddMemberSchema = z.object({
   path: ["userId"],
 });
 
+/**
+ * Performs handle add member operation.
+ * @param {any} req - Description of req
+ * @param {string} familyId - Description of familyId
+ * @returns {Promise<Response>} Description of return value
+ */
 export async function handleAddMember(
   req: any,
   familyId: string,
@@ -214,6 +220,14 @@ const ReviewInviteSchema = z.object({
   remarks: z.string().optional(),
 });
 
+/**
+ * Performs handle review invite operation.
+ * @param {any} req - Description of req
+ * @param {string} familyId - Description of familyId
+ * @param {string} inviteId - Description of inviteId
+ * @param {string} _action - Description of _action
+ * @returns {Promise<Response>} Description of return value
+ */
 export async function handleReviewInvite(
   req: any,
   familyId: string,

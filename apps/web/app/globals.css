@@ -43,23 +43,7 @@
 
   --focus-ring: #c97c1c;
 
-  /* Jewel Tone Scale (backward compatibility) */
-  --jewel-50: #fdfaf5;
-  --jewel-100: #f5f0e6;
-  --jewel-200: #e8d5b7;
-  --jewel-300: #d4b896;
-  --jewel-400: #8b7355;
-  --jewel-500: #5c4033;
-  --jewel-600: #4a3228;
-  --jewel-700: #3d2a21;
-  --jewel-800: #2d1b0e;
-  --jewel-900: #1a0f08;
-  --jewel-950: #0d0704;
-  --jewel-gold: #c97c1c;
-  --jewel-gold-light: #d4a017;
-  --jewel-emerald: #1b5e20;
-  --jewel-saffron: #c97c1c;
-  --jewel-ruby: #b71c1c;
+  /* Legacy jewel-* tokens removed — all components migrated to editorial palette */
 }
 
 html,

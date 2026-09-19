@@ -14,6 +14,11 @@ interface Member {
   };
 }
 
+/**
+ * Performs  member card operation.
+ * @param {{ member: Member; onToggle: (id: string, alive: boolean) => void; }} { member, onToggle } - Description of { member, onToggle }
+ * @returns {any} Description of return value
+ */
 export function MemberCard({ member, onToggle }: { member: Member; onToggle: (id: string, alive: boolean) => void }) {
   const alive = member.user.status;
   const [confirmOpen, setConfirmOpen] = useState(false);

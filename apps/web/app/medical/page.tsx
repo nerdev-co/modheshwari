@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
 import { LoadingState } from "@repo/ui/loadingState";
@@ -22,6 +21,10 @@ interface MedicalInfo {
   medicalNotes?: string;
 }
 
+/**
+ * Performs  medical operation.
+ * @returns {any} Description of return value
+ */
 export default function Medical() {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -64,48 +67,48 @@ export default function Medical() {
 
   if (loading) {
     return (
-      <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
+      <div className="min-h-screen px-6 py-10 flex items-center justify-center">
         <LoadingState message={t("common.loading")} />
-      </DreamySunsetBackground>
+      </div>
     );
   }
 
   if (!user) {
     return (
-      <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
-        <p className="text-jewel-500">No user data available</p>
-      </DreamySunsetBackground>
+      <div className="min-h-screen px-6 py-10 flex items-center justify-center">
+        <p className="text-ink-muted">No user data available</p>
+      </div>
     );
   }
 
   return (
-    <DreamySunsetBackground className="px-6 py-10">
+    <div className="min-h-screen px-6 py-10">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-display font-bold text-jewel-900 mb-1">{t("medical.title")}</h1>
-          <p className="text-sm text-jewel-500">{t("medical.welcome").replace("{{name}}", user.name)}</p>
+          <h1 className="text-3xl font-display font-bold text-ink mb-1">{t("medical.title")}</h1>
+          <p className="text-sm text-ink-muted">{t("medical.welcome").replace("{{name}}", user.name)}</p>
         </div>
 
         {/* My Medical Info Card */}
         <Card className="p-5 mb-8">
-          <h2 className="text-lg font-display font-bold text-jewel-900 mb-4">{t("medical.myInfo")}</h2>
+          <h2 className="text-lg font-display font-bold text-ink mb-4">{t("medical.myInfo")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <p className="text-xs text-jewel-400 mb-1">{t("medical.bloodGroup")}</p>
-              <p className="text-sm font-medium text-jewel-800">
+              <p className="text-xs text-ink-muted mb-1">{t("medical.bloodGroup")}</p>
+              <p className="text-sm font-medium text-ink">
                 {formatBloodGroup(myProfile?.bloodGroup)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-jewel-400 mb-1">{t("medical.allergies")}</p>
-              <p className="text-sm font-medium text-jewel-800">
+              <p className="text-xs text-ink-muted mb-1">{t("medical.allergies")}</p>
+              <p className="text-sm font-medium text-ink">
                 {myProfile?.allergies || t("medical.noneRecorded")}
               </p>
             </div>
             <div>
-              <p className="text-xs text-jewel-400 mb-1">{t("medical.medicalNotes")}</p>
-              <p className="text-sm font-medium text-jewel-800">
+              <p className="text-xs text-ink-muted mb-1">{t("medical.medicalNotes")}</p>
+              <p className="text-sm font-medium text-ink">
                 {myProfile?.medicalNotes || t("medical.noneRecorded")}
               </p>
             </div>
@@ -122,10 +125,10 @@ export default function Medical() {
 
         {/* Search Card */}
         <Card className="p-5 mb-8">
-          <label htmlFor="medical-search" className="block text-sm text-jewel-700 font-medium mb-2">
+          <label htmlFor="medical-search" className="block text-sm text-ink-secondary font-medium mb-2">
             {t("medical.searchTitle")}
           </label>
-          <p className="text-xs text-jewel-400 mb-3">
+          <p className="text-xs text-ink-muted mb-3">
             {t("medical.searchDesc")}
           </p>
 
@@ -139,7 +142,7 @@ export default function Medical() {
               onKeyDown={(e) => {
                 if (e.key === "Enter") fetchMedicalInfo(searchQuery);
               }}
-              className="flex-grow bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 text-jewel-900"
+              className="flex-grow bg-surface border border-ink-muted/30 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-saffron/50 text-ink"
             />
 
             <Button
@@ -160,7 +163,7 @@ export default function Medical() {
                   setSearchQuery(bg);
                   fetchMedicalInfo(bg);
                 }}
-                className="px-3 py-1 text-xs rounded-full bg-jewel-50/60 hover:bg-jewel-100 border border-jewel-400/20 transition text-jewel-700"
+                className="px-3 py-1 text-xs rounded-full bg-surface hover:bg-surface border border-ink-muted/20 transition text-ink-secondary"
               >
                 {bg}
               </Button>
@@ -170,11 +173,11 @@ export default function Medical() {
 
         {/* Results Card */}
         <Card className="overflow-hidden">
-          <div className="px-5 py-4 border-b border-jewel-400/20">
-            <h2 className="text-lg font-display font-bold text-jewel-900">
+          <div className="px-5 py-4 border-b border-ink-muted/20">
+            <h2 className="text-lg font-display font-bold text-ink">
               {t("medical.results")}
               {medicalList.length > 0 && (
-                <span className="ml-2 text-sm text-jewel-500 font-normal">
+                <span className="ml-2 text-sm text-ink-muted font-normal">
                   ({medicalList.length} users)
                 </span>
               )}
@@ -182,7 +185,7 @@ export default function Medical() {
           </div>
 
           {medicalList.length === 0 ? (
-            <div className="text-center text-jewel-500 py-10 text-sm">
+            <div className="text-center text-ink-muted py-10 text-sm">
               {searchQuery
                 ? t("medical.noResultsFound")
                 : t("medical.noResults")}
@@ -190,7 +193,7 @@ export default function Medical() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-jewel-100/60 text-jewel-600">
+                <thead className="bg-surface text-ink-secondary">
                   <tr>
                     <th className="px-4 py-3 text-left font-medium">{t("medical.name")}</th>
                     <th className="px-4 py-3 text-left font-medium">{t("medical.email")}</th>
@@ -204,19 +207,19 @@ export default function Medical() {
                   {medicalList.map((m) => (
                     <tr
                       key={m.userId}
-                      className="border-t border-jewel-400/15 hover:bg-jewel-100/40 transition"
+                      className="border-t border-ink-muted/15 hover:bg-surface/40 transition"
                     >
-                      <td className="px-4 py-3 font-medium text-jewel-900">{m.name}</td>
-                      <td className="px-4 py-3 text-jewel-600">{m.email}</td>
+                      <td className="px-4 py-3 font-medium text-ink">{m.name}</td>
+                      <td className="px-4 py-3 text-ink-secondary">{m.email}</td>
                       <td className="px-4 py-3">
-                        <span className="px-2 py-0.5 rounded-full bg-jewel-ruby/10 text-jewel-ruby text-xs font-medium border border-jewel-ruby/20">
+                        <span className="px-2 py-0.5 rounded-full bg-ruby/10 text-ruby text-xs font-medium border border-ruby/20">
                           {formatBloodGroup(m.bloodGroup)}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-jewel-700">
+                      <td className="px-4 py-3 text-ink-secondary">
                         {m.allergies || t("medical.noneRecorded")}
                       </td>
-                      <td className="px-4 py-3 text-jewel-600 max-w-xs truncate">
+                      <td className="px-4 py-3 text-ink-secondary max-w-xs truncate">
                         {m.medicalNotes || t("medical.noneRecorded")}
                       </td>
                     </tr>
@@ -227,6 +230,6 @@ export default function Medical() {
           )}
         </Card>
       </div>
-    </DreamySunsetBackground>
+    </div>
   );
 }

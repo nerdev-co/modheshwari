@@ -8,6 +8,19 @@ interface SunMarkProps {
   size?: number;
 }
 
+/**
+ * Performs  sun mark operation.
+ * @param {SunMarkProps} {
+ *   className = "",
+ *   wordmark = true,
+ *   size = 32,
+ * } - Description of {
+ *   className = "",
+ *   wordmark = true,
+ *   size = 32,
+ * }
+ * @returns {any} Description of return value
+ */
 export function SunMark({
   className = "",
   wordmark = true,

@@ -28,7 +28,9 @@ project.addSourceFilesAtPaths([
   "apps/ws/**/*.ts",
 ]);
 
-const files = project.getSourceFiles();
+const files = project.getSourceFiles().filter(
+  (f) => !f.getFilePath().includes("node_modules"),
+);
 
 /**
  * Generates inferred JSDoc for a given function-like declaration.
@@ -38,31 +40,35 @@ function generateDocs(
   name: string,
   isArrow = false,
 ) {
-  const params = entity.getParameters().map((p: ParameterDeclaration) => ({
-    name: p.getName(),
-    type: p.getType().getText(),
-  }));
+  try {
+    const params = entity.getParameters().map((p: ParameterDeclaration) => ({
+      name: p.getName(),
+      type: p.getType().getText(),
+    }));
 
-  const returnType = entity.getReturnType().getText();
-  const description = `${isArrow ? "Executes" : "Performs"} ${name
-    .replace(/([A-Z])/g, " $1")
-    .toLowerCase()} operation.`;
+    const returnType = entity.getReturnType().getText();
+    const description = `${isArrow ? "Executes" : "Performs"} ${name
+      .replace(/([A-Z])/g, " $1")
+      .toLowerCase()} operation.`;
 
-  entity.addJsDoc({
-    description,
-    tags: [
-      ...params.map((param: { name: string; type: string }) => ({
-        tagName: "param",
-        text: `{${param.type}} ${param.name} - Description of ${param.name}`,
-      })),
-      {
-        tagName: "returns",
-        text: `{${returnType}} Description of return value`,
-      },
-    ],
-  });
+    entity.addJsDoc({
+      description,
+      tags: [
+        ...params.map((param: { name: string; type: string }) => ({
+          tagName: "param",
+          text: `{${param.type}} ${param.name} - Description of ${param.name}`,
+        })),
+        {
+          tagName: "returns",
+          text: `{${returnType}} Description of return value`,
+        },
+      ],
+    });
 
-  console.info(` Added docs for ${isArrow ? "arrow " : ""}function: ${name}`);
+    console.info(` Added docs for ${isArrow ? "arrow " : ""}function: ${name}`);
+  } catch {
+    // Skip functions with unresolvable types (Bun built-ins, .d.ts internals)
+  }
 }
 
 for (const file of files) {

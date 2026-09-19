@@ -41,6 +41,12 @@ const FHSigninSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
+/**
+ * Performs handle f h login operation.
+ * @param {Request} req - Description of req
+ * @param {string} expectedRole - Description of expectedRole
+ * @returns {Promise<Response>} Description of return value
+ */
 export async function handleFHLogin(
   req: Request,
   expectedRole: string,
@@ -153,6 +159,12 @@ const FHSignupSchema = z.object({
   familyName: z.string().min(1, "Family name is required"),
 });
 
+/**
+ * Performs handle f h signup operation.
+ * @param {Request} req - Description of req
+ * @param {string} role - Description of role
+ * @returns {Promise<Response>} Description of return value
+ */
 export async function handleFHSignup(
   req: Request,
   role: string,

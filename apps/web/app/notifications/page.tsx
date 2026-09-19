@@ -2,11 +2,11 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
-import { Card } from "@repo/ui/card";
 import { LoadingState } from "@repo/ui/loadingState";
 import { useToast } from "@repo/ui/toast";
+import { motion } from "framer-motion";
+import { MOTION_PAGE_ENTER } from "@repo/ui/motion";
 
 import useNotifications from "../../hooks/useNotifications";
 import { useUser } from "../../lib/UserContext";
@@ -40,6 +40,10 @@ type Priority = "low" | "normal" | "high" | "urgent";
 type ReadFilter = "all" | "read" | "unread";
 type SortBy = "newest" | "oldest" | "unread-first";
 
+/**
+ * Performs get token operation.
+ * @returns {string} Description of return value
+ */
 function getToken(): string | null {
     if (typeof window === "undefined") return null;
     return localStorage.getItem("token");
@@ -66,6 +70,10 @@ function dedupeKey(n: Notification): string {
     return `fallback:${n.message}:${n.createdAt}`;
 }
 
+/**
+ * Performs  notifications page operation.
+ * @returns {React.ReactElement} Description of return value
+ */
 export default function NotificationsPage(): React.ReactElement {
     const { notifications: hookNotifications, unreadCount, refresh, markRead, markAllRead, pulse } = useNotifications();
     const { toast } = useToast();
@@ -233,249 +241,115 @@ export default function NotificationsPage(): React.ReactElement {
 
 
     return (
-        <DreamySunsetBackground className="px-6 py-10">
-            <div className="max-w-5xl mx-auto">
-                {/* Header */}
-                <div className="mb-10">
-                    <h1 className="text-4xl sm:text-5xl font-display font-bold text-jewel-900 mb-2">
-                        {t("notifications.title")}
-                    </h1>
-                    <p className="text-lg text-jewel-500">
-                        {t("notifications.subtitle")}
-                    </p>
-                </div>
+        <div className="min-h-screen">
+            <div className="mx-auto max-w-[800px] px-6 py-10 sm:px-8 lg:px-10 lg:py-14">
+                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={MOTION_PAGE_ENTER} className="mb-14">
+                    <h1 className="font-display text-[36px] font-semibold leading-tight text-ink">{t("notifications.title")}</h1>
+                    <p className="text-[15px] text-ink-secondary mt-1">{t("notifications.subtitle")}</p>
+                </motion.div>
 
-                {/* Error */}
+                <div className="h-px bg-border" />
+
                 {error && (
-                    <div className="mb-6 rounded-xl border border-jewel-ruby/30 bg-jewel-ruby/10 px-4 py-3 text-sm text-jewel-ruby">
-                        {error}
-                    </div>
+                    <div className="mt-6 p-4 border border-ruby/30 bg-ruby/5 text-sm text-ruby">{error}</div>
                 )}
 
-                {/* Admin Broadcast */}
                 {isAdmin && (
-                    <Card className="p-8 mb-10">
-                        <h2 className="text-2xl font-display font-bold text-jewel-900 mb-2">
-                            {t("notifications.broadcast")}
-                        </h2>
-                        <p className="text-jewel-500 mb-6">
-                            {t("notifications.broadcastDesc")}
-                        </p>
-
+                    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ ...MOTION_PAGE_ENTER, delay: 0.05 }} className="py-10">
+                        <h2 className="text-[18px] font-semibold text-ink mb-6">{t("notifications.broadcast")}</h2>
                         <form onSubmit={handleBroadcast} className="space-y-6">
-                            <input
-                                value={subject}
-                                onChange={(e) => setSubject(e.target.value)}
-                                placeholder={t("notifications.subjectPlaceholder")}
-                                className="w-full bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-3 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50"
-                            />
-
-                            <textarea
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                                rows={3}
-                                placeholder={t("notifications.messagePlaceholder")}
-                                className="w-full bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-3 resize-none text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50"
-                            />
-
+                            <input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder={t("notifications.subjectPlaceholder")}
+                                className="w-full px-4 py-2.5 text-sm border border-border bg-canvas text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-saffron focus:border-saffron" />
+                            <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={3} placeholder={t("notifications.messagePlaceholder")}
+                                className="w-full px-4 py-2.5 text-sm border border-border bg-canvas text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-saffron focus:border-saffron resize-none" />
                             <div className="flex flex-wrap items-center gap-3">
-                                <select
-                                    value={targetRole}
-                                    onChange={(e) => setTargetRole(e.target.value)}
-                                    className="select"
-                                >
+                                <select value={targetRole} onChange={(e) => setTargetRole(e.target.value)} className="px-3 py-2 text-sm border border-border bg-canvas text-ink focus:outline-none focus:ring-1 focus:ring-saffron">
                                     <option value="ALL">{t("notifications.allUsers")}</option>
-
-                                    {me?.role === "COMMUNITY_HEAD" && (
-                                        <>
-                                            <option value="COMMUNITY_HEAD">{t("role.community_head")}</option>
-                                            <option value="COMMUNITY_SUBHEAD">
-                                                {t("role.community_subhead")}
-                                            </option>
-                                            <option value="GOTRA_HEAD">{t("role.gotra_head")}</option>
-                                            <option value="FAMILY_HEAD">{t("role.family_head")}</option>
-                                            <option value="MEMBER">{t("role.member")}</option>
-                                        </>
-                                    )}
-
-                                    {me?.role === "COMMUNITY_SUBHEAD" && (
-                                        <>
-                                            <option value="COMMUNITY_HEAD">{t("role.community_head")}</option>
-                                            <option value="COMMUNITY_SUBHEAD">
-                                                {t("role.community_subhead")}
-                                            </option>
-                                            <option value="GOTRA_HEAD">{t("role.gotra_head")}</option>
-                                        </>
-                                    )}
-
-                                    {me?.role === "GOTRA_HEAD" && (
-                                        <>
-                                            <option value="FAMILY_HEAD">{t("role.family_head")}</option>
-                                            <option value="MEMBER">{t("role.member")}</option>
-                                        </>
-                                    )}
+                                    {me?.role === "COMMUNITY_HEAD" && (<><option value="COMMUNITY_HEAD">{t("role.community_head")}</option><option value="COMMUNITY_SUBHEAD">{t("role.community_subhead")}</option><option value="GOTRA_HEAD">{t("role.gotra_head")}</option><option value="FAMILY_HEAD">{t("role.family_head")}</option><option value="MEMBER">{t("role.member")}</option></>)}
+                                    {me?.role === "COMMUNITY_SUBHEAD" && (<><option value="COMMUNITY_HEAD">{t("role.community_head")}</option><option value="COMMUNITY_SUBHEAD">{t("role.community_subhead")}</option><option value="GOTRA_HEAD">{t("role.gotra_head")}</option></>)}
+                                    {me?.role === "GOTRA_HEAD" && (<><option value="FAMILY_HEAD">{t("role.family_head")}</option><option value="MEMBER">{t("role.member")}</option></>)}
                                 </select>
-
-                                <select
-                                    value={priority}
-                                    onChange={(e) => setPriority(e.target.value as Priority)}
-                                    className="select"
-                                >
+                                <select value={priority} onChange={(e) => setPriority(e.target.value as Priority)} className="px-3 py-2 text-sm border border-border bg-canvas text-ink focus:outline-none focus:ring-1 focus:ring-saffron">
                                     <option value="low">{t("notifications.priorityLow")}</option>
                                     <option value="normal">{t("notifications.priorityNormal")}</option>
                                     <option value="high">{t("notifications.priorityHigh")}</option>
                                     <option value="urgent">{t("notifications.priorityUrgent")}</option>
                                 </select>
-
-                                <Button
-                                    type="submit"
-                                    disabled={broadcasting || !message.trim()}
-                                >
-                                    {broadcasting ? t("notifications.sending") : t("notifications.send")}
-                                </Button>
+                                <Button type="submit" disabled={broadcasting || !message.trim()}>{broadcasting ? t("notifications.sending") : t("notifications.send")}</Button>
                             </div>
-
-                            {/* Channels */}
                             <fieldset className="space-y-3">
-                                <legend className="block text-sm font-medium text-jewel-700">
-                                    {t("notifications.channels")}
-                                </legend>
-                                <div className="flex gap-3">
+                                <legend className="block text-[13px] font-medium text-ink-muted">{t("notifications.channels")}</legend>
+                                <div className="flex gap-4">
                                     {["IN_APP", "EMAIL", "PUSH"].map((c) => (
-                                        <label key={c} className="flex items-center gap-2 text-jewel-700">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedChannels.includes(c)}
-                                                onChange={() => toggleChannel(c)}
-                                                className="accent-jewel-gold"
-                                            />
+                                        <label key={c} className="flex items-center gap-2 text-[14px] text-ink">
+                                            <input type="checkbox" checked={selectedChannels.includes(c)} onChange={() => toggleChannel(c)} className="accent-saffron" />
                                             {c}
                                         </label>
                                     ))}
                                 </div>
                             </fieldset>
-
-                            {/* Preview */}
                             {(subject.trim() || message.trim()) && (
-                                <div className="border border-jewel-400/20 rounded-xl p-4 bg-jewel-50/50">
-                                    <p className="font-semibold text-jewel-900">{subject.trim() || "\u2014"}</p>
-                                    <p className="text-jewel-700">{message.trim()}</p>
+                                <div className="border border-border p-4">
+                                    <p className="text-[14px] font-medium text-ink">{subject.trim() || "\u2014"}</p>
+                                    <p className="text-[14px] text-ink-secondary mt-1">{message.trim()}</p>
                                 </div>
                             )}
                         </form>
-                    </Card>
+                        <div className="h-px bg-border mt-10" />
+                    </motion.div>
                 )}
 
-                {/* Notifications List */}
-                <Card className="overflow-hidden">
-                    {/* Controls */}
-                    <div className="p-4 border-b border-jewel-400/20 flex flex-wrap gap-3 items-center">
-                                <select
-                                    value={filterRead}
-                                    onChange={(e) => setFilterRead(e.target.value as ReadFilter)}
-                                    className="select"
-                                >
-                                    <option value="all">{t("notifications.allOption")}</option>
-                                    <option value="unread">{t("notifications.unread")}</option>
-                                    <option value="read">{t("notifications.readOption")}</option>
-                                </select>
-
-                                <select
-                                    value={sortBy}
-                                    onChange={(e) => setSortBy(e.target.value as SortBy)}
-                                    className="select"
-                                >
-                                    <option value="newest">{t("notifications.newest")}</option>
-                                    <option value="oldest">{t("notifications.oldest")}</option>
-                                    <option value="unread-first">{t("notifications.unreadFirst")}</option>
-                                </select>
-
-                                <select
-                                    value={selectedType}
-                                    onChange={(e) => setSelectedType(e.target.value)}
-                                    className="select"
-                                >
-                                    <option value="all">{t("notifications.allTypesOption")}</option>
-                                    {notificationTypes.map((type) => (
-                                        <option key={type} value={type}>
-                                            {type}
-                                        </option>
-                                    ))}
-                                </select>
-
+                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ ...MOTION_PAGE_ENTER, delay: 0.1 }} className="py-10">
+                    <div className="flex flex-wrap gap-3 items-center mb-6">
+                        <select value={filterRead} onChange={(e) => setFilterRead(e.target.value as ReadFilter)} className="px-3 py-1.5 text-sm border border-border bg-canvas text-ink focus:outline-none focus:ring-1 focus:ring-saffron">
+                            <option value="all">{t("notifications.allOption")}</option>
+                            <option value="unread">{t("notifications.unread")}</option>
+                            <option value="read">{t("notifications.readOption")}</option>
+                        </select>
+                        <select value={sortBy} onChange={(e) => setSortBy(e.target.value as SortBy)} className="px-3 py-1.5 text-sm border border-border bg-canvas text-ink focus:outline-none focus:ring-1 focus:ring-saffron">
+                            <option value="newest">{t("notifications.newest")}</option>
+                            <option value="oldest">{t("notifications.oldest")}</option>
+                            <option value="unread-first">{t("notifications.unreadFirst")}</option>
+                        </select>
+                        <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)} className="px-3 py-1.5 text-sm border border-border bg-canvas text-ink focus:outline-none focus:ring-1 focus:ring-saffron">
+                            <option value="all">{t("notifications.allTypesOption")}</option>
+                            {notificationTypes.map((type) => (<option key={type} value={type}>{type}</option>))}
+                        </select>
                         <div className="ml-auto flex items-center gap-3">
-                            <Button
-                                variant="secondary"
-                                onClick={() => void fetchNotifications()}
-                            >
-                                {t("notifications.refresh")}
-                            </Button>
-
-                            <Button
-                                variant="secondary"
-                                onClick={() => void handleMarkAllRead()}
-                            >
-                                {t("notifications.markAllRead")}
-                            </Button>
-
-                            <div className="text-sm text-jewel-gold">
-                                {unreadCount > 0 && (
-                                    <span className={`${pulse ? "animate-pulse font-semibold" : "font-medium"}`}>
-                                        {t("notifications.unreadPrefix")}{unreadCount > 99 ? "99+" : unreadCount}
-                                    </span>
-                                )}
-                            </div>
+                            <button onClick={() => void fetchNotifications()} className="text-[13px] text-ink-muted hover:text-ink transition-colors">{t("notifications.refresh")}</button>
+                            <button onClick={() => void handleMarkAllRead()} className="text-[13px] text-ink-muted hover:text-ink transition-colors">{t("notifications.markAllRead")}</button>
+                            {unreadCount > 0 && <span className={`text-[13px] text-saffron ${pulse ? "animate-pulse font-semibold" : "font-medium"}`}>{t("notifications.unreadPrefix")}{unreadCount > 99 ? "99+" : unreadCount}</span>}
                         </div>
                     </div>
 
-                    {/* Content */}
                     {loading ? (
                         <LoadingState message={t("common.loading")} />
                     ) : filteredNotifications.length === 0 ? (
-                        <p className="text-center py-12 text-jewel-500">{t("notifications.noNotifications")}</p>
+                        <p className="text-center py-12 text-[14px] text-ink-muted">{t("notifications.noNotifications")}</p>
                     ) : (
-                        <ul>
+                        <div className="space-y-0">
                             {filteredNotifications.map((n) => {
                                 const canToggleRead = Boolean(n.id);
-
                                 return (
-                                    <li
-                                        key={dedupeKey(n)}
-                                        className={`p-6 border-b border-jewel-400/15 last:border-b-0 ${n.read ? "bg-jewel-50/40" : "bg-jewel-gold/5"
-                                            }`}
-                                    >
+                                    <div key={dedupeKey(n)} className={`py-4 border-b border-border-subtle last:border-0 ${n.read ? "" : "bg-saffron/5"}`}>
                                         <div className="flex items-start justify-between gap-4">
-                                            <div className="space-y-1">
-                                                <p className="text-jewel-900">{n.message}</p>
-                                                <p className="text-xs text-jewel-400">
-                                                    {new Date(n.createdAt).toLocaleString()}
-                                                </p>
+                                            <div className="min-w-0 flex-1">
+                                                <p className="text-[14px] text-ink">{n.message}</p>
+                                                <p className="text-[12px] text-ink-muted mt-0.5">{new Date(n.createdAt).toLocaleString()}</p>
                                             </div>
-
                                             {canToggleRead && (
-                                                <Button
-                                                    variant="secondary"
-                                                    size="sm"
-                                                    onClick={() => void handleToggleRead(n.id!, !!n.read)}
-                                                    className="text-xs px-3 py-2 rounded-xl border border-jewel-400/20 bg-jewel-50/50 flex items-center justify-center text-jewel-600 hover:bg-jewel-100 transition-colors"
-                                                    title={n.read ? t("notifications.markUnread") : t("notifications.markRead")}
-                                                    aria-label={n.read ? t("notifications.markUnread") : t("notifications.markRead")}
-                                                >
-                                                    {n.read ? (
-                                                        <Eye className="w-4 h-4" />
-                                                    ) : (
-                                                        <EyeOff className="w-4 h-4" />
-                                                    )}
-                                                </Button>
+                                                <button onClick={() => void handleToggleRead(n.id!, !!n.read)} className="text-ink-muted hover:text-ink transition-colors flex-shrink-0" title={n.read ? t("notifications.markUnread") : t("notifications.markRead")}>
+                                                    {n.read ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                                </button>
                                             )}
                                         </div>
-                                    </li>
+                                    </div>
                                 );
                             })}
-                        </ul>
+                        </div>
                     )}
-                </Card>
+                </motion.div>
             </div>
-        </DreamySunsetBackground>
+        </div>
     );
 }

@@ -6,6 +6,17 @@ interface NotAuthenticatedProps {
   className?: string;
 }
 
+/**
+ * Performs  not authenticated operation.
+ * @param {NotAuthenticatedProps} {
+ *   children,
+ *   className = "",
+ * } - Description of {
+ *   children,
+ *   className = "",
+ * }
+ * @returns {React.JSX.Element} Description of return value
+ */
 export function NotAuthenticated({
   children,
   className = "",

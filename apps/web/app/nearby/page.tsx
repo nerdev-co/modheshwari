@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { LoaderFour } from "@repo/ui/loading";
 import { EmptyState } from "@repo/ui/emptyState";
 import { ErrorState } from "@repo/ui/errorState";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Card } from "@repo/ui/card";
 
 import apiFetch from "../../lib/api";
@@ -21,15 +20,24 @@ interface NearbyUser {
   distanceKm: number;
 }
 
+/**
+ * Performs  meta operation.
+ * @param {{ label: string; value: string; }} { label, value } - Description of { label, value }
+ * @returns {React.JSX.Element} Description of return value
+ */
 function Meta({ label, value }: { label: string; value: string }) {
   return (
-    <div className="p-3 border border-jewel-400/20 rounded-xl bg-jewel-50/50">
-      <div className="text-xs text-jewel-400">{label}</div>
-      <div className="font-medium text-jewel-800">{value}</div>
+    <div className="p-3 border border-border rounded-xl bg-surface">
+      <div className="text-xs text-ink-muted">{label}</div>
+      <div className="font-medium text-ink">{value}</div>
     </div>
   );
 }
 
+/**
+ * Performs  nearby page operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function NearbyPage() {
   const navigate = useNavigate();
   const { t } = useLocale();
@@ -85,26 +93,26 @@ export default function NearbyPage() {
 
   if (loading) {
     return (
-      <DreamySunsetBackground className="flex items-center justify-center min-h-screen">
+      <div className="min-h-screen flex items-center justify-center">
         <LoaderFour text={t("nearby.findingMembers")} />
-      </DreamySunsetBackground>
+      </div>
     );
   }
 
   return (
-    <DreamySunsetBackground className="px-6 py-10">
+    <div className="min-h-screen px-6 py-10">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <Card className="p-6">
-          <h1 className="text-2xl font-display font-bold text-jewel-900">{t("nearby.title")}</h1>
-          <p className="text-sm text-jewel-500 mt-1">
+          <h1 className="text-2xl font-display font-bold text-ink">{t("nearby.title")}</h1>
+          <p className="text-sm text-ink-muted mt-1">
             {t("nearby.description")}
           </p>
 
           <div className="mt-6">
             <div className="flex justify-between text-sm mb-1">
-              <span className="text-jewel-500">{t("nearby.searchRadius")}</span>
-              <span className="font-medium text-jewel-800">{radiusKm} km</span>
+              <span className="text-ink-muted">{t("nearby.searchRadius")}</span>
+              <span className="font-medium text-ink">{radiusKm} km</span>
             </div>
 
             <input
@@ -113,7 +121,7 @@ export default function NearbyPage() {
               max={50}
               value={radiusKm}
               onChange={(e) => setRadiusKm(Number(e.target.value))}
-              className="w-full accent-jewel-gold"
+              className="w-full accent-saffron"
             />
           </div>
         </Card>
@@ -147,12 +155,12 @@ export default function NearbyPage() {
                 key={u.id}
                 className="p-6 flex gap-4 items-center"
               >
-                <div className="h-14 w-14 rounded-full bg-jewel-gold/20 text-jewel-deep flex items-center justify-center font-semibold">
+                <div className="h-14 w-14 rounded-full bg-saffron/20 text-ink flex items-center justify-center font-semibold">
                   {initials}
                 </div>
 
                 <div className="flex-1">
-                  <h2 className="font-display font-semibold text-jewel-900">{u.name}</h2>
+                  <h2 className="font-display font-semibold text-ink">{u.name}</h2>
 
                   <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
                     <Meta label={t("nearby.distance")} value={`${u.distanceKm} km`} />
@@ -164,6 +172,6 @@ export default function NearbyPage() {
           })}
         </section>
       </div>
-    </DreamySunsetBackground>
+    </div>
   );
 }

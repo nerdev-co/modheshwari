@@ -66,6 +66,33 @@ const shapeClasses: Record<BadgeShape, string> = {
   square: "rounded",
 };
 
+/**
+ * Performs  badge operation.
+ * @param {import("/Users/nalindalal/modheshwari/packages/ui/src/badge").BadgeProps} {
+ *   variant = "neutral",
+ *   size = "sm",
+ *   shape = "pill",
+ *   solid = false,
+ *   border = true,
+ *   dot = false,
+ *   icon,
+ *   className,
+ *   children,
+ *   ...rest
+ * } - Description of {
+ *   variant = "neutral",
+ *   size = "sm",
+ *   shape = "pill",
+ *   solid = false,
+ *   border = true,
+ *   dot = false,
+ *   icon,
+ *   className,
+ *   children,
+ *   ...rest
+ * }
+ * @returns {any} Description of return value
+ */
 export function Badge({
   variant = "neutral",
   size = "sm",

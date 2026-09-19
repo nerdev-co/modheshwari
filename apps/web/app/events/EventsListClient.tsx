@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
-import { Card } from "@repo/ui/card";
 import { useNavigate } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 import {
@@ -19,6 +17,8 @@ import { EmptyState } from "@repo/ui/emptyState";
 import { ErrorState } from "@repo/ui/errorState";
 import { NotAuthenticated } from "@repo/ui/notAuthenticated";
 import { useToast } from "@repo/ui/toast";
+import { motion } from "framer-motion";
+import { MOTION_PAGE_ENTER } from "@repo/ui/motion";
 
 import { API_BASE } from "../../lib/config";
 import apiFetch from "../../lib/api";
@@ -46,6 +46,10 @@ async (url: string) => {
   return res;
 };
 
+/**
+ * Performs  events list client operation.
+ * @returns {any} Description of return value
+ */
 export default function EventsListClient() {
   const { t } = useLocale();
   const navigate = useNavigate();
@@ -123,137 +127,127 @@ export default function EventsListClient() {
 
   const getStatusConfig = (status: string) => {
     const map: Record<string, { label: string; classes: string }> = {
-      APPROVED: { label: t("events.list.statusApproved"), classes: "bg-emerald/15 text-emerald border-emerald/30" },
-      PENDING: { label: t("events.list.statusPending"), classes: "bg-accent/15 text-accent border-accent/30" },
-      REJECTED: { label: t("events.list.statusRejected"), classes: "bg-ruby/15 text-ruby border-ruby/30" },
-      CANCELLED: { label: t("events.list.statusCancelled"), classes: "bg-surface-muted text-text-secondary border-border" },
+      APPROVED: { label: t("events.list.statusApproved"), classes: "text-emerald border-emerald/30" },
+      PENDING: { label: t("events.list.statusPending"), classes: "text-saffron border-saffron/30" },
+      REJECTED: { label: t("events.list.statusRejected"), classes: "text-ruby border-ruby/30" },
+      CANCELLED: { label: t("events.list.statusCancelled"), classes: "text-ink-muted border-border" },
     };
-    return map[status] || { label: status, classes: "bg-surface-muted text-text-secondary border-border" };
+    return map[status] || { label: status, classes: "text-ink-muted border-border" };
   };
 
   if (hydrated && !token) return <NotAuthenticated />;
   if (!hydrated) return null;
 
   return (
-    <DreamySunsetBackground className="px-6 py-10">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-display font-bold text-text-primary tracking-tight">{t("events.list.title")}</h1>
-            <p className="text-sm text-text-muted mt-1">{t("events.list.description")}</p>
+    <div className="min-h-screen">
+      <div className="mx-auto max-w-[1100px] px-6 py-10 sm:px-8 lg:px-10 lg:py-14">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={MOTION_PAGE_ENTER}
+          className="mb-14"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="font-display text-[36px] font-semibold leading-tight text-ink">{t("events.list.title")}</h1>
+              <p className="text-[15px] text-ink-secondary mt-1">{t("events.list.description")}</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant="secondary" size="sm" onClick={() => navigate("/events/calendar")}>
+                <Calendar className="w-4 h-4" />
+                {t("events.list.calendar")}
+              </Button>
+              <Button size="sm" onClick={() => navigate("/events/create")}>
+                <Plus className="w-4 h-4" />
+                {t("events.list.create")}
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Button
-              variant="secondary"
-              onClick={() => navigate("/events/calendar")}
-            >
-              <Calendar className="w-4 h-4" />
-              {t("events.list.calendar")}
-            </Button>
-            <Button onClick={() => navigate("/events/create")}>
-              <Plus className="w-4 h-4" />
-              {t("events.list.create")}
-            </Button>
+        </motion.div>
+
+        <div className="h-px bg-border" />
+
+        <div className="py-10">
+          <div className="flex gap-2 mb-8">
+            {[{ label: t("events.list.filterApproved"), value: "approved" as const }, { label: t("events.list.filterPending"), value: "pending" as const }, { label: t("events.list.filterAll"), value: "all" as const }].map((f) => (
+              <button
+                key={f.value}
+                onClick={() => setFilter(f.value)}
+                className={`px-4 py-1.5 text-sm font-medium transition-all border ${
+                  filter === f.value
+                    ? "text-saffron border-saffron"
+                    : "text-ink-muted border-transparent hover:text-ink"
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
           </div>
-        </div>
 
-        <div className="flex gap-2 mb-6">
-          {[{ label: t("events.list.filterApproved"), value: "approved" as const }, { label: t("events.list.filterPending"), value: "pending" as const }, { label: t("events.list.filterAll"), value: "all" as const }].map((f) => (
-            <Button
-              key={f.value}
-              variant="secondary"
-              size="sm"
-              onClick={() => setFilter(f.value)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                filter === f.value
-                  ? "bg-accent/15 text-accent border border-accent/30"
-                  : "text-text-muted hover:text-accent border border-transparent"
-              }`}
-            >
-              {f.label}
-            </Button>
-          ))}
-        </div>
-
-        {isLoading ? (
-          <LoaderOne />
-        ) : error ? (
-          <ErrorState message={error.message} onRetry={() => mutate(key)} />
-        ) : events.length === 0 ? (
-          <EmptyState
-            icon={Calendar}
-            title={t("events.list.noEvents")}
-            description={filter === "approved" ? t("events.list.noApprovedEvents") : t("events.list.adjustFilters")}
-            action={{
-              label: t("events.list.createNewEvent"),
-              onClick: () => navigate("/events/create"),
-            }}
-          />
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.map((event, index) => {
-              const status = getStatusConfig(event.status);
-              const initial = event.createdBy?.name ? event.createdBy.name.charAt(0).toUpperCase() : "?";
-              return (
-                <Card
-                  key={event.id}
-                  className="shadow-jewel p-6 hover:shadow-jewel-lg transition-all"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${status.classes}`}>
-                      {status.label}
-                    </span>
-                    <span className="flex items-center gap-1 text-xs text-text-muted"><Users className="w-3.5 h-3.5" />{event._count.registrations}</span>
-                  </div>
-
-                  <h3 className="text-lg font-display font-bold text-text-primary mb-2 line-clamp-2">{event.name}</h3>
-
-                  {event.description && <p className="text-sm text-text-secondary mb-4 line-clamp-2">{event.description}</p>}
-
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-xs text-text-muted"><Calendar className="w-4 h-4 flex-shrink-0" /><span className="truncate">{formatDate(event.date)}</span></div>
-                    {event.venue && (<div className="flex items-center gap-2 text-xs text-text-muted"><MapPin className="w-4 h-4 flex-shrink-0" /><span className="truncate">{event.venue}</span></div>)}
-                  </div>
-
-                  <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-accent/15 border border-accent/25 flex items-center justify-center text-jewel-deep font-bold">{initial}</div>
-                      <p className="text-xs text-text-muted">{t("events.list.organizedBy")} <span className="text-text-primary font-medium">{event.createdBy.name}</span></p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {isAdmin && (
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={(e) => handleCardModeration(e, event.id, "APPROVED")}
-                            disabled={!!moderatingId}
-                            aria-label={`Approve ${event.name}`}
-                            className="px-2 py-1"
-                          >
-                            <CheckCircle className="w-3.5 h-3.5" />
-                          </Button>
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={(e) => handleCardModeration(e, event.id, "REJECTED")}
-                            disabled={!!moderatingId}
-                            aria-label={`Reject ${event.name}`}
-                            className="px-2 py-1"
-                          >
-                            <XCircle className="w-3.5 h-3.5" />
-                          </Button>
+          {isLoading ? (
+            <div className="flex justify-center py-20"><LoaderOne /></div>
+          ) : error ? (
+            <ErrorState message={error.message} onRetry={() => mutate(key)} />
+          ) : events.length === 0 ? (
+            <EmptyState
+              icon={Calendar}
+              title={t("events.list.noEvents")}
+              description={filter === "approved" ? t("events.list.noApprovedEvents") : t("events.list.adjustFilters")}
+              action={{ label: t("events.list.createNewEvent"), onClick: () => navigate("/events/create") }}
+            />
+          ) : (
+            <div className="space-y-0">
+              {events.map((event) => {
+                const status = getStatusConfig(event.status);
+                const initial = event.createdBy?.name ? event.createdBy.name.charAt(0).toUpperCase() : "?";
+                const eventDate = new Date(event.date);
+                return (
+                  <div
+                    key={event.id}
+                    onClick={() => navigate(`/events/${event.id}`)}
+                    className="flex items-start justify-between py-5 border-b border-border-subtle last:border-0 cursor-pointer hover:bg-surface transition-colors -mx-2 px-2"
+                  >
+                    <div className="flex items-start gap-5 min-w-0">
+                      <div className="text-center flex-shrink-0 w-10">
+                        <p className="font-display text-[18px] font-semibold leading-none text-ink">
+                          {eventDate.getDate()}
+                        </p>
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-muted mt-0.5">
+                          {eventDate.toLocaleDateString("en-US", { month: "short" })}
+                        </p>
+                      </div>
+                      <div className="min-w-0 pt-0.5">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="text-[15px] font-semibold text-ink truncate">{event.name}</h3>
+                          <span className={`inline-flex items-center px-2 py-0.5 text-[11px] font-medium border ${status.classes}`}>
+                            {status.label}
+                          </span>
                         </div>
-                      )}
-                      <p className="text-xs text-text-muted">{new Date(event.createdAt).toLocaleDateString()}</p>
+                        {event.description && <p className="text-[13px] text-ink-muted line-clamp-1">{event.description}</p>}
+                        <div className="flex items-center gap-4 mt-1.5 text-[12px] text-ink-muted">
+                          <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{formatDate(event.date)}</span>
+                          {event.venue && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{event.venue}</span>}
+                          <span className="flex items-center gap-1"><Users className="w-3 h-3" />{event._count.registrations}</span>
+                        </div>
+                      </div>
                     </div>
+                    {isAdmin && (
+                      <div className="flex items-center gap-1 flex-shrink-0 ml-4">
+                        <Button variant="primary" size="sm" onClick={(e) => handleCardModeration(e, event.id, "APPROVED")} disabled={!!moderatingId} className="px-2 py-1">
+                          <CheckCircle className="w-3.5 h-3.5" />
+                        </Button>
+                        <Button variant="danger" size="sm" onClick={(e) => handleCardModeration(e, event.id, "REJECTED")} disabled={!!moderatingId} className="px-2 py-1">
+                          <XCircle className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
-                </Card>
-              );
-            })}
-          </div>
-        )}
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
-    </DreamySunsetBackground>
+    </div>
   );
 }

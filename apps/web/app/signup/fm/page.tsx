@@ -2,7 +2,6 @@
 
 import { useState, useId } from "react";
 import { Button } from "@repo/ui/button";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Card } from "@repo/ui/card";
 import { Input } from "@repo/ui/input";
 import { useToast } from "@repo/ui/toast";
@@ -10,6 +9,10 @@ import { useToast } from "@repo/ui/toast";
 import { API_BASE } from "../../../lib/config";
 import { useLocale } from "../../../lib/LocaleContext";
 
+/**
+ * Performs  member signup page operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function MemberSignupPage() {
     const { toast } = useToast();
     const { t } = useLocale();
@@ -53,18 +56,18 @@ export default function MemberSignupPage() {
     }
 
     return (
-        <DreamySunsetBackground className="flex items-center justify-center px-6 py-10">
+        <div className="min-h-screen flex items-center justify-center px-6 py-10">
             <div className="w-full max-w-md">
-                <Card className="p-8 shadow-jewel">
+                <Card className="p-8">
                     {submitted ? (
                         <SuccessState />
                     ) : (
                         <>
                             <div className="mb-8 text-center">
-                                <h1 className="text-3xl font-display font-bold text-text-primary tracking-tight">
+                                <h1 className="text-3xl font-display font-bold text-ink tracking-tight">
                                     {t("signup.fm.heading")}
                                 </h1>
-                                <p className="text-sm text-jewel-600 mt-2">
+                                <p className="text-sm text-ink-secondary mt-2">
                                     {t("signup.fm.subtitle")}
                                 </p>
                             </div>
@@ -125,9 +128,9 @@ export default function MemberSignupPage() {
                                 </Button>
                             </form>
 
-                            <p className="text-xs text-jewel-500 text-center mt-6">
+                            <p className="text-xs text-ink-muted text-center mt-6">
                                 {t("signup.fm.alreadyApproved")}{" "}
-                                <a href="/signin" className="text-jewel-gold hover:text-jewel-500 font-medium transition-colors">
+                                <a href="/signin" className="text-saffron hover:text-ink font-medium transition-colors">
                                     {t("signup.fm.signIn")}
                                 </a>
                             </p>
@@ -135,7 +138,7 @@ export default function MemberSignupPage() {
                     )}
                 </Card>
             </div>
-        </DreamySunsetBackground>
+        </div>
     );
 }
 
@@ -157,7 +160,7 @@ function LabeledInput({
     const fieldId = useId();
     return (
         <div>
-            <label htmlFor={fieldId} className="block text-xs font-medium text-jewel-700 mb-1">{label}</label>
+            <label htmlFor={fieldId} className="block text-xs font-medium text-ink-secondary mb-1">{label}</label>
             <Input
                 id={fieldId}
                 {...props}
@@ -167,15 +170,19 @@ function LabeledInput({
     );
 }
 
+/**
+ * Performs  success state operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 function SuccessState() {
     const { t } = useLocale();
     return (
         <div className="py-14 text-center">
-            <div className="w-14 h-14 mx-auto rounded-full bg-jewel-emerald/10 flex items-center justify-center mb-4">
-                <span className="text-jewel-emerald text-2xl">✓</span>
+            <div className="w-14 h-14 mx-auto rounded-full bg-emerald/10 flex items-center justify-center mb-4">
+                <span className="text-emerald text-2xl">✓</span>
             </div>
-            <h2 className="text-2xl font-display font-bold text-jewel-900">{t("signup.fm.requestSentHeading")}</h2>
-            <p className="text-sm text-jewel-600 mt-2">
+            <h2 className="text-2xl font-display font-bold text-ink">{t("signup.fm.requestSentHeading")}</h2>
+            <p className="text-sm text-ink-secondary mt-2">
                 {t("signup.fm.requestSentDescription")}
                 <br />
                 {t("signup.fm.requestSentSubtext")}

@@ -2,6 +2,19 @@
 
 import { ReactNode, useState, useRef, useId } from "react";
 
+/**
+ * Performs  tooltip operation.
+ * @param {{ children: React.ReactNode; text: string; className?: string; }} {
+ *   children,
+ *   text,
+ *   className = "",
+ * } - Description of {
+ *   children,
+ *   text,
+ *   className = "",
+ * }
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function Tooltip({
   children,
   text,
@@ -46,7 +59,7 @@ export default function Tooltip({
         id={tooltipId}
         role="tooltip"
         aria-hidden={!show}
-        className={`pointer-events-none transition-opacity duration-150 absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 z-50 whitespace-nowrap rounded-md bg-jewel-900 text-jewel-50 text-xs py-1 px-2 shadow-lg ${
+        className={`pointer-events-none transition-opacity duration-150 absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 z-50 whitespace-nowrap rounded-md bg-ink text-surface text-xs py-1 px-2 shadow-lg ${
           show ? "opacity-100" : "opacity-0"
         }`}
         style={{
@@ -55,7 +68,7 @@ export default function Tooltip({
         }}
       >
         {text}
-        <div className="absolute left-1/2 transform -translate-x-1/2 top-full w-0 h-0 border-8 border-transparent border-t-jewel-900" />
+        <div className="absolute left-1/2 transform -translate-x-1/2 top-full w-0 h-0 border-8 border-transparent border-t-ink" />
       </div>
     </div>
   );

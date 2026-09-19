@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Performs  sun mark operation.
+ * @param {{ className?: string; size?: number; }} { className = "", size = 32 } - Description of { className = "", size = 32 }
+ * @returns {React.JSX.Element} Description of return value
+ */
 export function SunMark({ className = "", size = 32 }: { className?: string; size?: number }) {
   return (
     <svg
@@ -14,7 +19,7 @@ export function SunMark({ className = "", size = 32 }: { className?: string; siz
       <defs>
         <linearGradient id="sunGradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="var(--accent)" />
-          <stop offset="50%" stopColor="var(--jewel-gold-light)" />
+          <stop offset="50%" stopColor="#d4a017" />
           <stop offset="100%" stopColor="var(--accent)" />
         </linearGradient>
       </defs>

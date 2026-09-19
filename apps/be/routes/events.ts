@@ -498,6 +498,12 @@ const ApproveEventSchema = z.object({
     remarks: z.string().optional(),
 });
 
+/**
+ * Performs handle approve event operation.
+ * @param {Request} req - Description of req
+ * @param {string} id - Description of id
+ * @returns {Promise<Response>} Description of return value
+ */
 export async function handleApproveEvent(
     req: Request,
     id: string,

@@ -101,6 +101,11 @@ const routeLabels: Record<string, string> = {
     "/settings": "nav.settings",
 };
 
+/**
+ * Performs  app shell operation.
+ * @param {{ children: React.ReactNode; }} { children } - Description of { children }
+ * @returns {React.JSX.Element} Description of return value
+ */
 export function AppShell({ children }: { children: ReactNode }) {
     const location = useLocation();
     const navigate = useNavigate();

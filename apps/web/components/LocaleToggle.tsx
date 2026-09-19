@@ -2,6 +2,10 @@
 
 import { useLocale } from "../lib/LocaleContext";
 
+/**
+ * Performs  locale toggle operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export function LocaleToggle() {
   const { locale, setLocale } = useLocale();
 

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, ChangeEvent } from "react";
 import { Network } from "vis-network";
 import { Plus, Loader } from "lucide-react";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
 
@@ -29,6 +28,10 @@ interface GraphData {
 
 type ViewType = "ancestors" | "descendants" | "full";
 
+/**
+ * Performs  family tree view operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function FamilyTreeView() {
     const containerRef = useRef<HTMLDivElement>(null);
     const networkRef = useRef<Network | null>(null);
@@ -172,7 +175,7 @@ export default function FamilyTreeView() {
     };
 
     return (
-        <DreamySunsetBackground className="px-6 py-10">
+        <div className="min-h-screen px-6 py-10">
             <div className="max-w-7xl mx-auto space-y-6">
                 {/* Controls */}
                 <Card className="p-6">
@@ -322,11 +325,11 @@ export default function FamilyTreeView() {
                     <h3 className="text-lg font-display-bold text-ink mb-4">{t("familyTree.legend")}</h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                         {[
-                            { color: "bg-jewel-ruby", label: t("role.community_head") },
-                            { color: "bg-jewel-saffron", label: t("role.community_subhead") },
-                            { color: "bg-jewel-emerald", label: t("role.gotra_head") },
-                            { color: "bg-jewel-gold", label: t("role.family_head") },
-                            { color: "bg-jewel-400", label: t("role.member") },
+                            { color: "bg-ruby", label: t("role.community_head") },
+                            { color: "bg-saffron", label: t("role.community_subhead") },
+                            { color: "bg-emerald", label: t("role.gotra_head") },
+                            { color: "bg-saffron", label: t("role.family_head") },
+                            { color: "bg-ink-muted", label: t("role.member") },
                         ].map(({ color, label }) => (
                             <div key={label} className="flex items-center gap-2">
                                 <div
@@ -351,6 +354,6 @@ export default function FamilyTreeView() {
                     </ul>
                 </div>
             </div>
-        </DreamySunsetBackground>
+        </div>
     );
 }

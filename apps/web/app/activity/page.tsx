@@ -7,6 +7,10 @@ import { MOTION_PAGE_ENTER } from "@repo/ui/motion";
 import { useLocale } from "../../lib/LocaleContext";
 import { useUser } from "../../lib/UserContext";
 
+/**
+ * Performs  activity page operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function ActivityPage() {
     const navigate = useNavigate();
     const { t } = useLocale();

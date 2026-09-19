@@ -17,6 +17,10 @@ if (dir) {
 }
 
 // Read secrets lazily so missing env vars don't crash module load time
+/**
+ * Performs get secret operation.
+ * @returns {string} Description of return value
+ */
 function getSecret(): string {
   if (!process.env.JWT_SECRET) {
     throw new Error("Missing JWT_SECRET in environment variables");
@@ -24,6 +28,10 @@ function getSecret(): string {
   return process.env.JWT_SECRET;
 }
 
+/**
+ * Performs get refresh secret operation.
+ * @returns {string} Description of return value
+ */
 function getRefreshSecret(): string {
   if (!process.env.JWT_REFRESH_SECRET) {
     throw new Error("Missing JWT_REFRESH_SECRET in environment variables");

@@ -39,6 +39,17 @@ const FILTER_MODE_LABELS: Record<FilterMode, string> = {
   role: "By Role",
 };
 
+/**
+ * Performs  search input operation.
+ * @param {{ placeholder?: string; focusSignal?: number; }} {
+ *   placeholder,
+ *   focusSignal,
+ * } - Description of {
+ *   placeholder,
+ *   focusSignal,
+ * }
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function SearchInput({
   placeholder,
   focusSignal,
@@ -134,15 +145,15 @@ export default function SearchInput({
   const getRoleBadgeColor = (role?: string) => {
     switch (role) {
       case "COMMUNITY_HEAD":
-        return "bg-jewel-gold";
+        return "bg-saffron";
       case "COMMUNITY_SUBHEAD":
-        return "bg-jewel-600";
+        return "bg-ink-secondary";
       case "GOTRA_HEAD":
-        return "bg-jewel-emerald";
+        return "bg-emerald";
       case "FAMILY_HEAD":
-        return "bg-jewel-500";
+        return "bg-ink-muted";
       default:
-        return "bg-jewel-400";
+        return "bg-ink-muted";
     }
   };
 
@@ -157,7 +168,7 @@ export default function SearchInput({
   return (
     <div className="w-full relative">
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-muted" />
 
         <Input
           ref={inputRef}
@@ -175,15 +186,15 @@ export default function SearchInput({
             onClick={() => setShowFilters(!showFilters)}
             className={`p-1 transition-colors rounded-lg ${
               showFilters
-                ? "text-jewel-gold bg-jewel-gold/10"
-                : "text-jewel-400 hover:text-jewel-600"
+                ? "text-saffron bg-saffron/10"
+                : "text-ink-muted hover:text-ink-secondary"
             }`}
             title={t("search.toggleFilters")}
           >
             <Filter className="w-4 h-4" />
           </Button>
           {loading ? (
-            <Loader2 className="w-4 h-4 text-jewel-gold animate-spin" />
+            <Loader2 className="w-4 h-4 text-saffron animate-spin" />
           ) : q ? (
             <Button
               variant="ghost"
@@ -193,7 +204,7 @@ export default function SearchInput({
                 setResults([]);
                 inputRef.current?.focus();
               }}
-              className="text-jewel-400 hover:text-jewel-600 transition-colors"
+              className="text-ink-muted hover:text-ink-secondary transition-colors"
             >
               <X className="w-4 h-4" />
             </Button>
@@ -208,7 +219,7 @@ export default function SearchInput({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.15 }}
-            className="absolute top-full mt-2 left-0 right-0 flex flex-wrap gap-2 p-3 bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 rounded-xl shadow-lg z-40"
+            className="absolute top-full mt-2 left-0 right-0 flex flex-wrap gap-2 p-3 bg-surface backdrop-blur-xl border border-border rounded-xl shadow-lg z-40"
           >
             {(Object.keys(FILTER_MODE_LABELS) as FilterMode[]).map((mode) => (
               <Button
@@ -222,8 +233,8 @@ export default function SearchInput({
                 }}
                 className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
                   filterMode === mode
-                    ? "bg-jewel-gold/15 text-jewel-gold border border-jewel-gold/25"
-                    : "bg-jewel-50/70 text-jewel-500 border border-jewel-400/20 hover:bg-jewel-100"
+                    ? "bg-saffron/15 text-saffron border border-saffron/25"
+                    : "bg-surface text-ink-muted border border-border hover:bg-surface"
                 }`}
               >
                 {t(`search.${mode === "text" ? "textSearch" : mode === "gotra" ? "byGotra" : mode === "profession" ? "byProfession" : mode === "location" ? "byLocation" : mode === "blood" ? "byBloodGroup" : "byRole"}`)}
@@ -240,16 +251,16 @@ export default function SearchInput({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full mt-2 w-full bg-jewel-50/80 backdrop-blur-2xl rounded-xl border border-jewel-400/20 shadow-jewel overflow-hidden z-50"
+            className="absolute top-full mt-2 w-full bg-surface backdrop-blur-2xl rounded-xl border border-border overflow-hidden z-50"
           >
             {loading && (
               <div className="p-4 space-y-3">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="flex items-center gap-3 animate-pulse">
-                    <div className="w-10 h-10 rounded-xl bg-jewel-200/70" />
+                    <div className="w-10 h-10 rounded-xl bg-surface" />
                     <div className="flex-1 space-y-2">
-                      <div className="h-4 w-3/4 bg-jewel-200/70 rounded" />
-                      <div className="h-3 w-1/2 bg-jewel-200/50 rounded" />
+                      <div className="h-4 w-3/4 bg-surface rounded" />
+                      <div className="h-3 w-1/2 bg-surface rounded" />
                     </div>
                   </div>
                 ))}
@@ -258,26 +269,26 @@ export default function SearchInput({
 
             {!loading && results.length === 0 && debouncedQ && (
               <div className="p-8 text-center">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-jewel-100/80 mb-3">
-                  <Search className="w-5 h-5 text-jewel-400" />
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-surface mb-3">
+                  <Search className="w-5 h-5 text-ink-muted" />
                 </div>
-                <p className="text-sm text-jewel-500">
+                <p className="text-sm text-ink-muted">
                   {t("search.noResults")}{" "}
-                  <span className="text-jewel-700 font-medium">&ldquo;{debouncedQ}&rdquo;</span>
+                  <span className="text-ink-secondary font-medium">&ldquo;{debouncedQ}&rdquo;</span>
                 </p>
-                <p className="text-xs text-jewel-400 mt-1">{t("search.tryDifferent")}</p>
+                <p className="text-xs text-ink-muted mt-1">{t("search.tryDifferent")}</p>
               </div>
             )}
 
             {!loading && results.length > 0 && (
               <div className="max-h-96 overflow-y-auto">
                 <div className="px-4 pt-3 pb-1">
-                  <p className="text-xs text-jewel-400 font-medium">
+                  <p className="text-xs text-ink-muted font-medium">
                     {t(results.length === 1 ? "search.resultsFound" : "search.resultsFound_other", { count: results.length })}
                   </p>
                 </div>
 
-                <ul className="divide-y divide-jewel-400/15">
+                <ul className="divide-y divide-border">
                   {results.map((r) => (
                     <motion.li
                       key={r.id}
@@ -287,56 +298,56 @@ export default function SearchInput({
                     >
                       <Button
                         variant="ghost"
-                        className="w-full px-4 py-3 hover:bg-jewel-100/60 transition-all duration-150 text-left"
+                        className="w-full px-4 py-3 hover:bg-surface transition-all duration-150 text-left"
                       >
                         <div className="flex items-start gap-3">
                           <div
-                            className={`flex items-center justify-center w-11 h-11 rounded-xl ${getRoleBadgeColor(r.role)} text-jewel-deep font-bold shadow-sm flex-shrink-0`}
+                            className={`flex items-center justify-center w-11 h-11 rounded-xl ${getRoleBadgeColor(r.role)} text-ink font-bold shadow-sm flex-shrink-0`}
                           >
                             {r.name?.charAt(0).toUpperCase() || "?"}
                           </div>
 
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                              <p className="text-sm font-semibold text-jewel-900 truncate">
+                              <p className="text-sm font-semibold text-ink truncate">
                                 {r.name || t("search.unknown")}
                               </p>
                               <span
-                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold ${getRoleBadgeColor(r.role)} text-jewel-deep shadow-sm`}
+                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold ${getRoleBadgeColor(r.role)} text-ink shadow-sm`}
                               >
                                 {formatRole(r.role)}
                               </span>
                             </div>
 
-                            <p className="text-xs text-jewel-400 truncate mb-2">
+                            <p className="text-xs text-ink-muted truncate mb-2">
                               {r.email || t("search.noEmail")}
                             </p>
 
                             <div className="flex flex-wrap gap-1.5 text-xs">
                               {r.profile?.gotra && (
-                                <span className="px-2 py-0.5 bg-jewel-400/10 text-jewel-600 rounded-md border border-jewel-400/20">
+                                <span className="px-2 py-0.5 bg-ink-muted/10 text-ink-secondary rounded-md border border-border">
                                   {t("search.byGotra")}: {r.profile.gotra}
                                 </span>
                               )}
                               {r.profile?.profession && (
-                                <span className="px-2 py-0.5 bg-jewel-emerald/10 text-jewel-emerald rounded-md border border-jewel-emerald/20">
+                                <span className="px-2 py-0.5 bg-emerald/10 text-emerald rounded-md border border-emerald/20">
                                   {r.profile.profession}
                                 </span>
                               )}
                               {r.profile?.location && (
-                                <span className="px-2 py-0.5 bg-jewel-gold/10 text-jewel-gold rounded-md border border-jewel-gold/20">
+                                <span className="px-2 py-0.5 bg-saffron/10 text-saffron rounded-md border border-saffron/20">
                                   {r.profile.location}
                                 </span>
                               )}
                               {r.profile?.bloodGroup && (
-                                <span className="px-2 py-0.5 bg-jewel-ruby/10 text-jewel-ruby rounded-md border border-jewel-ruby/20">
+                                <span className="px-2 py-0.5 bg-ruby/10 text-ruby rounded-md border border-ruby/20">
                                   {formatBloodGroup(r.profile.bloodGroup)}
                                 </span>
                               )}
                             </div>
 
                             {r.families && r.families.length > 0 && (
-                              <p className="text-xs text-jewel-600 mt-1.5">
+                              <p className="text-xs text-ink-secondary mt-1.5">
                                 {t("search.familyLabel")}: {r.families.map((f) => f.name).join(", ")}
                               </p>
                             )}

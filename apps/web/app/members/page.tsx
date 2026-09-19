@@ -26,6 +26,10 @@ type Member = {
     }[];
 };
 
+/**
+ * Performs  members page operation.
+ * @returns {React.JSX.Element} Description of return value
+ */
 export default function MembersPage() {
     const navigate = useNavigate();
     const { t } = useLocale();

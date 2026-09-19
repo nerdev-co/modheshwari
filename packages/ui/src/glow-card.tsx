@@ -2,6 +2,17 @@
 
 import { useRef, type ReactNode } from "react";
 
+/**
+ * Performs  glow card operation.
+ * @param {{ children: React.ReactNode; className?: string; }} {
+ *   children,
+ *   className = "",
+ * } - Description of {
+ *   children,
+ *   className = "",
+ * }
+ * @returns {React.JSX.Element} Description of return value
+ */
 export function GlowCard({
   children,
   className = "",
