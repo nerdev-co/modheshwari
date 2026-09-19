@@ -9,6 +9,7 @@ import { Card } from "@repo/ui/card";
 
 import { API_BASE } from "../../lib/config";
 import { apiFetch } from "../../lib/api";
+import { useLocale } from "../../lib/LocaleContext";
 
 interface GraphData {
     nodes: Array<{
@@ -31,6 +32,7 @@ type ViewType = "ancestors" | "descendants" | "full";
 export default function FamilyTreeView() {
     const containerRef = useRef<HTMLDivElement>(null);
     const networkRef = useRef<Network | null>(null);
+    const { t } = useLocale();
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -45,10 +47,9 @@ export default function FamilyTreeView() {
     });
     const [showRelationshipForm, setShowRelationshipForm] = useState(false);
 
-    // Fetch family tree
     const fetchFamilyTree = async () => {
         if (!userId) {
-            setError("User ID not available");
+            setError(t("familyTree.userIdNotAvailable"));
             return;
         }
 
@@ -71,7 +72,7 @@ export default function FamilyTreeView() {
             }
             setTreeData(tree);
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Unknown error");
+            setError(err instanceof Error ? err.message : t("familyTree.unknownError"));
         } finally {
             setLoading(false);
         }
@@ -142,7 +143,7 @@ export default function FamilyTreeView() {
 
     const handleCreateRelationship = async () => {
         if (!relationshipForm.targetUserId) {
-            setError("Please enter target user ID");
+            setError(t("familyTree.enterUserId"));
             return;
         }
 
@@ -164,7 +165,7 @@ export default function FamilyTreeView() {
 
             await fetchFamilyTree();
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Unknown error");
+            setError(err instanceof Error ? err.message : t("familyTree.unknownError"));
         } finally {
             setLoading(false);
         }
@@ -178,8 +179,8 @@ export default function FamilyTreeView() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                         {/* View Type */}
                         <div>
-                            <label htmlFor="viewType" className="block text-sm font-medium text-jewel-600 mb-2">
-                                View Type
+                            <label htmlFor="viewType" className="block text-sm font-medium text-ink-muted mb-2">
+                                {t("familyTree.viewType")}
                             </label>
                             <select
                                 id="viewType"
@@ -187,16 +188,16 @@ export default function FamilyTreeView() {
                                 onChange={(e) => setView(e.target.value as ViewType)}
                                 className="select"
                             >
-                                <option value="full">Full Tree</option>
-                                <option value="ancestors">Ancestors</option>
-                                <option value="descendants">Descendants</option>
+                                <option value="full">{t("familyTree.fullTree")}</option>
+                                <option value="ancestors">{t("familyTree.ancestors")}</option>
+                                <option value="descendants">{t("familyTree.descendants")}</option>
                             </select>
                         </div>
 
                         {/* Depth */}
                         <div>
-                            <label htmlFor="depth" className="block text-sm font-medium text-jewel-600 mb-2">
-                                Depth: {depth}
+                            <label htmlFor="depth" className="block text-sm font-medium text-ink-muted mb-2">
+                                {t("familyTree.depth")}: {depth}
                             </label>
                             <input
                                 id="depth"
@@ -205,7 +206,7 @@ export default function FamilyTreeView() {
                                 max="10"
                                 value={depth}
                                 onChange={(e) => setDepth(parseInt(e.target.value))}
-                                className="w-full accent-jewel-gold"
+                                className="w-full accent-saffron"
                             />
                         </div>
 
@@ -217,7 +218,7 @@ export default function FamilyTreeView() {
                                 className="w-full"
                             >
                                 {loading ? <Loader className="w-4 h-4 animate-spin" /> : null}
-                                Refresh Tree
+                                {t("familyTree.refreshTree")}
                             </Button>
                         </div>
 
@@ -229,18 +230,18 @@ export default function FamilyTreeView() {
                                 className="w-full"
                             >
                                 <Plus className="w-4 h-4" />
-                                Add Relation
+                                {t("familyTree.addRelation")}
                             </Button>
                         </div>
                     </div>
 
                     {/* Add Relationship Form */}
                     {showRelationshipForm && (
-                        <div className="border-t border-jewel-400/20 pt-4 mt-4">
+                        <div className="border-t border-border pt-4 mt-4">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
-                                    <label htmlFor="targetUserId" className="block text-sm font-medium text-jewel-600 mb-2">
-                                        Target User ID
+                                    <label htmlFor="targetUserId" className="block text-sm font-medium text-ink-muted mb-2">
+                                        {t("familyTree.targetUserId")}
                                     </label>
                                     <input
                                         id="targetUserId"
@@ -252,14 +253,14 @@ export default function FamilyTreeView() {
                                                 targetUserId: e.target.value,
                                             })
                                         }
-                                        placeholder="Enter user ID"
-                                        className="w-full px-3 py-2 bg-jewel-50/50 border border-jewel-400/30 rounded-xl text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                                        placeholder={t("familyTree.enterUserId")}
+                                        className="w-full px-3 py-2 bg-canvas border border-border rounded-xl text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-saffron"
                                     />
                                 </div>
 
                                 <div>
-                                    <label htmlFor="relationType" className="block text-sm font-medium text-jewel-600 mb-2">
-                                        Relationship Type
+                                    <label htmlFor="relationType" className="block text-sm font-medium text-ink-muted mb-2">
+                                        {t("familyTree.relationshipType")}
                                     </label>
                                     <select
                                         id="relationType"
@@ -272,10 +273,10 @@ export default function FamilyTreeView() {
                                         }
                                         className="select"
                                     >
-                                        <option value="SPOUSE">Spouse</option>
-                                        <option value="PARENT">Parent</option>
-                                        <option value="CHILD">Child</option>
-                                        <option value="SIBLING">Sibling</option>
+                                        <option value="SPOUSE">{t("familyTree.spouse")}</option>
+                                        <option value="PARENT">{t("familyTree.parent")}</option>
+                                        <option value="CHILD">{t("familyTree.child")}</option>
+                                        <option value="SIBLING">{t("familyTree.sibling")}</option>
                                     </select>
                                 </div>
 
@@ -285,14 +286,14 @@ export default function FamilyTreeView() {
                                         disabled={loading}
                                         className="flex-1"
                                     >
-                                        Add
+                                        {t("familyTree.add")}
                                     </Button>
                                     <Button
                                         variant="secondary"
                                         onClick={() => setShowRelationshipForm(false)}
                                         className="px-4"
                                     >
-                                        Cancel
+                                        {t("familyTree.cancel")}
                                     </Button>
                                 </div>
                             </div>
@@ -301,7 +302,7 @@ export default function FamilyTreeView() {
 
                     {/* Error Message */}
                     {error && (
-                        <div className="mt-4 p-3 bg-jewel-ruby/10 border border-jewel-ruby/30 rounded-xl text-jewel-ruby text-sm">
+                        <div className="mt-4 p-3 bg-ruby-soft border border-ruby/30 rounded-xl text-ruby text-sm">
                             {error}
                         </div>
                     )}
@@ -311,42 +312,42 @@ export default function FamilyTreeView() {
                 <Card className="overflow-hidden">
                     <div
                         ref={containerRef}
-                        className="w-full bg-jewel-100/40"
+                        className="w-full bg-surface-muted"
                         style={{ height: "600px", minHeight: "600px" }}
                     />
                 </Card>
 
                 {/* Legend */}
                 <Card className="p-6">
-                    <h3 className="text-lg font-display font-bold text-jewel-900 mb-4">Legend</h3>
+                    <h3 className="text-lg font-display-bold text-ink mb-4">{t("familyTree.legend")}</h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                         {[
-                            { color: "bg-jewel-ruby", label: "Community Head" },
-                            { color: "bg-jewel-saffron", label: "Community Subhead" },
-                            { color: "bg-jewel-emerald", label: "Gotra Head" },
-                            { color: "bg-jewel-gold", label: "Family Head" },
-                            { color: "bg-jewel-400", label: "Member" },
+                            { color: "bg-jewel-ruby", label: t("role.community_head") },
+                            { color: "bg-jewel-saffron", label: t("role.community_subhead") },
+                            { color: "bg-jewel-emerald", label: t("role.gotra_head") },
+                            { color: "bg-jewel-gold", label: t("role.family_head") },
+                            { color: "bg-jewel-400", label: t("role.member") },
                         ].map(({ color, label }) => (
                             <div key={label} className="flex items-center gap-2">
                                 <div
                                     className={`w-6 h-6 rounded ${color}`}
                                 />
-                                <span className="text-sm text-jewel-700">{label}</span>
+                                <span className="text-sm text-ink-secondary">{label}</span>
                             </div>
                         ))}
                     </div>
                 </Card>
 
                 {/* Instructions */}
-                <div className="bg-jewel-gold/10 border border-jewel-gold/30 rounded-2xl p-4">
-                    <h3 className="font-display font-bold text-jewel-800 mb-2">How to Use:</h3>
-                    <ul className="text-sm text-jewel-600 space-y-1 list-disc list-inside">
-                        <li>Click and drag to pan around the tree</li>
-                        <li>Scroll to zoom in and out</li>
-                        <li>Click a node to select it</li>
-                        <li>Use the View Type selector to switch between different tree views</li>
-                        <li>Adjust Depth to show more or fewer generations</li>
-                        <li>Add relationships using the Add Relation button</li>
+                <div className="bg-saffron-soft border border-saffron/30 rounded-2xl p-4">
+                    <h3 className="font-display-bold text-ink mb-2">{t("familyTree.howToUse")}</h3>
+                    <ul className="text-sm text-ink-secondary space-y-1 list-disc list-inside">
+                        <li>{t("familyTree.instructions.pan")}</li>
+                        <li>{t("familyTree.instructions.zoom")}</li>
+                        <li>{t("familyTree.instructions.select")}</li>
+                        <li>{t("familyTree.instructions.viewType")}</li>
+                        <li>{t("familyTree.instructions.depth")}</li>
+                        <li>{t("familyTree.instructions.addRelation")}</li>
                     </ul>
                 </div>
             </div>

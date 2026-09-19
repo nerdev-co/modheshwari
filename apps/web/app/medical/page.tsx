@@ -52,11 +52,11 @@ export default function Medical() {
         setMedicalList(data.data || []);
       } else {
         setMedicalList([]);
-        toast(data.message || "No users found", { variant: "info" });
+        toast(data.message || t("medical.noResults"), { variant: "info" });
       }
     } catch {
       setMedicalList([]);
-      toast("Failed to search medical records", { variant: "error" });
+      toast(t("medical.records.toastSearchFailed"), { variant: "error" });
     } finally {
       setSearchLoading(false);
     }
@@ -65,7 +65,7 @@ export default function Medical() {
   if (loading) {
     return (
       <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
-        <LoadingState message="Loading user info..." />
+        <LoadingState message={t("common.loading")} />
       </DreamySunsetBackground>
     );
   }
@@ -214,10 +214,10 @@ export default function Medical() {
                         </span>
                       </td>
                       <td className="px-4 py-3 text-jewel-700">
-                        {m.allergies || "None"}
+                        {m.allergies || t("medical.noneRecorded")}
                       </td>
                       <td className="px-4 py-3 text-jewel-600 max-w-xs truncate">
-                        {m.medicalNotes || "None"}
+                        {m.medicalNotes || t("medical.noneRecorded")}
                       </td>
                     </tr>
                   ))}

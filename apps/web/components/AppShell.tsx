@@ -6,7 +6,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   Calendar,
   MessageCircle,
-  Package,
   Search,
   Menu,
   X,
@@ -19,14 +18,11 @@ import {
   UserCheck,
   Users2,
   GitBranch,
-  ClipboardList,
-  CheckCheck,
-  Compass,
   Inbox,
   Activity,
   Bell,
 } from "lucide-react";
-import { MOTION_ENTER, MOTION_SIDEBAR, MOTION_DRAWER } from "@repo/ui/motion";
+import { MOTION_ENTER, MOTION_DRAWER } from "@repo/ui/motion";
 import { useFocusTrap } from "@repo/ui/useFocusTrap";
 
 import { SunMark } from "./SunMark";
@@ -70,21 +66,6 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    label: "nav.sections.operations",
-    items: [
-      { path: "/requests", i18nKey: "nav.requests", icon: ClipboardList },
-      { path: "/approvals", i18nKey: "nav.approvals", icon: CheckCheck },
-      { path: "/resources", i18nKey: "nav.resources", icon: Package },
-    ],
-  },
-  {
-    label: "nav.sections.discover",
-    items: [
-      { path: "/search", i18nKey: "nav.search", icon: Search },
-      { path: "/nearby", i18nKey: "nav.nearby", icon: Compass },
-    ],
-  },
-  {
     label: "nav.sections.personal",
     items: [
       { path: "/notifications", i18nKey: "nav.notifications", icon: Inbox },
@@ -93,8 +74,8 @@ const NAV_SECTIONS: NavSection[] = [
   },
 ];
 
-const SIDEBAR_WIDTH = 272;
-const SIDEBAR_COLLAPSED_WIDTH = 80;
+const SIDEBAR_WIDTH = 256;
+const SIDEBAR_COLLAPSED_WIDTH = 64;
 
 export function AppShell({ children }: { children: ReactNode }) {
   const location = useLocation();
@@ -105,7 +86,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const profileButtonRef = useRef<HTMLButtonElement>(null);
   const mobileSidebarRef = useRef<HTMLDivElement>(null);
@@ -154,129 +134,68 @@ export function AppShell({ children }: { children: ReactNode }) {
         style={{ width: sidebarWidth }}
         aria-label="Main navigation"
       >
-        <div className="flex h-16 items-center justify-between px-4 border-b border-border">
-          <Link to="/" className="flex items-center gap-2" aria-label="Modheshwari Home">
-            <SunMark size={28} className="text-saffron" />
+        {/* Sidebar Header */}
+        <div className="flex h-14 items-center px-4 border-b border-border">
+          <Link to="/" className="flex items-center gap-2.5" aria-label="Modheshwari Home">
+            <SunMark size={24} className="text-saffron flex-shrink-0" />
             {sidebarOpen && (
               <motion.span
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={MOTION_ENTER}
-                className="font-display-bold text-xl text-ink"
+                className="font-display-bold text-base text-ink tracking-tight"
               >
                 Modheshwari
               </motion.span>
             )}
           </Link>
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="lg:hidden p-1.5 rounded-lg text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
-            aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-            aria-expanded={sidebarOpen}
-          >
-            {sidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
-          </button>
         </div>
 
+        {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-5" aria-label="Main navigation">
           {filteredSections.map((section) => (
-            <div key={section.label} className="space-y-1">
+            <div key={section.label}>
               {sidebarOpen && (
-                <motion.h3
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  transition={MOTION_ENTER}
-                  className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-ink-muted"
-                >
+                <p className="px-2 mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-ink-muted">
                   {t(section.label)}
-                </motion.h3>
+                </p>
               )}
-              {section.items.map((item) => {
-                const Icon = item.icon;
-                const active = isActive(item.path);
-                const isHovered = hoveredItem === item.path;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onMouseEnter={() => !sidebarOpen && setHoveredItem(item.path)}
-                    onMouseLeave={() => !sidebarOpen && setHoveredItem(null)}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-fast relative ${
-                      active
-                        ? "bg-saffron-soft text-saffron"
-                        : "text-ink-secondary hover:bg-surface-muted hover:text-ink"
-                    }`}
-                    aria-current={active ? "page" : undefined}
-                  >
-                    <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
-                    {sidebarOpen && (
-                      <motion.span
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
-                        transition={MOTION_ENTER}
-                      >
-                        {t(item.i18nKey)}
-                      </motion.span>
-                    )}
-                    {!sidebarOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: isHovered ? 1 : 0, scale: isHovered ? 1 : 0.9 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        transition={{ duration: 150, ease: "easeOut" }}
-                        className="absolute left-full ml-3 px-2 py-1 rounded-lg bg-ink text-ink-inverse text-xs font-medium whitespace-nowrap shadow-lg z-50"
-                      >
-                        {t(item.i18nKey)}
-                      </motion.div>
-                    )}
-                    {active && (
-                      <motion.div
-                        initial={{ height: 0 }}
-                        animate={{ height: "calc(100% - 8px)" }}
-                        exit={{ height: 0 }}
-                        transition={MOTION_SIDEBAR}
-                        className="absolute left-0 top-4 bottom-4 w-1 bg-saffron rounded-r-md"
-                      />
-                    )}
-                    {!sidebarOpen && active && (
-                      <motion.div
-                        initial={{ opacity: 0, x: -4 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -4 }}
-                        transition={MOTION_SIDEBAR}
-                        className="absolute left-full ml-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-saffron"
-                      />
-                    )}
-                  </Link>
-                );
-              })}
+              <div className="space-y-0.5">
+                {section.items.map((item) => {
+                  const Icon = item.icon;
+                  const active = isActive(item.path);
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={`group flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-colors relative ${
+                        active
+                          ? "bg-saffron-soft text-saffron"
+                          : "text-ink-secondary hover:bg-surface-muted hover:text-ink"
+                      }`}
+                      aria-current={active ? "page" : undefined}
+                    >
+                      <Icon className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
+                      {sidebarOpen && <span>{t(item.i18nKey)}</span>}
+                      {!sidebarOpen && active && (
+                        <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-saffron" />
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
           ))}
         </nav>
 
-        <div className={`p-3 border-t border-border transition-opacity duration-200 ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+        {/* Sidebar Footer - Profile */}
+        <div className="p-2 border-t border-border">
           <Link
             to="/me"
-            onMouseEnter={() => !sidebarOpen && setHoveredItem("profile")}
-            onMouseLeave={() => !sidebarOpen && setHoveredItem(null)}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-ink-secondary hover:bg-surface-muted hover:text-ink transition-all duration-fast"
+            className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
           >
-            <User className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+            <User className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
             {sidebarOpen && <span>{t("nav.profile")}</span>}
-            {!sidebarOpen && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: hoveredItem === "profile" ? 1 : 0, scale: hoveredItem === "profile" ? 1 : 0.9 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 150, ease: "easeOut" }}
-                className="absolute left-full ml-3 px-2 py-1 rounded-lg bg-ink text-ink-inverse text-xs font-medium whitespace-nowrap shadow-lg z-50"
-              >
-                {t("nav.profile")}
-              </motion.div>
-            )}
           </Link>
         </div>
       </aside>
@@ -296,68 +215,71 @@ export function AppShell({ children }: { children: ReactNode }) {
         )}
       </AnimatePresence>
 
+      {/* Mobile Sidebar */}
       <AnimatePresence>
         {mobileSidebarOpen && (
           <motion.aside
             ref={mobileSidebarRef}
-            initial={{ x: -300 }}
+            initial={{ x: -280 }}
             animate={{ x: 0 }}
-            exit={{ x: -300 }}
+            exit={{ x: -280 }}
             transition={MOTION_DRAWER}
-            className="fixed inset-y-0 left-0 z-50 w-80 bg-surface border-r border-border lg:hidden"
+            className="fixed inset-y-0 left-0 z-50 w-72 bg-surface border-r border-border lg:hidden"
             aria-label="Mobile navigation"
           >
-            <div className="flex h-16 items-center justify-between px-4 border-b border-border">
+            <div className="flex h-14 items-center justify-between px-4 border-b border-border">
               <Link to="/" className="flex items-center gap-2" aria-label="Modheshwari Home">
-                <SunMark size={28} className="text-saffron" />
-                <span className="font-display-bold text-xl text-ink">Modheshwari</span>
+                <SunMark size={24} className="text-saffron" />
+                <span className="font-display-bold text-base text-ink tracking-tight">Modheshwari</span>
               </Link>
               <button
                 onClick={() => setMobileSidebarOpen(false)}
-                className="p-2 rounded-lg text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
+                className="p-1.5 rounded-lg text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
                 aria-label="Close menu"
               >
-                <X className="w-5 h-5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
 
-            <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5" aria-label="Mobile navigation">
+            <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-5" aria-label="Mobile navigation">
               {filteredSections.map((section) => (
-                <div key={section.label} className="space-y-1">
-                  <h3 className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-ink-muted">
+                <div key={section.label}>
+                  <p className="px-2 mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-ink-muted">
                     {t(section.label)}
-                  </h3>
-                  {section.items.map((item) => {
-                    const Icon = item.icon;
-                    const active = isActive(item.path);
-                    return (
-                      <Link
-                        key={item.path}
-                        to={item.path}
-                        onClick={() => setMobileSidebarOpen(false)}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-fast ${
-                          active
-                            ? "bg-saffron-soft text-saffron"
-                            : "text-ink-secondary hover:bg-surface-muted hover:text-ink"
-                        }`}
-                        aria-current={active ? "page" : undefined}
-                      >
-                        <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
-                        <span>{t(item.i18nKey)}</span>
-                      </Link>
-                    );
-                  })}
+                  </p>
+                  <div className="space-y-0.5">
+                    {section.items.map((item) => {
+                      const Icon = item.icon;
+                      const active = isActive(item.path);
+                      return (
+                        <Link
+                          key={item.path}
+                          to={item.path}
+                          onClick={() => setMobileSidebarOpen(false)}
+                          className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                            active
+                              ? "bg-saffron-soft text-saffron"
+                              : "text-ink-secondary hover:bg-surface-muted hover:text-ink"
+                          }`}
+                          aria-current={active ? "page" : undefined}
+                        >
+                          <Icon className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
+                          <span>{t(item.i18nKey)}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </div>
               ))}
             </nav>
 
-            <div className="p-3 border-t border-border">
+            <div className="p-2 border-t border-border">
               <Link
                 to="/me"
                 onClick={() => setMobileSidebarOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-ink-secondary hover:bg-surface-muted hover:text-ink transition-all duration-fast"
+                className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
               >
-                <User className="w-5 h-5" aria-hidden="true" />
+                <User className="h-4 w-4" aria-hidden="true" />
                 <span>{t("nav.profile")}</span>
               </Link>
             </div>
@@ -366,17 +288,21 @@ export function AppShell({ children }: { children: ReactNode }) {
       </AnimatePresence>
 
       {/* Main Content */}
-      <div className="flex flex-1 flex-col lg:pl-[272px]" style={{ marginLeft: sidebarOpen ? 0 : SIDEBAR_COLLAPSED_WIDTH - SIDEBAR_WIDTH }}>
+      <div
+        className="flex flex-1 flex-col min-w-0"
+        style={{ marginLeft: typeof window !== 'undefined' && window.innerWidth >= 1024 ? (sidebarOpen ? 0 : SIDEBAR_COLLAPSED_WIDTH - SIDEBAR_WIDTH) : 0 }}
+      >
         {/* Top Bar */}
-        <header className="sticky top-0 z-30 h-16 bg-surface/80 backdrop-blur-xl border-b border-border">
-          <div className="flex h-full items-center justify-between px-4 lg:px-6">
-            <div className="flex items-center gap-4">
+        <header className="sticky top-0 z-30 h-14 bg-surface/80 backdrop-blur-xl border-b border-border">
+          <div className="flex h-full items-center justify-between px-4 lg:px-5">
+            {/* Left: Mobile menu + Sidebar toggle */}
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => setMobileSidebarOpen(true)}
-                className="lg:hidden p-2 rounded-lg text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
+                className="lg:hidden p-1.5 rounded-lg text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
                 aria-label="Open menu"
               >
-                <Menu className="w-6 h-6" />
+                <Menu className="h-5 w-5" />
               </button>
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -384,60 +310,20 @@ export function AppShell({ children }: { children: ReactNode }) {
                 aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
                 aria-expanded={sidebarOpen}
               >
-                {sidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                {sidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
               </button>
-              {sidebarOpen && (
-                <motion.span
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  transition={MOTION_ENTER}
-                  className="text-sm font-medium text-ink-secondary hidden sm:block"
-                >
-                  {(() => {
-                    const activeSection = filteredSections.find((s) =>
-                      s.items.some((item) => isActive(item.path))
-                    );
-                    return activeSection ? t(activeSection.label) : "";
-                  })()}
-                </motion.span>
-              )}
             </div>
 
-            <div className="flex items-center gap-3">
-              {/* Breadcrumbs & Search */}
-              <div className="flex items-center gap-4 flex-1 max-w-xl ml-4 lg:ml-8 hidden lg:flex">
-                <nav className="flex items-center gap-2 text-sm text-ink-muted" aria-label="Breadcrumb">
-                  <Link to="/" className="hover:text-ink transition-colors">
-                    <LayoutDashboard className="w-4 h-4" aria-hidden="true" />
-                  </Link>
-                  {(() => {
-                    const activeSection = filteredSections.find((s) =>
-                      s.items.some((item) => isActive(item.path))
-                    );
-                    if (!activeSection) return null;
-                    const activeItem = activeSection.items.find((item) => isActive(item.path));
-                    return (
-                      <>
-                        <span className="mx-1 text-ink-muted" aria-hidden="true">/</span>
-                        <span className="text-ink-secondary capitalize">{t(activeSection.label)}</span>
-                        {activeItem && activeItem.path !== "/" && (
-                          <>
-                            <span className="mx-1 text-ink-muted" aria-hidden="true">/</span>
-                            <span className="text-ink capitalize">{t(activeItem.i18nKey)}</span>
-                          </>
-                        )}
-                      </>
-                    );
-                  })()}
-                </nav>
-
-                <div className="relative flex-1 max-w-md">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted" aria-hidden="true" />
+            {/* Right: Search, Locale, Notifications, Profile */}
+            <div className="flex items-center gap-2">
+              {/* Search */}
+              <div className="hidden md:flex items-center">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-muted" aria-hidden="true" />
                   <input
                     type="search"
                     placeholder={t("common.searchPlaceholder")}
-                    className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-border bg-surface text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-saffron focus:border-transparent transition-all"
+                    className="w-56 pl-9 pr-3 py-1.5 text-sm rounded-lg border border-border bg-canvas text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-saffron focus:border-saffron transition-all"
                     aria-label={t("common.searchLabel")}
                   />
                 </div>
@@ -446,72 +332,75 @@ export function AppShell({ children }: { children: ReactNode }) {
               <LocaleToggle />
 
               {/* Notifications */}
+              <Link
+                to="/notifications"
+                className="relative p-1.5 rounded-lg text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
+                aria-label={t("nav.notifications")}
+              >
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-saffron px-1 text-[9px] font-bold text-ink-on-accent">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
+              </Link>
+
+              {/* Profile Menu */}
               <div className="relative">
                 <button
                   ref={profileButtonRef}
                   onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                  className="flex items-center gap-2 p-1.5 rounded-xl text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
+                  className="flex items-center gap-2 p-1 rounded-lg hover:bg-surface-muted transition-colors"
                   aria-expanded={profileMenuOpen}
                   aria-haspopup="true"
                   aria-label={t("nav.account")}
                 >
-                  <div className="h-8 w-8 rounded-full bg-saffron-soft flex items-center justify-center">
-                    <span className="text-sm font-semibold text-saffron">
+                  <div className="h-7 w-7 rounded-full bg-saffron-soft flex items-center justify-center">
+                    <span className="text-xs font-semibold text-saffron">
                       {user?.name?.charAt(0).toUpperCase() || "U"}
                     </span>
                   </div>
-                  {sidebarOpen && (
-                    <>
-                      <span className="hidden sm:block text-sm font-medium text-ink">
-                        {user?.name || "User"}
-                      </span>
-                      <ChevronRight className="w-4 h-4 text-ink-muted" />
-                    </>
-                  )}
                 </button>
 
                 <AnimatePresence>
                   {profileMenuOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                      initial={{ opacity: 0, y: -4, scale: 0.98 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                      exit={{ opacity: 0, y: -4, scale: 0.98 }}
                       transition={MOTION_ENTER}
-                      className="absolute right-0 mt-2 w-56 origin-top-right rounded-xl bg-surface-raised border border-border shadow-medium p-2"
+                      className="absolute right-0 mt-1.5 w-52 origin-top-right rounded-xl bg-surface-raised border border-border shadow-medium p-1.5"
                       role="menu"
                     >
-                      <div className="px-3 py-2 border-b border-border">
-                        <p className="text-sm font-medium text-ink">{user?.name}</p>
-                        <p className="text-xs text-ink-muted">{user?.email}</p>
-                        <span className="inline-flex mt-1 px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-saffron-soft text-saffron">
-                          {t(`role.${user?.role?.toLowerCase() || "member"}`)}
-                        </span>
+                      <div className="px-2.5 py-2 border-b border-border mb-1">
+                        <p className="text-sm font-medium text-ink truncate">{user?.name}</p>
+                        <p className="text-xs text-ink-muted truncate">{user?.email}</p>
                       </div>
                       <Link
                         to="/me"
                         onClick={() => setProfileMenuOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
+                        className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-sm text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
                         role="menuitem"
                       >
-                        <User className="w-4 h-4" />
+                        <User className="h-4 w-4" />
                         {t("nav.profile")}
                       </Link>
                       <Link
                         to="/me/edit"
                         onClick={() => setProfileMenuOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
+                        className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-sm text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
                         role="menuitem"
                       >
-                        <Settings className="w-4 h-4" />
+                        <Settings className="h-4 w-4" />
                         {t("nav.settings")}
                       </Link>
-                      <hr className="my-2 border-border" />
+                      <hr className="my-1 border-border" />
                       <button
                         onClick={handleLogout}
-                        className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm text-ruby hover:bg-ruby-soft transition-colors"
+                        className="flex items-center gap-2 w-full px-2.5 py-1.5 rounded-lg text-sm text-ruby hover:bg-ruby-soft transition-colors"
                         role="menuitem"
                       >
-                        <LogOut className="w-4 h-4" />
+                        <LogOut className="h-4 w-4" />
                         {t("nav.logout")}
                       </button>
                     </motion.div>
@@ -523,7 +412,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6">
+        <main className="flex-1 overflow-y-auto">
           {children}
         </main>
       </div>

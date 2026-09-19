@@ -14,19 +14,19 @@ import hi from "../locales/hi.json";
 
 type Locale = "en" | "hi";
 
-const translations: Record<Locale, typeof en> = { en, hi };
+const translations = { en, hi } as Record<Locale, Record<string, unknown>>;
 
 interface LocaleContextValue {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, string | number>) => string;
 }
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
 function getCookie(name: string): string | null {
   const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
-  return match ? decodeURIComponent(match[2]) : null;
+  return match && match[2] ? decodeURIComponent(match[2]) : null;
 }
 
 function setCookie(name: string, value: string, days = 365) {
@@ -41,6 +41,11 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
     }
     return path;
   }, obj) as string;
+}
+
+function interpolate(template: string, params?: Record<string, string | number>): string {
+  if (!params) return template;
+  return template.replace(/\{\{(\w+)\}\}/g, (_, key) => String(params[key] ?? ""));
 }
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
@@ -62,8 +67,9 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const t = useCallback(
-    (key: string): string => {
-      return getNestedValue(translations[locale], key);
+    (key: string, params?: Record<string, string | number>): string => {
+      const template = getNestedValue(translations[locale], key);
+      return interpolate(template, params);
     },
     [locale],
   );
@@ -72,7 +78,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
 
   if (!mounted) {
     return (
-      <LocaleContext.Provider value={{ locale: "en", setLocale: () => {}, t: (k) => getNestedValue(translations.en, k) }}>
+      <LocaleContext.Provider value={{ locale: "en", setLocale: () => {}, t: (k, p) => interpolate(getNestedValue(translations.en, k), p) }}>
         {children}
       </LocaleContext.Provider>
     );

@@ -12,6 +12,7 @@ import useNotifications from "../../hooks/useNotifications";
 import { useUser } from "../../lib/UserContext";
 import { API_BASE } from "../../lib/config";
 import { apiFetch } from "../../lib/api";
+import { useLocale } from "../../lib/LocaleContext";
 
 /**
  * Single notification item returned from backend.
@@ -68,6 +69,7 @@ function dedupeKey(n: Notification): string {
 export default function NotificationsPage(): React.ReactElement {
     const { notifications: hookNotifications, unreadCount, refresh, markRead, markAllRead, pulse } = useNotifications();
     const { toast } = useToast();
+    const { t } = useLocale();
     const { user: me } = useUser();
 
     const [subject, setSubject] = useState("");
@@ -93,7 +95,7 @@ export default function NotificationsPage(): React.ReactElement {
         try {
             await refresh();
         } catch {
-            setError("Failed to load notifications.");
+            setError(t("notifications.loadFailed"));
         } finally {
             setLoading(false);
         }
@@ -128,7 +130,7 @@ export default function NotificationsPage(): React.ReactElement {
 
         const token = getToken();
         if (!token) {
-            toast("Please login to broadcast notifications", { variant: "warning" });
+            toast(t("notifications.loginRequired"), { variant: "warning" });
             return;
         }
 
@@ -159,7 +161,7 @@ export default function NotificationsPage(): React.ReactElement {
 
             if (!res.ok) {
                 const js = await res.json().catch(() => null);
-                toast(js?.message || "Failed to broadcast", { variant: "error" });
+                toast(js?.message || t("notifications.broadcastFailed"), { variant: "error" });
                 return;
             }
 
@@ -170,9 +172,9 @@ export default function NotificationsPage(): React.ReactElement {
             setSelectedChannels(["IN_APP"]);
 
             await fetchNotifications();
-            toast("Broadcast sent", { variant: "success" });
+            toast(t("notifications.broadcastSent"), { variant: "success" });
         } catch {
-            toast("Network error", { variant: "error" });
+            toast(t("notifications.networkError"), { variant: "error" });
         } finally {
             setBroadcasting(false);
         }
@@ -236,10 +238,10 @@ export default function NotificationsPage(): React.ReactElement {
                 {/* Header */}
                 <div className="mb-10">
                     <h1 className="text-4xl sm:text-5xl font-display font-bold text-jewel-900 mb-2">
-                        Notifications
+                        {t("notifications.title")}
                     </h1>
                     <p className="text-lg text-jewel-500">
-                        Stay updated with system and community alerts
+                        {t("notifications.subtitle")}
                     </p>
                 </div>
 
@@ -254,17 +256,17 @@ export default function NotificationsPage(): React.ReactElement {
                 {isAdmin && (
                     <Card className="p-8 mb-10">
                         <h2 className="text-2xl font-display font-bold text-jewel-900 mb-2">
-                            Broadcast Notification
+                            {t("notifications.broadcast")}
                         </h2>
                         <p className="text-jewel-500 mb-6">
-                            You can notify users within your permitted scope.
+                            {t("notifications.broadcastDesc")}
                         </p>
 
                         <form onSubmit={handleBroadcast} className="space-y-6">
                             <input
                                 value={subject}
                                 onChange={(e) => setSubject(e.target.value)}
-                                placeholder="Subject (optional)"
+                                placeholder={t("notifications.subjectPlaceholder")}
                                 className="w-full bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-3 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50"
                             />
 
@@ -272,7 +274,7 @@ export default function NotificationsPage(): React.ReactElement {
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
                                 rows={3}
-                                placeholder="Write a message to broadcast..."
+                                placeholder={t("notifications.messagePlaceholder")}
                                 className="w-full bg-jewel-50/50 border border-jewel-400/30 rounded-xl px-4 py-3 resize-none text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50"
                             />
 
@@ -282,34 +284,34 @@ export default function NotificationsPage(): React.ReactElement {
                                     onChange={(e) => setTargetRole(e.target.value)}
                                     className="select"
                                 >
-                                    <option value="ALL">All users</option>
+                                    <option value="ALL">{t("notifications.allUsers")}</option>
 
                                     {me?.role === "COMMUNITY_HEAD" && (
                                         <>
-                                            <option value="COMMUNITY_HEAD">Community Heads</option>
+                                            <option value="COMMUNITY_HEAD">{t("role.community_head")}</option>
                                             <option value="COMMUNITY_SUBHEAD">
-                                                Community Subheads
+                                                {t("role.community_subhead")}
                                             </option>
-                                            <option value="GOTRA_HEAD">Gotra Heads</option>
-                                            <option value="FAMILY_HEAD">Family Heads</option>
-                                            <option value="MEMBER">Members</option>
+                                            <option value="GOTRA_HEAD">{t("role.gotra_head")}</option>
+                                            <option value="FAMILY_HEAD">{t("role.family_head")}</option>
+                                            <option value="MEMBER">{t("role.member")}</option>
                                         </>
                                     )}
 
                                     {me?.role === "COMMUNITY_SUBHEAD" && (
                                         <>
-                                            <option value="COMMUNITY_HEAD">Community Heads</option>
+                                            <option value="COMMUNITY_HEAD">{t("role.community_head")}</option>
                                             <option value="COMMUNITY_SUBHEAD">
-                                                Community Subheads
+                                                {t("role.community_subhead")}
                                             </option>
-                                            <option value="GOTRA_HEAD">Gotra Heads</option>
+                                            <option value="GOTRA_HEAD">{t("role.gotra_head")}</option>
                                         </>
                                     )}
 
                                     {me?.role === "GOTRA_HEAD" && (
                                         <>
-                                            <option value="FAMILY_HEAD">Family Heads</option>
-                                            <option value="MEMBER">Members</option>
+                                            <option value="FAMILY_HEAD">{t("role.family_head")}</option>
+                                            <option value="MEMBER">{t("role.member")}</option>
                                         </>
                                     )}
                                 </select>
@@ -319,24 +321,24 @@ export default function NotificationsPage(): React.ReactElement {
                                     onChange={(e) => setPriority(e.target.value as Priority)}
                                     className="select"
                                 >
-                                    <option value="low">Low Priority</option>
-                                    <option value="normal">Normal Priority</option>
-                                    <option value="high">High Priority</option>
-                                    <option value="urgent">Urgent</option>
+                                    <option value="low">{t("notifications.priorityLow")}</option>
+                                    <option value="normal">{t("notifications.priorityNormal")}</option>
+                                    <option value="high">{t("notifications.priorityHigh")}</option>
+                                    <option value="urgent">{t("notifications.priorityUrgent")}</option>
                                 </select>
 
                                 <Button
                                     type="submit"
                                     disabled={broadcasting || !message.trim()}
                                 >
-                                    {broadcasting ? "Sending..." : "Send Notification"}
+                                    {broadcasting ? t("notifications.sending") : t("notifications.send")}
                                 </Button>
                             </div>
 
                             {/* Channels */}
                             <fieldset className="space-y-3">
                                 <legend className="block text-sm font-medium text-jewel-700">
-                                    Channels
+                                    {t("notifications.channels")}
                                 </legend>
                                 <div className="flex gap-3">
                                     {["IN_APP", "EMAIL", "PUSH"].map((c) => (
@@ -368,58 +370,58 @@ export default function NotificationsPage(): React.ReactElement {
                 <Card className="overflow-hidden">
                     {/* Controls */}
                     <div className="p-4 border-b border-jewel-400/20 flex flex-wrap gap-3 items-center">
-                        <select
-                            value={filterRead}
-                            onChange={(e) => setFilterRead(e.target.value as ReadFilter)}
-                            className="select"
-                        >
-                            <option value="all">All</option>
-                            <option value="unread">Unread</option>
-                            <option value="read">Read</option>
-                        </select>
+                                <select
+                                    value={filterRead}
+                                    onChange={(e) => setFilterRead(e.target.value as ReadFilter)}
+                                    className="select"
+                                >
+                                    <option value="all">{t("notifications.allOption")}</option>
+                                    <option value="unread">{t("notifications.unread")}</option>
+                                    <option value="read">{t("notifications.readOption")}</option>
+                                </select>
 
-                        <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value as SortBy)}
-                            className="select"
-                        >
-                            <option value="newest">Newest</option>
-                            <option value="oldest">Oldest</option>
-                            <option value="unread-first">Unread first</option>
-                        </select>
+                                <select
+                                    value={sortBy}
+                                    onChange={(e) => setSortBy(e.target.value as SortBy)}
+                                    className="select"
+                                >
+                                    <option value="newest">{t("notifications.newest")}</option>
+                                    <option value="oldest">{t("notifications.oldest")}</option>
+                                    <option value="unread-first">{t("notifications.unreadFirst")}</option>
+                                </select>
 
-                        <select
-                            value={selectedType}
-                            onChange={(e) => setSelectedType(e.target.value)}
-                            className="select"
-                        >
-                            <option value="all">All types</option>
-                            {notificationTypes.map((t) => (
-                                <option key={t} value={t}>
-                                    {t}
-                                </option>
-                            ))}
-                        </select>
+                                <select
+                                    value={selectedType}
+                                    onChange={(e) => setSelectedType(e.target.value)}
+                                    className="select"
+                                >
+                                    <option value="all">{t("notifications.allTypesOption")}</option>
+                                    {notificationTypes.map((type) => (
+                                        <option key={type} value={type}>
+                                            {type}
+                                        </option>
+                                    ))}
+                                </select>
 
                         <div className="ml-auto flex items-center gap-3">
                             <Button
                                 variant="secondary"
                                 onClick={() => void fetchNotifications()}
                             >
-                                Refresh
+                                {t("notifications.refresh")}
                             </Button>
 
                             <Button
                                 variant="secondary"
                                 onClick={() => void handleMarkAllRead()}
                             >
-                                Mark all read
+                                {t("notifications.markAllRead")}
                             </Button>
 
                             <div className="text-sm text-jewel-gold">
                                 {unreadCount > 0 && (
                                     <span className={`${pulse ? "animate-pulse font-semibold" : "font-medium"}`}>
-                                        Unread: {unreadCount > 99 ? "99+" : unreadCount}
+                                        {t("notifications.unreadPrefix")}{unreadCount > 99 ? "99+" : unreadCount}
                                     </span>
                                 )}
                             </div>
@@ -428,9 +430,9 @@ export default function NotificationsPage(): React.ReactElement {
 
                     {/* Content */}
                     {loading ? (
-                        <LoadingState message="Loading..." />
+                        <LoadingState message={t("common.loading")} />
                     ) : filteredNotifications.length === 0 ? (
-                        <p className="text-center py-12 text-jewel-500">No notifications</p>
+                        <p className="text-center py-12 text-jewel-500">{t("notifications.noNotifications")}</p>
                     ) : (
                         <ul>
                             {filteredNotifications.map((n) => {
@@ -456,8 +458,8 @@ export default function NotificationsPage(): React.ReactElement {
                                                     size="sm"
                                                     onClick={() => void handleToggleRead(n.id!, !!n.read)}
                                                     className="text-xs px-3 py-2 rounded-xl border border-jewel-400/20 bg-jewel-50/50 flex items-center justify-center text-jewel-600 hover:bg-jewel-100 transition-colors"
-                                                    title={n.read ? "Mark unread" : "Mark read"}
-                                                    aria-label={n.read ? "Mark unread" : "Mark read"}
+                                                    title={n.read ? t("notifications.markUnread") : t("notifications.markRead")}
+                                                    aria-label={n.read ? t("notifications.markUnread") : t("notifications.markRead")}
                                                 >
                                                     {n.read ? (
                                                         <Eye className="w-4 h-4" />

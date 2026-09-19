@@ -1,12 +1,12 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { LoaderOne } from "@repo/ui/loading";
-import { List, Network, Plus, UserCheck, Users } from "lucide-react";
+import { List, Network, Plus } from "lucide-react";
 import { Button } from "@repo/ui/button";
-import { Badge } from "@repo/ui/badge";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@repo/ui/card";
-import { MOTION_PAGE_ENTER, FADE_IN_UP } from "@repo/ui/motion";
+import { MOTION_PAGE_ENTER } from "@repo/ui/motion";
 
 import FamilyPageContent from "./FamilyPageContent";
 import FamilyTreeView from "./FamilyTreeView";
@@ -15,6 +15,7 @@ import { useLocale } from "../../lib/LocaleContext";
 export default function FamilyPage(): React.ReactElement {
   const [activeTab, setActiveTab] = useState<"list" | "tree">("list");
   const { t } = useLocale();
+  const navigate = useNavigate();
 
   return (
     <div className="bg-canvas min-h-screen">

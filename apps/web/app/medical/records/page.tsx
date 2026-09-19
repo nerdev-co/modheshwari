@@ -10,6 +10,7 @@ import { LoadingState } from "@repo/ui/loadingState";
 import { API_BASE } from "../../../lib/config";
 import { apiFetch } from "../../../lib/api";
 import { useUser } from "../../../lib/UserContext";
+import { useLocale } from "../../../lib/LocaleContext";
 
 type MedicalRecord = {
   id: string;
@@ -40,6 +41,7 @@ const EMPTY_FORM: FormState = {
 
 export default function MedicalRecordsPage() {
   const { user, loading } = useUser();
+  const { t } = useLocale();
   const navigate = useNavigate();
   const [records, setRecords] = useState<MedicalRecord[]>([]);
   const [loadingData, setLoadingData] = useState(false);
@@ -53,7 +55,7 @@ export default function MedicalRecordsPage() {
 
   if (loading) return (
     <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
-      <LoadingState message="Loading..." />
+      <LoadingState message={t("common.loading")} />
     </DreamySunsetBackground>
   );
   if (!user) return null;
@@ -70,13 +72,13 @@ export default function MedicalRecordsPage() {
       const res = await apiFetch(`${API_BASE}/medical-records`, {
         signal,
       });
-      if (!res.ok) throw new Error("Failed to load records");
+      if (!res.ok) throw new Error(t("medical.records.loadFailed"));
 
       const json = await res.json();
       setRecords(json.data?.items ?? []);
     } catch (e) {
       if (e instanceof DOMException && e.name === "AbortError") return;
-      setError("Could not load medical records.");
+      setError(t("medical.records.loadError"));
     } finally {
       setLoadingData(false);
     }
@@ -97,13 +99,13 @@ export default function MedicalRecordsPage() {
         body: JSON.stringify(form),
       });
       if (!res.ok) {
-        throw new Error("Failed to create record");
+        throw new Error(t("medical.records.createError"));
       }
 
       setForm(EMPTY_FORM);
       await loadRecords();
     } catch {
-      setError("Could not create record.");
+      setError(t("medical.records.createError"));
     } finally {
       setSubmitting(false);
     }
@@ -116,7 +118,7 @@ export default function MedicalRecordsPage() {
   return (
     <DreamySunsetBackground className="px-6 py-10">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-display font-bold text-jewel-900 mb-4">Medical Records</h1>
+        <h1 className="text-2xl font-display font-bold text-jewel-900 mb-4">{t("medical.records.title")}</h1>
 
         {error && (
           <div className="mb-4 rounded-xl border border-jewel-ruby/30 bg-jewel-ruby/10 px-4 py-3 text-sm text-jewel-ruby">
@@ -125,49 +127,49 @@ export default function MedicalRecordsPage() {
         )}
 
         <form onSubmit={handleCreate} className="mb-8 space-y-4">
-          <Field label="Blood Type">
+          <Field label={t("medical.records.bloodType")}>
             <Input
               value={form.bloodType}
               onChange={(e) => updateField("bloodType", e.target.value)}
-              placeholder="e.g. O+"
-              aria-label="Blood Type"
+              placeholder={t("medical.records.bloodTypePlaceholder")}
+              aria-label={t("medical.records.bloodType")}
             />
           </Field>
 
-          <Field label="Allergies">
+          <Field label={t("medical.records.allergies")}>
             <Input
               value={form.allergies}
               onChange={(e) => updateField("allergies", e.target.value)}
-              placeholder="e.g. peanuts, dust"
-              aria-label="Allergies"
+              placeholder={t("medical.records.allergiesPlaceholder")}
+              aria-label={t("medical.records.allergies")}
             />
           </Field>
 
-          <Field label="Conditions">
+          <Field label={t("medical.records.conditions")}>
             <Input
               value={form.conditions}
               onChange={(e) => updateField("conditions", e.target.value)}
-              placeholder="e.g. asthma"
-              aria-label="Conditions"
+              placeholder={t("medical.records.conditionsPlaceholder")}
+              aria-label={t("medical.records.conditions")}
             />
           </Field>
 
-          <Field label="Medications">
+          <Field label={t("medical.records.medications")}>
             <Input
               value={form.medications}
               onChange={(e) => updateField("medications", e.target.value)}
-              placeholder="e.g. cetirizine"
-              aria-label="Medications"
+              placeholder={t("medical.records.medicationsPlaceholder")}
+              aria-label={t("medical.records.medications")}
             />
           </Field>
 
-          <Field label="Notes">
+          <Field label={t("medical.records.notes")}>
             <textarea
               value={form.notes}
               onChange={(e) => updateField("notes", e.target.value)}
               className="w-full rounded-xl border border-jewel-400/30 bg-jewel-50/50 px-3 py-2 text-jewel-900 placeholder-jewel-400 focus:outline-none focus:ring-2 focus:ring-accent/50 min-h-[100px] resize-none"
-              placeholder="Anything important..."
-              aria-label="Notes"
+              placeholder={t("medical.records.notesPlaceholder")}
+              aria-label={t("medical.records.notes")}
             />
           </Field>
 
@@ -175,25 +177,25 @@ export default function MedicalRecordsPage() {
             type="submit"
             disabled={submitting || !hasAnyFormValue}
           >
-            {submitting ? "Creating..." : "Create"}
+            {submitting ? t("medical.records.creating") : t("medical.records.create")}
           </Button>
         </form>
 
-        <h2 className="text-lg font-display font-bold text-jewel-900 mb-3">Your Records</h2>
+        <h2 className="text-lg font-display font-bold text-jewel-900 mb-3">{t("medical.records.yourRecords")}</h2>
 
         {loadingData ? (
-          <LoadingState message="Loading..." size="sm" />
+          <LoadingState message={t("common.loading")} size="sm" />
         ) : records.length === 0 ? (
-          <p className="text-sm text-jewel-500">No records yet.</p>
+          <p className="text-sm text-jewel-500">{t("medical.records.noRecordsYet")}</p>
         ) : (
           <ul className="space-y-4">
             {records.map((r) => (
               <li key={r.id}>
-                <Row label="Blood" value={r.bloodType} />
-                <Row label="Allergies" value={r.allergies} />
-                <Row label="Conditions" value={r.conditions} />
-                <Row label="Medications" value={r.medications} />
-                {r.notes && <Row label="Notes" value={r.notes} />}
+                <Row label={t("medical.records.blood")} value={r.bloodType} />
+                <Row label={t("medical.records.allergies")} value={r.allergies} />
+                <Row label={t("medical.records.conditions")} value={r.conditions} />
+                <Row label={t("medical.records.medications")} value={r.medications} />
+                {r.notes && <Row label={t("medical.records.notes")} value={r.notes} />}
 
                 <div className="mt-3 text-xs text-jewel-500">
                   {new Date(r.createdAt).toLocaleString()}

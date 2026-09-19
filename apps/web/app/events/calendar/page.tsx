@@ -189,7 +189,7 @@ export default function EventsCalendar() {
                             <Button
                                 variant="secondary"
                                 size="sm"
-                                aria-label="Previous month"
+                                aria-label={t("events.calendar.previousMonth")}
                                 onClick={() =>
                                     setCurrent(
                                         new Date(
@@ -214,7 +214,7 @@ export default function EventsCalendar() {
                             <Button
                                 variant="secondary"
                                 size="sm"
-                                aria-label="Next month"
+                                aria-label={t("events.calendar.nextMonth")}
                                 onClick={() =>
                                     setCurrent(
                                         new Date(

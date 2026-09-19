@@ -136,5 +136,8 @@ function basicTransliterate(text: string): string {
  */
 export function formatHindiNumber(num: number): string {
   const hindiDigits = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
-  return num.toString().replace(/\d/g, (d) => hindiDigits[Number(d)]);
+  return num.toString().replace(/\d/g, (d) => {
+    const idx = Number(d);
+    return hindiDigits[idx] ?? d;
+  });
 }

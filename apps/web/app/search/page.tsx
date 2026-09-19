@@ -10,9 +10,11 @@ import { MOTION_PAGE_ENTER } from "@repo/ui/motion";
 
 import SearchInput from "./SearchInput";
 import { useUser } from "../../lib/UserContext";
+import { useLocale } from "../../lib/LocaleContext";
 
 export default function SearchPage() {
   const { user, loading } = useUser();
+  const { t } = useLocale();
   const navigate = useNavigate();
   const [focusTrigger, setFocusTrigger] = useState(0);
   const [isMac, setIsMac] = useState(false);
@@ -38,7 +40,7 @@ export default function SearchPage() {
 
   if (loading) return (
     <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
-      <LoadingState message="Loading..." />
+      <LoadingState message={t("common.loading")} />
     </DreamySunsetBackground>
   );
   if (!user) return null;
@@ -57,11 +59,11 @@ export default function SearchPage() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-display font-bold text-jewel-900 mb-4">
-            Search Members
+            {t("search.title")}
           </h1>
 
           <p className="text-jewel-500 text-lg">
-            Find family members, check profiles, and connect instantly
+            {t("search.subtitle")}
           </p>
         </motion.div>
 
@@ -73,13 +75,13 @@ export default function SearchPage() {
         >
           <div className="relative mb-6">
             <SearchInput
-              placeholder="Search by name, email, family, occupation or blood group..."
+              placeholder={t("search.placeholder")}
               focusSignal={focusTrigger}
             />
           </div>
 
           <div className="flex items-center justify-center gap-2 text-sm text-jewel-400">
-            <span>Quick search:</span>
+            <span>{t("search.quickSearch")}</span>
             <kbd className="px-2 py-1 bg-jewel-50/50 border border-jewel-400/30 rounded text-xs font-mono text-jewel-500 shadow-sm">
               {isMac ? "\u2318" : "Ctrl"}
             </kbd>
@@ -96,15 +98,15 @@ export default function SearchPage() {
           transition={{ ...MOTION_PAGE_ENTER, delay: 0.6 }}
           className="mt-8"
         >
-          <p className="text-sm text-jewel-400 mb-3">Advanced Filters:</p>
+          <p className="text-sm text-jewel-400 mb-3">{t("search.advancedFilters")}</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs text-jewel-500">
             {[
-              { label: "By Gotra", desc: "Filter by gotra/clan" },
-              { label: "By Profession", desc: "Find by occupation" },
-              { label: "By Location", desc: "Search by area/city" },
-              { label: "By Blood Group", desc: "Filter by blood type" },
-              { label: "By Role", desc: "Find by member role" },
-              { label: "Text Search", desc: "Multi-field search" },
+              { label: t("search.byGotra"), desc: t("search.filterByGotra") },
+              { label: t("search.byProfession"), desc: t("search.filterByProfession") },
+              { label: t("search.byLocation"), desc: t("search.filterByLocation") },
+              { label: t("search.byBloodGroup"), desc: t("search.filterByBloodGroup") },
+              { label: t("search.byRole"), desc: t("search.filterByRole") },
+              { label: t("search.textSearch"), desc: t("search.filterByText") },
             ].map(({ label, desc }) => (
               <div
                 key={label}
@@ -124,8 +126,7 @@ export default function SearchPage() {
           className="mt-12 text-center"
         >
           <p className="text-xs text-jewel-400">
-            Tip: Use specific keywords for better results. Contact support if
-            you can&apos;t find someone.
+            {t("search.tip")}
           </p>
         </motion.div>
       </div>

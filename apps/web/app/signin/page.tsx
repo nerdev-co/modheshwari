@@ -13,17 +13,19 @@ import { Input } from "@repo/ui/input";
 
 import { apiPost } from "../../lib/api";
 import { API_BASE } from "../../lib/config";
+import { useLocale } from "../../lib/LocaleContext";
 
 const roles = [
-  { label: "Family Head", value: "familyhead" },
-  { label: "Family Member", value: "member" },
-  { label: "Gotra Head", value: "gotrahead" },
-  { label: "Community Head", value: "communityhead" },
-  { label: "Community Subhead", value: "communitysubhead" },
+  { label: "signin.familyHead", value: "familyhead" },
+  { label: "signin.familyMember", value: "member" },
+  { label: "signin.gotraHead", value: "gotrahead" },
+  { label: "signin.communityHead", value: "communityhead" },
+  { label: "signin.communitySubhead", value: "communitysubhead" },
 ];
 
 export default function SigninPage() {
   const navigate = useNavigate();
+  const { t } = useLocale();
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -56,13 +58,13 @@ export default function SigninPage() {
       } else {
         const msg =
           (data && (data.message || data.error)) ||
-          "Sign in unsuccessful. Check your credentials and role.";
+          t("signin.authFailed");
         setAuthError(msg);
         toast(msg, { variant: "error" });
       }
     } catch (err) {
-      const msg =
-        "Network error: " + (err instanceof Error ? err.message : String(err));
+        const msg =
+          t("signin.networkError") + ": " + (err instanceof Error ? err.message : String(err));
       setAuthError(msg);
       toast(msg, { variant: "error" });
     } finally {
@@ -89,17 +91,17 @@ export default function SigninPage() {
               M
             </motion.div>
             <h1 className="text-3xl font-display font-bold text-text-primary mb-2">
-              Welcome Back
+              {t("signin.title")}
             </h1>
             <p className="text-sm text-jewel-600">
-              Sign in to manage your community
+              {t("signin.subtitle")}
             </p>
           </div>
 
           <form className="space-y-6" onSubmit={handleLogin}>
             <fieldset>
               <legend className="block text-xs font-medium text-jewel-700 mb-3">
-                Select Your Role
+                {t("signin.selectRole")}
               </legend>
               <div className="flex flex-wrap gap-2">
                 {roles.map((r) => (
@@ -122,7 +124,7 @@ export default function SigninPage() {
                       onChange={() => setRole(r.value)}
                       className="hidden"
                     />
-                    {r.label}
+                    {r.label && t(r.label)}
                   </label>
                 ))}
               </div>
@@ -130,14 +132,14 @@ export default function SigninPage() {
 
             <div>
               <label htmlFor="signin-email" className="block text-xs font-medium text-jewel-700 mb-2">
-                Email Address
+                {t("signin.emailLabel")}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
                 <Input
                   id="signin-email"
                   className="pl-11 pr-4 py-3 rounded-lg"
-                  placeholder="your.email@example.com"
+                  placeholder={t("signin.emailPlaceholder")}
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -148,14 +150,14 @@ export default function SigninPage() {
 
             <div>
               <label htmlFor="signin-password" className="block text-xs font-medium text-jewel-700 mb-2">
-                Password
+                {t("signin.passwordLabel")}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-jewel-400" />
                 <Input
                   id="signin-password"
                   className="pl-11 pr-4 py-3 rounded-lg"
-                  placeholder="Enter your password"
+                  placeholder={t("signin.passwordPlaceholder")}
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -171,14 +173,14 @@ export default function SigninPage() {
             ) : null}
 
             <Button type="submit" disabled={loading || !email || !password} className="w-full">
-              {loading ? (
+                  {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Signing In...
+                  {t("signin.signingIn")}
                 </span>
               ) : (
                 <span className="flex items-center justify-center gap-2">
-                  Sign In
+                  {t("signin.signIn")}
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </span>
               )}
@@ -187,19 +189,19 @@ export default function SigninPage() {
 
           <div className="mt-6 pt-6 border-t border-jewel-400/20">
             <p className="text-center text-sm text-jewel-600">
-              Don&apos;t have an account?{" "}
+              {t("signin.noAccount")}{" "}
               <Link
                 to="/signup"
                 className="text-jewel-gold hover:text-jewel-500 font-medium transition-colors"
               >
-                Sign Up
+                {t("signin.signUp")}
               </Link>
             </p>
           </div>
 
           <div className="mt-4 text-center">
             <span className="text-xs text-jewel-400">
-              Forgot your password? Contact the admin or the person who created your account.
+              {t("signin.forgotPassword")}
             </span>
           </div>
         </div>
@@ -211,7 +213,7 @@ export default function SigninPage() {
           className="mt-6 text-center"
         >
           <p className="text-xs text-jewel-500">
-            🔒 Secure authentication powered by Modheshwari
+            🔒 {t("signin.secureSignin")}
           </p>
         </motion.div>
       </motion.main>

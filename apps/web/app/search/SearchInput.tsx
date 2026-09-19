@@ -10,6 +10,7 @@ import { formatBloodGroup } from "@modheshwari/utils/format";
 import { useDebouncedValue } from "../../hooks/useDebouncedValue";
 import { API_BASE } from "../../lib/config";
 import { apiFetch } from "../../lib/api";
+import { useLocale } from "../../lib/LocaleContext";
 
 interface SearchResult {
   id?: string;
@@ -29,22 +30,23 @@ interface SearchResult {
 
 type FilterMode = "text" | "gotra" | "profession" | "location" | "blood" | "role";
 
-/**
- * @param {{ placeholder?: string; focusSignal?: number; }} {
- *   placeholder = "Search...",
- *   focusSignal,
- * } - Description of {
- *   placeholder = "Search...",
- *   focusSignal,
- * }
- */
+const FILTER_MODE_LABELS: Record<FilterMode, string> = {
+  text: "Text Search",
+  gotra: "By Gotra",
+  profession: "By Profession",
+  location: "By Location",
+  blood: "By Blood Group",
+  role: "By Role",
+};
+
 export default function SearchInput({
-  placeholder = "Search...",
+  placeholder,
   focusSignal,
 }: {
   placeholder?: string;
   focusSignal?: number;
 }) {
+  const { t } = useLocale();
   const [q, setQ] = useState("");
   const debouncedQ = useDebouncedValue(q, 350);
   const [filterMode, setFilterMode] = useState<FilterMode>("text");
@@ -145,7 +147,7 @@ export default function SearchInput({
   };
 
   const formatRole = (role?: string) => {
-    if (!role) return "Member";
+    if (!role) return t("role.member");
     return role
       .split("_")
       .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
@@ -161,9 +163,9 @@ export default function SearchInput({
           ref={inputRef}
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder={placeholder}
+          placeholder={placeholder || t("search.placeholder")}
           className="pl-12 pr-16 py-4 rounded-xl backdrop-blur-xl shadow-sm"
-          aria-label="Search"
+          aria-label={t("search.placeholder")}
         />
 
         <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
@@ -176,7 +178,7 @@ export default function SearchInput({
                 ? "text-jewel-gold bg-jewel-gold/10"
                 : "text-jewel-400 hover:text-jewel-600"
             }`}
-            title="Toggle filters"
+            title={t("search.toggleFilters")}
           >
             <Filter className="w-4 h-4" />
           </Button>
@@ -184,17 +186,17 @@ export default function SearchInput({
             <Loader2 className="w-4 h-4 text-jewel-gold animate-spin" />
           ) : q ? (
             <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              setQ("");
-              setResults([]);
-              inputRef.current?.focus();
-            }}
-            className="text-jewel-400 hover:text-jewel-600 transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </Button>
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setQ("");
+                setResults([]);
+                inputRef.current?.focus();
+              }}
+              className="text-jewel-400 hover:text-jewel-600 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </Button>
           ) : null}
         </div>
       </div>
@@ -208,7 +210,7 @@ export default function SearchInput({
             transition={{ duration: 0.15 }}
             className="absolute top-full mt-2 left-0 right-0 flex flex-wrap gap-2 p-3 bg-jewel-50/80 backdrop-blur-xl border border-jewel-400/20 rounded-xl shadow-lg z-40"
           >
-            {(["text", "gotra", "profession", "location", "blood", "role"] as FilterMode[]).map((mode) => (
+            {(Object.keys(FILTER_MODE_LABELS) as FilterMode[]).map((mode) => (
               <Button
                 key={mode}
                 variant="secondary"
@@ -224,7 +226,7 @@ export default function SearchInput({
                     : "bg-jewel-50/70 text-jewel-500 border border-jewel-400/20 hover:bg-jewel-100"
                 }`}
               >
-                {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                {t(`search.${mode === "text" ? "textSearch" : mode === "gotra" ? "byGotra" : mode === "profession" ? "byProfession" : mode === "location" ? "byLocation" : mode === "blood" ? "byBloodGroup" : "byRole"}`)}
               </Button>
             ))}
           </motion.div>
@@ -260,10 +262,10 @@ export default function SearchInput({
                   <Search className="w-5 h-5 text-jewel-400" />
                 </div>
                 <p className="text-sm text-jewel-500">
-                  No results found for{" "}
+                  {t("search.noResults")}{" "}
                   <span className="text-jewel-700 font-medium">&ldquo;{debouncedQ}&rdquo;</span>
                 </p>
-                <p className="text-xs text-jewel-400 mt-1">Try searching with a different keyword</p>
+                <p className="text-xs text-jewel-400 mt-1">{t("search.tryDifferent")}</p>
               </div>
             )}
 
@@ -271,7 +273,7 @@ export default function SearchInput({
               <div className="max-h-96 overflow-y-auto">
                 <div className="px-4 pt-3 pb-1">
                   <p className="text-xs text-jewel-400 font-medium">
-                    {results.length} {results.length === 1 ? "result" : "results"} found
+                    {t(results.length === 1 ? "search.resultsFound" : "search.resultsFound_other", { count: results.length })}
                   </p>
                 </div>
 
@@ -297,7 +299,7 @@ export default function SearchInput({
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                               <p className="text-sm font-semibold text-jewel-900 truncate">
-                                {r.name || "Unknown"}
+                                {r.name || t("search.unknown")}
                               </p>
                               <span
                                 className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold ${getRoleBadgeColor(r.role)} text-jewel-deep shadow-sm`}
@@ -307,13 +309,13 @@ export default function SearchInput({
                             </div>
 
                             <p className="text-xs text-jewel-400 truncate mb-2">
-                              {r.email || "No email"}
+                              {r.email || t("search.noEmail")}
                             </p>
 
                             <div className="flex flex-wrap gap-1.5 text-xs">
                               {r.profile?.gotra && (
                                 <span className="px-2 py-0.5 bg-jewel-400/10 text-jewel-600 rounded-md border border-jewel-400/20">
-                                  Gotra: {r.profile.gotra}
+                                  {t("search.byGotra")}: {r.profile.gotra}
                                 </span>
                               )}
                               {r.profile?.profession && (
@@ -335,7 +337,7 @@ export default function SearchInput({
 
                             {r.families && r.families.length > 0 && (
                               <p className="text-xs text-jewel-600 mt-1.5">
-                                Family: {r.families.map((f) => f.name).join(", ")}
+                                {t("search.familyLabel")}: {r.families.map((f) => f.name).join(", ")}
                               </p>
                             )}
                           </div>

@@ -7,20 +7,22 @@ import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
 import { Card } from "@repo/ui/card";
 import { MOTION_ENTER } from "@repo/ui/motion";
 
-const signupOptions = [
-  {
-    href: "/signup/fh",
-    title: "Family Head",
-    description: "Create a new family account and become the primary manager.",
-  },
-  {
-    href: "/signup/fm",
-    title: "Family Member",
-    description: "Request to join an existing family with approval.",
-  },
-];
+import { useLocale } from "../../lib/LocaleContext";
 
 export default function SignupLandingPage() {
+  const { t } = useLocale();
+  const signupOptions = [
+    {
+      href: "/signup/fh",
+      title: t("signup.landing.familyHead"),
+      description: t("signup.landing.familyHeadDesc"),
+    },
+    {
+      href: "/signup/fm",
+      title: t("signup.landing.familyMember"),
+      description: t("signup.landing.familyMemberDesc"),
+    },
+  ];
   return (
     <DreamySunsetBackground className="flex items-center justify-center px-4 py-12 min-h-screen">
       <motion.main
@@ -35,10 +37,10 @@ export default function SignupLandingPage() {
               <Users className="w-8 h-8" />
             </div>
             <h1 className="text-3xl sm:text-4xl font-display font-bold text-text-primary mb-3">
-              Choose your signup path
+              {t("signup.landing.title")}
             </h1>
             <p className="text-sm sm:text-base text-jewel-600">
-              The app has two signup flows. Pick the one that matches your role.
+              {t("signup.landing.subtitle")}
             </p>
           </div>
 
@@ -53,7 +55,7 @@ export default function SignupLandingPage() {
                   <div>
                     <div className="inline-flex items-center gap-2 rounded-full bg-jewel-gold/10 px-3 py-1 text-xs font-semibold text-jewel-gold">
                       <Shield className="h-3.5 w-3.5" />
-                      Signup
+                       {t("signup.landing.signup")}
                     </div>
                     <h2 className="mt-4 text-2xl font-display font-bold text-jewel-900">
                       {option.title}
@@ -69,7 +71,8 @@ export default function SignupLandingPage() {
           </div>
 
           <div className="mt-8 text-center text-sm text-jewel-500">
-            Already approved? <Link to="/signin" className="font-medium text-jewel-gold hover:text-jewel-500">Sign in</Link>
+            {t("signup.landing.alreadyApproved")}{" "}
+            <Link to="/signin" className="font-medium text-jewel-gold hover:text-jewel-500">{t("signup.landing.signIn")}</Link>
           </div>
         </Card>
       </motion.main>

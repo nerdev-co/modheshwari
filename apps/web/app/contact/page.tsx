@@ -73,7 +73,7 @@ export default function ContactPage() {
             setSubmitted(true);
         } catch (err) {
             setError(
-                err instanceof Error ? err.message : "Failed to send message. Please try again.",
+                err instanceof Error ? err.message : t("common.error"),
             );
         } finally {
             setIsSubmitting(false);

@@ -91,7 +91,7 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
 
   if (loading) return (
     <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
-      <LoadingState message="Loading..." />
+      <LoadingState message={t("common.loading")} />
     </DreamySunsetBackground>
   );
   if (!me) return null;
@@ -106,13 +106,13 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
 
       if (data.status === "success") {
         setResource("");
-        toast("Request created successfully", { variant: "success" });
+        toast(t("resources.toastCreated"), { variant: "success" });
         void fetchRequests();
       } else {
-        toast(data.message || "Failed to create request", { variant: "error" });
+        toast(data.message || t("resources.createError"), { variant: "error" });
       }
     } catch {
-      toast("Network error", { variant: "error" });
+      toast(t("resources.toastNetworkError"), { variant: "error" });
     }
   }
 
@@ -131,13 +131,13 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
       );
 
       if (data.status === "success") {
-        toast("Review submitted", { variant: "success" });
+        toast(t("resources.toastReviewSubmitted"), { variant: "success" });
         void fetchRequests();
       } else {
-        toast(data.message || "Failed to review", { variant: "error" });
+        toast(data.message || t("resources.toastReviewFailed"), { variant: "error" });
       }
     } catch {
-      toast("Network error", { variant: "error" });
+      toast(t("resources.toastNetworkError"), { variant: "error" });
     }
   }
 

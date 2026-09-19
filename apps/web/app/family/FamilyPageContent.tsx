@@ -6,7 +6,7 @@ import { LoaderOne } from "@repo/ui/loading";
 import { NotAuthenticated } from "@repo/ui/notAuthenticated";
 import { Button } from "@repo/ui/button";
 import { Badge } from "@repo/ui/badge";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@repo/ui/card";
+import { Card } from "@repo/ui/card";
 import { EmptyState } from "@repo/ui/emptyState";
 import { motion } from "framer-motion";
 import {
@@ -15,13 +15,13 @@ import {
   Filter,
   ChevronDown,
   ChevronUp,
-  UserPlus,
+  Users,
 } from "lucide-react";
-import { FADE_IN_UP, MOTION_PAGE_ENTER, STAGGER_CONTAINER, STAGGER_ITEM } from "@repo/ui/motion";
+import { MOTION_PAGE_ENTER, STAGGER_CONTAINER, STAGGER_ITEM } from "@repo/ui/motion";
+import { useToast } from "@repo/ui/toast";
 
 import { API_BASE } from "../../lib/config";
 import { apiFetch } from "../../lib/api";
-import { useToast } from "@repo/ui/toast";
 import { useLocale } from "../../lib/LocaleContext";
 
 /**
@@ -281,7 +281,7 @@ export default function FamilyPageContent() {
                                             {/* Role */}
                                             <div className="text-center md:justify-center">
                                                 <span className="text-sm text-ink-secondary capitalize">
-                                                    {m.user.status ? "Member" : "Deceased"}
+                                                    {m.user.status ? t("profile.member") : t("family.deceased")}
                                                 </span>
                                             </div>
 

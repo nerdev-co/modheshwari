@@ -7,9 +7,11 @@ import { LoadingState } from "@repo/ui/loadingState";
 
 import FamilyTreeView from "../FamilyTreeView";
 import { useUser } from "../../../lib/UserContext";
+import { useLocale } from "../../../lib/LocaleContext";
 
 export default function FamilyTreePage() {
   const { user, loading } = useUser();
+  const { t } = useLocale();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,7 +20,7 @@ export default function FamilyTreePage() {
 
   if (loading) return (
     <DreamySunsetBackground className="px-6 py-10 flex items-center justify-center">
-      <LoadingState message="Loading..." />
+      <LoadingState message={t("common.loading")} />
     </DreamySunsetBackground>
   );
   if (!user) return null;
@@ -27,9 +29,9 @@ export default function FamilyTreePage() {
     <DreamySunsetBackground className="px-6 py-10">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-4xl font-display font-bold text-jewel-900">Family Tree</h1>
+          <h1 className="text-4xl font-display font-bold text-jewel-900">{t("family.tree.title")}</h1>
           <p className="text-jewel-500">
-            Visualize your family relationships and connections
+            {t("family.tree.description")}
           </p>
         </div>
         <FamilyTreeView />
