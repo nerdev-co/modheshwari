@@ -1,22 +1,5 @@
 services:
-  # PostgreSQL Database
-  db:
-    image: postgres:15-alpine
-    container_name: modheshwari-db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${DB_USER:-modheshwari}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
-      POSTGRES_DB: ${DB_NAME:-modheshwari}
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-modheshwari}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # Redis Cache
+    # Redis Cache
   redis:
     image: redis:7-alpine
     container_name: modheshwari-redis
@@ -89,8 +72,6 @@ services:
       retries: 3
       start_period: 15s
     depends_on:
-      db:
-        condition: service_healthy
       redis:
         condition: service_healthy
 

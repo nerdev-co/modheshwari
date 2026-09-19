@@ -64,5 +64,9 @@
     "redis": "^5.10.0",
     "swagger-ui-react": "^5.31.0",
     "tailwind-merge": "^3.4.0"
+  },
+  "overrides": {
+    "baseline-browser-mapping": "latest",
+    "caniuse-lite": "1.0.30001810"
   }
 }
