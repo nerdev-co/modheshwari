@@ -74,7 +74,8 @@
         "retry": "पुनः प्रयास करें"
     },
     "dashboard": {
-        "title": "डैशबोर्ड",
+        "greeting": "सुप्रभात",
+        "greetingAnonymous": "स्वागत है",
         "subtitle": "यहाँ आपके समुदाय में क्या हो रहा है।",
         "viewDetails": "विवरण देखें",
         "viewAll": "सभी देखें",
@@ -84,56 +85,29 @@
         "pendingApprovals": "लंबित अनुमोदन",
         "recentActivity": "हाल की गतिविधि",
         "quickActions": "त्वरित कार्य",
-        "stats": {
-            "members": "सदस्य",
-            "membersTrend": "+१२ इस महीने",
-            "families": "परिवार",
-            "familiesTrend": "+८ इस महीने",
-            "gotras": "गोत्र",
-            "gotrasTrend": "स्थिर",
-            "upcomingEvents": "आगामी कार्यक्रम",
-            "eventsTrend": "३ इस सप्ताह"
+        "createEvent": "कार्यक्रम बनाएं",
+        "members": "सदस्य",
+        "families": "परिवार",
+        "gotras": "गोत्र",
+        "upcoming": "आगामी",
+        "yourFamily": "आपका परिवार",
+        "ctaTitle": "अपने समुदाय का अन्वेषण करें",
+        "ctaDescription": "परिवारों को खोजें, सदस्यों से जुड़ें, और कार्यक्रमों में भाग लें।",
+        "exploreFamilies": "परिवारों का अन्वेषण करें",
+        "searchMembers": "सदस्य खोजें",
+        "noUpcomingEvents": "कोई आगामी कार्यक्रम नहीं",
+        "noActivityTitle": "कोई हालिया गतिविधि नहीं",
+        "noActivityDescription": "जब चीजें होंगी तो सामुदायिक गतिविधि यहाँ दिखाई देगी।",
+        "membersTrend": "+३८ इस महीने",
+        "familiesTrend": "+६ इस महीने",
+        "gotrasTrend": "समुदाय में",
+        "eventType": {
+            "community": "समुदाय",
+            "family": "परिवार"
         },
-        "status": {
-            "approved": "स्वीकृत",
-            "pending": "लंबित",
-            "rejected": "अस्वीकृत"
-        },
-        "upcomingEvents": "आगामी कार्यक्रम",
-        "pendingApprovals": "लंबित अनुमोदन",
-        "recentActivity": "हाल की गतिविधि",
-        "quickActions": "त्वरित कार्य",
-        "viewAll": "सभी देखें",
-        "viewAllApprovals": "सभी अनुमोदन देखें",
-        "viewAllActivity": "सभी गतिविधि देखें",
-        "events": {
-            "ganeshChaturthi": "गणेश चतुर्थी उत्सव",
-            "familyGathering": "पारिवारिक सभा",
-            "annualMeeting": "वार्षिक आम बैठक",
-            "communityHall": "सामुदायिक भवन",
-            "mainGround": "मुख्य मैदान",
-            "mainHall": "मुख्य हॉल"
-        },
-        "approvals": {
-            "familyRequest": "परिवार अनुरोध",
-            "resourceRequest": "संसाधन अनुरोध",
-            "memberInvitation": "सदस्य निमंत्रण",
-            "eventCreation": "कार्यक्रम निर्माण"
-        },
-        "activity": {
-            "addedFamilyMember": "एक परिवार सदस्य जोड़ा",
-            "approvedEventRegistration": "कार्यक्रम पंजीकरण स्वीकृत",
-            "submittedResourceRequest": "संसाधन अनुरोध जमा किया",
-            "postedAnnouncement": "सामुदायिक घोषणा पोस्ट की",
-            "requestedFamilyMembership": "परिवार सदस्यता का अनुरोध किया",
-            "registeredForEvent": "कार्यक्रम के लिए पंजीकृत"
-        },
-        "actions": {
-            "addFamily": "परिवार जोड़ें",
-            "createEvent": "कार्यक्रम बनाएं",
-            "requestResource": "संसाधन का अनुरोध करें",
-            "inviteMember": "सदस्य को आमंत्रित करें"
-        }
+        "upcomingEventsLabel": "आगामी कार्यक्रम",
+        "yourFamily": "आपका परिवार",
+        "viewFamily": "परिवार देखें"
     },
     "profile": {
         "title": "आपकी प्रोफ़ाइल",
@@ -160,14 +134,27 @@
         "memberSince": "सदस्यता प्रारंभ",
         "unnamedMember": "सदस्य",
         "unknownRole": "अज्ञात भूमिका",
-        "connectFamily": "परिवार जोड़ें",
         "noFamilyTitle": "अभी तक कोई परिवार नहीं जुड़ा",
         "noFamilyDescription": "अपनी प्रोफ़ाइल को अपने परिवार से जोड़ें ताकि आप परिवार के सदस्य, रिश्ते, कार्यक्रम और सामुदायिक गतिविधियाँ देख सकें।",
         "joined": "शामिल हुए",
         "noActivityTitle": "कोई हालिया गतिविधि नहीं",
         "noActivityDescription": "जब कुछ होगा तो सामुदायिक गतिविधि यहाँ दिखाई देगी।",
         "viewAll": "सभी देखें",
-        "edit": "संपादित करें"
+        "edit": "संपादित करें",
+        "active": "सक्रिय",
+        "member": "सदस्य",
+        "yourFamily": "आपका परिवार",
+        "familyDescription": "आपके पारिवारिक संबंध और रिश्ते",
+        "noFamilyConnected": "अभी तक कोई परिवार नहीं जुड़ा",
+        "connectFamilyDesc": "अपनी प्रोफ़ाइल को अपने परिवार से जोड़ें ताकि आप परिवार के सदस्य, रिश्ते, कार्यक्रम और सामुदायिक गतिविधियाँ देख सकें।",
+        "connectFamily": "परिवार जोड़ें",
+        "addDetails": "विवरण जोड़ें",
+        "noPersonalDetails": "अभी तक कोई व्यक्तिगत विवरण नहीं जोड़ा गया।",
+        "contact": "संपर्क",
+        "email": "ईमेल",
+        "activityDescription": "आपकी हालिया सामुदायिक गतिविधि",
+        "noActivity": "कोई हालिया गतिविधि नहीं",
+        "activityWillAppear": "जब आप सामुदायिक कार्यक्रमों, अनुरोधों या घोषणाओं में भाग लेंगे तो गतिविधि यहाँ दिखाई देगी।"
     },
     "medical": {
         "title": "चिकित्सा डैशबोर्ड",

@@ -405,25 +405,47 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
 
             <div className="flex items-center gap-3">
+              {/* Breadcrumbs & Search */}
+              <div className="flex items-center gap-4 flex-1 max-w-xl ml-4 lg:ml-8 hidden lg:flex">
+                <nav className="flex items-center gap-2 text-sm text-ink-muted" aria-label="Breadcrumb">
+                  <Link to="/" className="hover:text-ink transition-colors">
+                    <LayoutDashboard className="w-4 h-4" aria-hidden="true" />
+                  </Link>
+                  {(() => {
+                    const activeSection = filteredSections.find((s) =>
+                      s.items.some((item) => isActive(item.path))
+                    );
+                    if (!activeSection) return null;
+                    const activeItem = activeSection.items.find((item) => isActive(item.path));
+                    return (
+                      <>
+                        <span className="mx-1 text-ink-muted" aria-hidden="true">/</span>
+                        <span className="text-ink-secondary capitalize">{t(activeSection.label)}</span>
+                        {activeItem && activeItem.path !== "/" && (
+                          <>
+                            <span className="mx-1 text-ink-muted" aria-hidden="true">/</span>
+                            <span className="text-ink capitalize">{t(activeItem.i18nKey)}</span>
+                          </>
+                        )}
+                      </>
+                    );
+                  })()}
+                </nav>
+
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted" aria-hidden="true" />
+                  <input
+                    type="search"
+                    placeholder={t("common.searchPlaceholder")}
+                    className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-border bg-surface text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-saffron focus:border-transparent transition-all"
+                    aria-label={t("common.searchLabel")}
+                  />
+                </div>
+              </div>
+
               <LocaleToggle />
 
               {/* Notifications */}
-              <div className="relative">
-                <Link
-                  to="/notifications"
-                  className="relative p-2 rounded-lg text-ink-secondary hover:bg-surface-muted hover:text-ink transition-colors"
-                  aria-label={t("nav.notifications")}
-                >
-                  <Bell className="w-5 h-5" />
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-saffron text-[10px] font-semibold text-ink-on-accent">
-                      {unreadCount > 99 ? "99+" : unreadCount}
-                    </span>
-                  )}
-                </Link>
-              </div>
-
-              {/* Profile Menu */}
               <div className="relative">
                 <button
                   ref={profileButtonRef}

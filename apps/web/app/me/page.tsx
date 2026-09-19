@@ -1,366 +1,419 @@
 "use client";
 
 import { useNavigate } from "react-router-dom";
-import { LoaderFour } from "@repo/ui/loading";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
+import { motion } from "framer-motion";
+import { LoaderOne } from "@repo/ui/loading";
 import { Button } from "@repo/ui/button";
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+    CardContent,
+    CardFooter,
+} from "@repo/ui/card";
 import { Badge } from "@repo/ui/badge";
 import { formatBloodGroup } from "@modheshwari/utils/format";
-import { motion } from "framer-motion";
-import { MOTION_ENTER } from "@repo/ui/motion";
 import {
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  Briefcase,
-  Users2,
-  Link2,
-  Plus,
-  Activity,
-  Clock,
-  ChevronRight,
+    User,
+    Mail,
+    Phone,
+    MapPin,
+    Briefcase,
+    BookOpen,
+    Droplet,
+    Calendar,
+    Users,
+    Settings,
+    LogOut,
+    Link2,
+    Plus,
+    ChevronRight,
 } from "lucide-react";
-
+import { MOTION_PAGE_ENTER, FADE_IN_UP } from "@repo/ui/motion";
+import { Activity } from "lucide-react";
 import { useUser } from "../../lib/UserContext";
-import { ROLE_COLORS, ROLE_COLORS_CSS } from "../../lib/constants";
 import { useLocale } from "../../lib/LocaleContext";
-
-function ProfileField({
-  label,
-  value,
-  icon: Icon,
-}: {
-  label: string;
-  value?: string | null;
-  icon?: React.ComponentType<{ className?: string }>;
-}) {
-  if (!value) return null;
-
-  return (
-    <div className="flex items-start gap-3 py-3 border-b border-border last:border-0">
-      {Icon && <Icon className="w-5 h-5 text-text-muted shrink-0 mt-0.5" aria-hidden="true" />}
-      <div className="flex-1 min-w-0">
-        <div className="text-xs text-text-muted">{label}</div>
-        <div className="text-base font-medium text-text-primary truncate">{value}</div>
-      </div>
-    </div>
-  );
-}
-
-function EmptyState({
-  title,
-  description,
-  action,
-  icon: Icon,
-}: {
-  title: string;
-  description: string;
-  action?: { label: string; onClick: () => void };
-  icon?: React.ComponentType<{ className?: string }>;
-}) {
-  return (
-    <div className="text-center py-10 px-4">
-      {Icon && (
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/10 text-accent mb-4 mx-auto">
-          <Icon className="w-6 h-6" aria-hidden="true" />
-        </div>
-      )}
-      <h3 className="font-display font-semibold text-text-primary mb-1">{title}</h3>
-      <p className="text-text-secondary text-sm mb-4 max-w-xs mx-auto">{description}</p>
-      {action && (
-        <Button variant="primary" size="sm" onClick={action.onClick} className="w-auto">
-          {action.label}
-          <Plus className="w-4 h-4 ml-1" />
-        </Button>
-      )}
-    </div>
-  );
-}
+import { ROLE_COLORS_CSS } from "../../lib/constants";
 
 export default function MePage() {
-  const navigate = useNavigate();
-  const { user, loading, logout } = useUser();
-  const { t } = useLocale();
+    const navigate = useNavigate();
+    const { user, loading, logout } = useUser();
+    const { t } = useLocale();
 
-  if (loading) {
-    return (
-      <DreamySunsetBackground className="flex items-center justify-center min-h-screen">
-        <LoaderFour text={t("common.loading")} />
-      </DreamySunsetBackground>
-    );
-  }
-
-  if (!user) {
-    navigate("/signin");
-    return null;
-  }
-
-  const initials = (user.name || "")
-    .split(" ")
-    .map((n: string) => n[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-
-  const displayName = user.name?.trim() || t("profile.unnamedMember");
-  const roleLabel = user.role ? user.role.replace(/_/g, " ") : t("profile.unknownRole");
-  const roleColor = ROLE_COLORS[user.role] || "bg-neutral";
-  const roleColorCss = ROLE_COLORS_CSS[user.role] || "var(--neutral-500)";
-  const joinedDate = null; // User type doesn't have createdAt/joinedAt
-
-  const statusBadge = user.status ? (
-    <Badge variant="emerald" size="sm" dot>
-      {t("common.active")}
-    </Badge>
-  ) : (
-    <Badge variant="surface" size="sm" dot>
-      {t("common.inactive")}
-    </Badge>
-  );
-
-  const handleLogout = () => {
-    logout();
-    navigate("/signin");
-  };
-
-  const hasFamily = Array.isArray(user.families) && user.families.length > 0;
-const families = user.families ?? [];
-  const hasActivity = false; // TODO: connect to real activity feed
-
-  return (
-    <DreamySunsetBackground className="min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Profile Header */}
-        <motion.section
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={MOTION_ENTER}
-          className="mb-10 pb-8 border-b border-border"
-        >
-          <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-            {/* Avatar */}
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ ...MOTION_ENTER, delay: 0.1 }}
-              className="flex-shrink-0"
-            >
-              <div
-                className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-on-accent shadow-lg"
-                style={{ background: roleColorCss }}
-                aria-hidden="true"
-              >
-                {initials || "??"}
-              </div>
-            </motion.div>
-
-            {/* Name & Meta */}
-            <motion.div
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ ...MOTION_ENTER, delay: 0.15 }}
-              className="flex-1 min-w-0 text-center sm:text-left"
-            >
-              <h1 className="font-display font-semibold text-3xl text-text-primary">
-                {displayName}
-              </h1>
-              <div className="mt-2 flex flex-wrap items-center gap-2">
-                <Badge variant={roleColor as any} size="md" solid>
-                  {roleLabel}
-                </Badge>
-                {statusBadge}
-              </div>
-              <p className="mt-2 text-text-secondary">
-                <span className="font-medium">{t("profile.memberSince")}</span>
-                {joinedDate && <span className="ml-1">{joinedDate}</span>}
-              </p>
-              <p className="mt-1 text-text-muted text-sm flex items-center gap-1">
-                <Mail className="w-4 h-4" aria-hidden="true" />
-                {user.email}
-              </p>
-            </motion.div>
-
-            {/* Actions */}
-            <motion.div
-              initial={{ opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ ...MOTION_ENTER, delay: 0.2 }}
-              className="flex flex-col sm:flex-row gap-3 self-center sm:self-stretch"
-            >
-              <Button
-                onClick={() => navigate("/me/edit")}
-                className="flex-1 sm:flex-none"
-              >
-                {t("profile.editProfile")}
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={handleLogout}
-                className="flex-1 sm:flex-none"
-              >
-                {t("profile.signOut")}
-              </Button>
-            </motion.div>
-          </div>
-        </motion.section>
-
-        {/* Main Content Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...MOTION_ENTER, delay: 0.2 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-6"
-        >
-          {/* ABOUT */}
-          <section className="space-y-6">
-            <header className="flex items-center justify-between">
-              <h2 className="font-display font-semibold text-xl text-text-primary flex items-center gap-2">
-                <User className="w-5 h-5 text-accent" aria-hidden="true" />
-                {t("profile.about")}
-              </h2>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/me/edit")}>
-                {t("common.edit")}
-                <ChevronRight className="w-4 h-4 ml-1" />
-              </Button>
-            </header>
-
-            <div className="bg-surface-raised border border-border rounded-2xl overflow-hidden">
-              <div className="p-5 space-y-1">
-                <ProfileField
-                  label={t("profile.profession")}
-                  value={user.profile?.profession}
-                  icon={Briefcase}
-                />
-                <ProfileField
-                  label={t("profile.gotra")}
-                  value={user.profile?.gotra}
-                  icon={Users2}
-                />
-                <ProfileField
-                  label={t("profile.bloodGroup")}
-                  value={formatBloodGroup(user.profile?.bloodGroup)}
-                  icon={Activity}
-                />
-                <ProfileField
-                  label={t("profile.location")}
-                  value={user.profile?.location}
-                  icon={MapPin}
-                />
-                <ProfileField
-                  label={t("profile.phone")}
-                  value={user.profile?.phone}
-                  icon={Phone}
-                />
-                <ProfileField
-                  label={t("profile.address")}
-                  value={user.profile?.address}
-                  icon={MapPin}
-                />
-                <ProfileField
-                  label={t("profile.email")}
-                  value={user.email}
-                  icon={Mail}
-                />
-              </div>
+    if (loading) {
+        return (
+            <div className="bg-canvas flex min-h-[60vh] items-center justify-center">
+                <LoaderOne />
             </div>
-            </section>
+        );
+    }
 
-          {/* FAMILY */}
-          <section className="space-y-6">
-            <header className="flex items-center justify-between">
-              <h2 className="font-display font-semibold text-xl text-text-primary flex items-center gap-2">
-                <Users2 className="w-5 h-5 text-accent" aria-hidden="true" />
-                {t("profile.family")}
-              </h2>
-              {!hasFamily && (
-                <Button variant="primary" size="sm" onClick={() => navigate("/families/create")}>
-                  <Plus className="w-4 h-4 mr-1" />
-                  {t("profile.connectFamily")}
-                </Button>
-              )}
-            </header>
+    if (!user) {
+        navigate("/signin");
+        return null;
+    }
 
-            {hasFamily ? (
-              <div className="bg-surface-raised border border-border rounded-2xl overflow-hidden">
-                {families.map((fm, index) => (
-                  <motion.li
-                    key={fm.id}
+    const initials = (user.name || "")
+        .split(" ")
+        .map((n: string) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase();
+
+    const memberSince = user.createdAt
+        ? new Date(user.createdAt).toLocaleDateString("en-US", {
+              month: "long",
+              year: "numeric",
+          })
+        : "2026";
+
+    const hasFamily = Array.isArray(user.families) && user.families.length > 0;
+    const primaryFamily = user.families?.[0];
+
+    const personalFields = [
+        {
+            label: t("profile.bloodGroup"),
+            value: formatBloodGroup(user.profile?.bloodGroup),
+            icon: Droplet,
+        },
+        {
+            label: t("profile.gotra"),
+            value: user.profile?.gotra,
+            icon: BookOpen,
+        },
+        {
+            label: t("profile.profession"),
+            value: user.profile?.profession,
+            icon: Briefcase,
+        },
+        {
+            label: t("profile.location"),
+            value: user.profile?.location,
+            icon: MapPin,
+        },
+        { label: t("profile.phone"), value: user.profile?.phone, icon: Phone },
+        {
+            label: t("profile.address"),
+            value: user.profile?.address,
+            icon: MapPin,
+        },
+    ].filter((f) => f.value);
+
+    const contactFields = [
+        { label: t("profile.email"), value: user.email, icon: Mail },
+    ].filter((f) => f.value);
+
+    return (
+        <div className="bg-canvas min-h-screen">
+            <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
+                {/* Profile Header */}
+                <motion.section
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ ...MOTION_ENTER, delay: 0.1 + index * 0.05 }}
-                    className="flex items-center justify-between p-4 border-b border-border last:border-0 hover:bg-surface-muted transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-semibold">
-                        {fm.family.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-text-primary">{fm.family.name}</p>
-                        <p className="text-sm text-text-secondary flex items-center gap-1">
-                          <Badge variant="accent" size="xs" solid>
-                            {fm.role.replace(/_/g, " ")}
-                          </Badge>
-                          <span className="text-text-muted">
-                            {t("profile.joined")} {new Date(fm.joinedAt).toLocaleDateString()}
-                          </span>
-                        </p>
-                      </div>
+                    transition={MOTION_PAGE_ENTER}
+                    className="mb-10"
+                >
+                    <div className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex items-center gap-5">
+                            <div className="relative">
+                                <div
+                                    className="text-ink flex h-24 w-24 items-center justify-center rounded-full text-3xl font-bold shadow-lg"
+                                    style={{
+                                        background:
+                                            ROLE_COLORS_CSS[user.role] ||
+                                            "var(--jewel-400)",
+                                    }}
+                                >
+                                    {initials}
+                                </div>
+                                {user.status && (
+                                    <span className="bg-emerald border-canvas absolute right-2 bottom-2 h-4 w-4 rounded-full border-3" />
+                                )}
+                            </div>
+                            <div>
+                                <h1 className="text-display-lg text-ink font-display-bold">
+                                    {user.name || t("profile.member")}
+                                </h1>
+                                <div className="mt-1 flex flex-wrap items-center gap-3">
+                                    <span className="bg-saffron-soft text-saffron border-saffron/30 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium">
+                                        <span className="bg-saffron h-1.5 w-1.5 rounded-full" />
+                                        {t("profile.active")}
+                                    </span>
+                                    <Badge
+                                        variant="gold"
+                                        size="sm"
+                                        shape="rounded"
+                                        className="capitalize"
+                                    >
+                                        {user.role
+                                            ?.toLowerCase()
+                                            .replace(/_/g, " ") || "member"}
+                                    </Badge>
+                                </div>
+                                <p className="text-body text-ink-secondary mt-2 flex items-center gap-2">
+                                    <Calendar className="h-4 w-4" />
+                                    {t("profile.memberSince")} {memberSince}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-3 sm:flex-row">
+                            <Button
+                                variant="secondary"
+                                onClick={() => navigate("/me/edit")}
+                            >
+                                <Settings className="h-4 w-4" />
+                                {t("profile.editProfile")}
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                onClick={() => {
+                                    logout();
+                                    navigate("/signin");
+                                }}
+                            >
+                                <LogOut className="h-4 w-4" />
+                                {t("profile.signOut")}
+                            </Button>
+                        </div>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-text-muted" />
-                  </motion.li>
-                ))}
-              </div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={MOTION_ENTER}
-                className="bg-surface-raised border border-border rounded-2xl p-8"
-              >
-                <EmptyState
-                  title={t("profile.noFamilyTitle")}
-                  description={t("profile.noFamilyDescription")}
-                  action={{
-                    label: t("profile.connectFamily"),
-                    onClick: () => navigate("/families/create"),
-                  }}
-                  icon={Link2}
-                />
-              </motion.div>
-            )}
-          </section>
-        </motion.div>
 
-        {/* RECENT ACTIVITY */}
-        <motion.section
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...MOTION_ENTER, delay: 0.3 }}
-          className="mt-10"
-        >
-          <header className="flex items-center justify-between mb-4">
-            <h2 className="font-display font-semibold text-xl text-text-primary flex items-center gap-2">
-              <Activity className="w-5 h-5 text-accent" aria-hidden="true" />
-              {t("profile.recentActivity")}
-            </h2>
-          </header>
+                    <div className="bg-border h-px" aria-hidden="true" />
+                </motion.section>
 
-          <div className="bg-surface-raised border border-border rounded-2xl overflow-hidden">
-            {hasActivity ? (
-              <div className="divide-y divide-border">
-                {/* TODO: real activity feed */}
-              </div>
-            ) : (
-              <EmptyState
-                title={t("profile.noActivityTitle")}
-                description={t("profile.noActivityDescription")}
-                icon={Clock}
-              />
-            )}
-          </div>
-        </motion.section>
-      </div>
-    </DreamySunsetBackground>
-  );
+                {/* About & Family Grid */}
+                <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ ...MOTION_PAGE_ENTER, delay: 0.1 }}
+                    className="mb-10 grid grid-cols-1 gap-6 lg:grid-cols-2"
+                >
+                    {/* About Section */}
+                    <Card>
+                        <CardHeader>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <CardTitle className="text-heading text-ink font-display-bold">
+                                        {t("profile.about")}
+                                    </CardTitle>
+                                    <CardDescription>
+                                        {t("profile.personalDetails")}
+                                    </CardDescription>
+                                </div>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => navigate("/me/edit")}
+                                >
+                                    <Settings className="h-4 w-4" />
+                                    {t("common.edit")}
+                                </Button>
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            {personalFields.length > 0 ? (
+                                <dl className="space-y-4">
+                                    {personalFields.map((field, idx) => (
+                                        <motion.div
+                                            key={field.label}
+                                            variants={FADE_IN_UP}
+                                            initial={{ opacity: 0, y: 8 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{
+                                                duration: 0.2,
+                                                delay: idx * 0.04,
+                                            }}
+                                            className="flex items-start gap-4"
+                                        >
+                                            <div className="bg-surface-muted flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl">
+                                                <field.icon className="text-ink-muted h-5 w-5" />
+                                            </div>
+                                            <div className="min-w-0 flex-1">
+                                                <dt className="text-caption text-ink-muted tracking-wide uppercase">
+                                                    {field.label}
+                                                </dt>
+                                                <dd className="text-body text-ink mt-0.5 truncate">
+                                                    {field.value}
+                                                </dd>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </dl>
+                            ) : (
+                                <div className="py-8 text-center">
+                                    <p className="text-ink-secondary mb-4">
+                                        {t("profile.noPersonalDetails")}
+                                    </p>
+                                    <Button
+                                        onClick={() => navigate("/me/edit")}
+                                        size="sm"
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                        {t("profile.addDetails")}
+                                    </Button>
+                                </div>
+                            )}
+
+                            {contactFields.length > 0 && (
+                                <div className="border-border mt-6 border-t pt-6">
+                                    <h4 className="text-ink mb-3 text-sm font-semibold">
+                                        {t("profile.contact")}
+                                    </h4>
+                                    <dl className="space-y-3">
+                                        {contactFields.map((field, idx) => (
+                                            <motion.div
+                                                key={field.label}
+                                                variants={FADE_IN_UP}
+                                                initial={{ opacity: 0, y: 8 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{
+                                                    duration: 0.2,
+                                                    delay: idx * 0.04,
+                                                }}
+                                                className="flex items-center gap-3"
+                                            >
+                                                <field.icon className="text-ink-muted h-5 w-5 flex-shrink-0" />
+                                                <div>
+                                                    <dt className="text-caption text-ink-muted">
+                                                        {field.label}
+                                                    </dt>
+                                                    <dd className="text-body text-ink">
+                                                        {field.value}
+                                                    </dd>
+                                                </div>
+                                            </motion.div>
+                                        ))}
+                                    </dl>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    {/* Family Section */}
+                    <Card>
+                        <CardHeader>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <CardTitle className="text-heading text-ink font-display-bold">
+                                        {t("profile.yourFamily")}
+                                    </CardTitle>
+                                    <CardDescription>
+                                        {t("profile.familyDescription")}
+                                    </CardDescription>
+                                </div>
+                                {hasFamily && (
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => navigate("/family")}
+                                    >
+                                        <ChevronRight className="h-4 w-4" />
+                                        {t("common.view")}
+                                    </Button>
+                                )}
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            {hasFamily ? (
+                                <div className="space-y-4">
+                                    {user.families!.map((fm, idx) => (
+                                        <motion.div
+                                            key={fm.id}
+                                            variants={FADE_IN_UP}
+                                            initial={{ opacity: 0, y: 8 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{
+                                                duration: 0.2,
+                                                delay: idx * 0.04,
+                                            }}
+                                            className="bg-surface-muted flex items-center gap-4 rounded-lg p-3"
+                                        >
+                                            <div className="bg-emerald-soft flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl">
+                                                <Users className="text-emerald h-5 w-5" />
+                                            </div>
+                                            <div className="min-w-0 flex-1">
+                                                <p className="text-ink truncate font-semibold">
+                                                    {fm.family.name}
+                                                </p>
+                                                <p className="text-ink-secondary text-sm capitalize">
+                                                    {fm.role.replace(/_/g, " ")}
+                                                </p>
+                                            </div>
+                                            <span className="text-caption text-ink-muted flex-shrink-0">
+                                                {t("profile.joined")}{" "}
+                                                {new Date(
+                                                    fm.joinedAt,
+                                                ).toLocaleDateString()}
+                                            </span>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="py-10 text-center">
+                                    <div className="bg-surface-muted mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl">
+                                        <Users className="text-ink-muted h-7 w-7" />
+                                    </div>
+                                    <p className="text-body text-ink-secondary mb-2">
+                                        {t("profile.noFamilyConnected")}
+                                    </p>
+                                    <p className="text-ink-muted mx-auto mb-6 max-w-sm text-sm">
+                                        {t("profile.connectFamilyDesc")}
+                                    </p>
+                                    <Button
+                                        onClick={() => navigate("/families")}
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                        {t("profile.connectFamily")}
+                                    </Button>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </motion.div>
+
+                {/* Activity Section */}
+                <motion.section
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ ...MOTION_PAGE_ENTER, delay: 0.2 }}
+                >
+                    <Card>
+                        <CardHeader>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <CardTitle className="text-heading text-ink font-display-bold">
+                                        {t("profile.recentActivity")}
+                                    </CardTitle>
+                                    <CardDescription>
+                                        {t("profile.activityDescription")}
+                                    </CardDescription>
+                                </div>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => navigate("/activity")}
+                                >
+                                    {t("common.viewAll")}
+                                    <ChevronRight className="h-3.5 w-3.5" />
+                                </Button>
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="py-10 text-center">
+                                <div className="bg-surface-muted mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
+                                    <Activity className="text-ink-muted h-6 w-6" />
+                                </div>
+                                <p className="text-body text-ink-secondary mb-1">
+                                    {t("profile.noActivity")}
+                                </p>
+                                <p className="text-ink-muted text-sm">
+                                    {t("profile.activityWillAppear")}
+                                </p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </motion.section>
+            </div>
+        </div>
+    );
 }

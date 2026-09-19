@@ -74,7 +74,8 @@
         "retry": "Try again"
     },
     "dashboard": {
-        "title": "Dashboard",
+        "greeting": "Good morning",
+        "greetingAnonymous": "Welcome",
         "subtitle": "Here's what's happening in your community.",
         "viewDetails": "View details",
         "viewAll": "View all",
@@ -84,64 +85,34 @@
         "pendingApprovals": "Pending approvals",
         "recentActivity": "Recent activity",
         "quickActions": "Quick actions",
-        "stats": {
-            "members": "Members",
-            "membersTrend": "+12 this month",
-            "families": "Families",
-            "familiesTrend": "+8 this month",
-            "gotras": "Gotras",
-            "gotrasTrend": "Stable",
-            "upcomingEvents": "Upcoming events",
-            "eventsTrend": "3 this week"
-        },
-        "status": {
-            "approved": "Approved",
-            "pending": "Pending",
-            "rejected": "Rejected"
-        },
-        "upcomingEvents": "Upcoming Events",
-        "pendingApprovals": "Pending Approvals",
+        "createEvent": "Create event",
+        "members": "Members",
+        "families": "Families",
+        "gotras": "Gotras",
+        "upcoming": "Upcoming",
+        "yourFamily": "Your Family",
+        "upcomingEvents": "Upcoming events",
         "recentActivity": "Recent Activity",
-        "quickActions": "Quick Actions",
+        "ctaTitle": "Explore your community",
+        "ctaDescription": "Discover families, connect with members, and participate in events.",
+        "exploreFamilies": "Explore Families",
+        "searchMembers": "Search Members",
+        "noUpcomingEvents": "No upcoming events",
+        "noActivityTitle": "No recent activity",
+        "noActivityDescription": "Community activity will appear here when things happen.",
+        "membersTrend": "+38 this month",
+        "familiesTrend": "+6 this month",
+        "gotrasTrend": "across community",
+        "eventType": {
+            "community": "Community",
+            "family": "Family"
+        },
+        "members": "Members",
+        "upcomingEventsLabel": "Upcoming Events",
+        "yourFamily": "Your Family",
+        "viewFamily": "View Family",
         "viewAll": "View all",
-        "viewAllApprovals": "View all approvals",
-        "viewAllActivity": "View all activity",
-        "events": {
-            "ganeshChaturthi": "Ganesh Chaturthi Celebration",
-            "familyGathering": "Family Gathering",
-            "annualMeeting": "Annual General Meeting",
-            "communityHall": "Community Hall",
-            "mainGround": "Main Ground",
-            "mainHall": "Main Hall"
-        },
-        "approvals": {
-            "familyRequest": "Family Request",
-            "resourceRequest": "Resource Request",
-            "memberInvitation": "Member Invitation",
-            "eventCreation": "Event Creation"
-        },
-        "activity": {
-            "addedFamilyMember": "added a family member",
-            "approvedEventRegistration": "approved event registration",
-            "submittedResourceRequest": "submitted resource request",
-            "postedAnnouncement": "posted community announcement",
-            "requestedFamilyMembership": "requested family membership",
-            "registeredForEvent": "registered for event"
-        },
-        "actions": {
-            "addFamily": "Add family",
-            "createEvent": "Create event",
-            "requestResource": "Request resource",
-            "inviteMember": "Invite member"
-        },
-        "events": {
-            "ganeshChaturthi": "Ganesh Chaturthi Celebration",
-            "familyGathering": "Family Gathering",
-            "annualMeeting": "Annual General Meeting",
-            "communityHall": "Community Hall",
-            "mainGround": "Main Ground",
-            "mainHall": "Main Hall"
-        }
+        "createEvent": "Create event"
     },
     "profile": {
         "title": "Your Profile",
@@ -168,18 +139,27 @@
         "memberSince": "Member since",
         "unnamedMember": "Member",
         "unknownRole": "Unknown Role",
-        "connectFamily": "Connect family",
         "noFamilyTitle": "No family connected yet",
         "noFamilyDescription": "Connect your profile to your family to see family members, relationships, events and community activity.",
         "joined": "Joined",
         "noActivityTitle": "No recent activity",
         "noActivityDescription": "Community activity will appear here when things happen.",
-        "noFamilyTitle": "No family connected yet",
-        "noFamilyDescription": "Connect your profile to your family to see family members, relationships, events and community activity.",
-        "noActivityTitle": "No recent activity",
-        "noActivityDescription": "Community activity will appear here when things happen.",
         "viewAll": "View all",
-        "edit": "Edit"
+        "edit": "Edit",
+        "active": "Active",
+        "member": "Member",
+        "yourFamily": "Your Family",
+        "familyDescription": "Your family connections and relationships",
+        "noFamilyConnected": "No family connected yet",
+        "connectFamilyDesc": "Connect your profile to your family to see family members, relationships, events and community activity.",
+        "connectFamily": "Connect Family",
+        "addDetails": "Add Details",
+        "noPersonalDetails": "No personal details added yet.",
+        "contact": "Contact",
+        "email": "Email",
+        "activityDescription": "Your recent community activity",
+        "noActivity": "No recent activity",
+        "activityWillAppear": "Activity will appear here when you participate in community events, requests, or announcements."
     },
     "medical": {
         "title": "Medical Dashboard",

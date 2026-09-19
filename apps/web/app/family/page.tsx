@@ -2,9 +2,11 @@
 
 import { Suspense, useState } from "react";
 import { LoaderOne } from "@repo/ui/loading";
-import { List, Network } from "lucide-react";
-import { DreamySunsetBackground } from "@repo/ui/dreamySunsetBackground";
+import { List, Network, Plus, UserCheck, Users } from "lucide-react";
 import { Button } from "@repo/ui/button";
+import { Badge } from "@repo/ui/badge";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@repo/ui/card";
+import { MOTION_PAGE_ENTER, FADE_IN_UP } from "@repo/ui/motion";
 
 import FamilyPageContent from "./FamilyPageContent";
 import FamilyTreeView from "./FamilyTreeView";
@@ -15,50 +17,71 @@ export default function FamilyPage(): React.ReactElement {
   const { t } = useLocale();
 
   return (
-    <DreamySunsetBackground className="px-6 py-10">
-      <div className="mb-8">
-        <h1 className="text-4xl font-display font-bold text-text-primary tracking-tight">{t("family.title")}</h1>
-        <p className="text-text-muted mt-2">{t("family.description")}</p>
-      </div>
+    <div className="bg-canvas min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={MOTION_PAGE_ENTER}
+          className="mb-8"
+        >
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h1 className="text-display-lg font-display-bold text-ink">{t("family.title")}</h1>
+              <p className="text-body text-ink-secondary mt-1">{t("family.description")}</p>
+            </div>
+            <Button onClick={() => navigate("/families")} size="sm" className="hidden sm:flex">
+              <Plus className="w-4 h-4" />
+              {t("family.addFamily")}
+            </Button>
+          </div>
+        </motion.div>
 
-      <div className="mb-6">
-        <div className="flex gap-3">
-          <Button
-            variant="secondary"
-            onClick={() => setActiveTab("list")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-              activeTab === "list"
-                ? "bg-accent/10 text-accent border border-accent/25"
-                : "text-text-muted hover:text-accent border border-transparent"
-            }`}
-          >
-            <List className="w-4 h-4" />
-            {t("family.listView")}
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => setActiveTab("tree")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-              activeTab === "tree"
-                ? "bg-accent/10 text-accent border border-accent/25"
-                : "text-text-muted hover:text-accent border border-transparent"
-            }`}
-          >
-            <Network className="w-4 h-4" />
-            {t("family.treeView")}
-          </Button>
-        </div>
-      </div>
+        {/* Tab Navigation */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...MOTION_PAGE_ENTER, delay: 0.1 }}
+          className="mb-6"
+        >
+          <div className="flex gap-2 bg-surface-raised border border-border rounded-xl p-1">
+            <Button
+              variant={activeTab === "list" ? "primary" : "ghost"}
+              onClick={() => setActiveTab("list")}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
+            >
+              <List className="w-4 h-4" />
+              {t("family.listView")}
+            </Button>
+            <Button
+              variant={activeTab === "tree" ? "primary" : "ghost"}
+              onClick={() => setActiveTab("tree")}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
+            >
+              <Network className="w-4 h-4" />
+              {t("family.treeView")}
+            </Button>
+          </div>
+        </motion.div>
 
-      {activeTab === "list" ? (
-        <Suspense fallback={<LoaderOne />}>
-          <FamilyPageContent />
-        </Suspense>
-      ) : (
-        <Suspense fallback={<LoaderOne />}>
-          <FamilyTreeView />
-        </Suspense>
-      )}
-    </DreamySunsetBackground>
+        {/* Content */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...MOTION_PAGE_ENTER, delay: 0.2 }}
+        >
+          {activeTab === "list" ? (
+            <Suspense fallback={<LoaderOne />}>
+              <FamilyPageContent />
+            </Suspense>
+          ) : (
+            <Suspense fallback={<LoaderOne />}>
+              <FamilyTreeView />
+            </Suspense>
+          )}
+        </motion.div>
+      </div>
+    </div>
   );
 }
