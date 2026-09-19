@@ -525,7 +525,9 @@
         "retry": "Retry",
         "typeMessage": "Type a message...",
         "send": "Send",
-        "typing": "typing..."
+        "typing": "typing...",
+        "searchPlaceholder": "Search messages...",
+        "noResults": "No results"
     },
     "privacy": {
         "title": "Privacy Policy",

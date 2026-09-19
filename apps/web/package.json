@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@repo/ui": "*",
+    "@tanstack/react-virtual": "^3.13.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.42.2",
     "js-yaml": "^5.2.1",
