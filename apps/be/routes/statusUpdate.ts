@@ -234,6 +234,16 @@ export async function handleReviewStatusUpdateRequest(
     // Wrap approval + profile update in a transaction to prevent race condition
     // where two concurrent approvals both see "all approved" and both update the profile
     const result = await prisma.$transaction(async (tx) => {
+      // Check if request is already finalized
+      const request = await tx.statusUpdateRequest.findUnique({
+        where: { id },
+        select: { status: true },
+      });
+      if (!request) throw new Error("NOT_FOUND");
+      if (request.status === "APPROVED" || request.status === "REJECTED") {
+        throw new Error("ALREADY_FINALIZED");
+      }
+
       const updatedApproval = await tx.statusUpdateApproval.updateMany({
         where: {
           requestId: id,
@@ -241,6 +251,10 @@ export async function handleReviewStatusUpdateRequest(
         },
         data: { status, remarks, reviewedAt: new Date() },
       });
+
+      if (updatedApproval.count === 0) {
+        throw new Error("NOT_AUTHORIZED");
+      }
 
       const allApproved = await tx.statusUpdateApproval.count({
         where: { requestId: id, status: "APPROVED" },
@@ -267,11 +281,25 @@ export async function handleReviewStatusUpdateRequest(
         }
       }
 
-      return updatedApproval;
+      // Return the actual approval record, not just the count
+      const approval = await tx.statusUpdateApproval.findFirst({
+        where: { requestId: id, approverId: userId },
+      });
+
+      return approval;
     });
 
     return success("Review submitted", { approval: result });
-  } catch (err) {
+  } catch (err: any) {
+    if (err.message === "NOT_AUTHORIZED") {
+      return failure("You are not an assigned approver", "Forbidden", 403);
+    }
+    if (err.message === "ALREADY_FINALIZED") {
+      return failure("Request has already been finalized", "Conflict", 409);
+    }
+    if (err.message === "NOT_FOUND") {
+      return failure("Request not found", "Not Found", 404);
+    }
     return failure("Internal server error", "Unexpected Error", 500);
   }
 }
