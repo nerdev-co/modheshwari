@@ -103,7 +103,7 @@ If you seed the database with `bun run db:seed`, you can sign in with any of the
 
 ## Release
 
-Current release: v1.1.0
+Current release: v1.2.0
 
 ## License
 
