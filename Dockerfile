@@ -53,7 +53,7 @@ FROM runner-base AS runner-web
 COPY --from=builder --chown=app:app /app/apps/web ./apps/web
 USER app
 EXPOSE 3000
-CMD ["bun", "run", "start"]
+CMD ["bunx", "serve", "apps/web/dist", "-l", "3000", "-s"]
 
 FROM runner-base AS runner-ws
 COPY --from=builder --chown=app:app /app/apps/ws ./apps/ws
