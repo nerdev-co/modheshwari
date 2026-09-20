@@ -61,6 +61,30 @@ export async function handleCreateStatusUpdateRequest(req: Request) {
     if (!validation.ok) return validation.response;
     const { targetUserId, reason } = validation.data;
 
+    if (targetUserId === userId) {
+      return failure("Cannot request status change for yourself", "Forbidden", 403);
+    }
+
+    const requesterFamilies = await prisma.familyMember.findMany({
+      where: { userId },
+      select: { familyId: true },
+    });
+
+    if (requesterFamilies.length === 0) {
+      return failure("You must belong to a family to request a status change", "Forbidden", 403);
+    }
+
+    const targetInSameFamily = await prisma.familyMember.findFirst({
+      where: {
+        userId: targetUserId,
+        familyId: { in: requesterFamilies.map((f) => f.familyId) },
+      },
+    });
+
+    if (!targetInSameFamily) {
+      return failure("Target user is not in your family", "Forbidden", 403);
+    }
+
     // Create request
     const request = await prisma.statusUpdateRequest.create({
       data: {
