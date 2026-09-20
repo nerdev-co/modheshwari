@@ -149,8 +149,8 @@ export default function EventsListClient() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="font-display text-[36px] font-semibold leading-tight text-ink">{t("events.list.title")}</h1>
-              <p className="text-[15px] text-ink-secondary mt-1">{t("events.list.description")}</p>
+              <h1 className="font-display text-display font-semibold leading-tight text-ink">{t("events.list.title")}</h1>
+              <p className="text-body-lg text-ink-secondary mt-1">{t("events.list.description")}</p>
             </div>
             <div className="flex items-center gap-3">
               <Button variant="secondary" size="sm" onClick={() => navigate("/events/calendar")}>
@@ -209,22 +209,22 @@ export default function EventsListClient() {
                   >
                     <div className="flex items-start gap-5 min-w-0">
                       <div className="text-center flex-shrink-0 w-10">
-                        <p className="font-display text-[18px] font-semibold leading-none text-ink">
+                        <p className="font-display text-heading-sm font-semibold leading-none text-ink">
                           {eventDate.getDate()}
                         </p>
-                        <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-muted mt-0.5">
+                        <p className="text-caption font-semibold uppercase tracking-wider text-ink-muted mt-0.5">
                           {eventDate.toLocaleDateString("en-US", { month: "short" })}
                         </p>
                       </div>
                       <div className="min-w-0 pt-0.5">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-[15px] font-semibold text-ink truncate">{event.name}</h3>
-                          <span className={`inline-flex items-center px-2 py-0.5 text-[11px] font-medium border ${status.classes}`}>
+                          <h3 className="text-body-lg font-semibold text-ink truncate">{event.name}</h3>
+                          <span className={`inline-flex items-center px-2 py-0.5 text-caption font-medium border ${status.classes}`}>
                             {status.label}
                           </span>
                         </div>
-                        {event.description && <p className="text-[13px] text-ink-muted line-clamp-1">{event.description}</p>}
-                        <div className="flex items-center gap-4 mt-1.5 text-[12px] text-ink-muted">
+                        {event.description && <p className="text-body text-ink-muted line-clamp-1">{event.description}</p>}
+                        <div className="flex items-center gap-4 mt-1.5 text-caption text-ink-muted">
                           <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{formatDate(event.date)}</span>
                           {event.venue && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{event.venue}</span>}
                           <span className="flex items-center gap-1"><Users className="w-3 h-3" />{event._count.registrations}</span>

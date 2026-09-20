@@ -46,10 +46,10 @@ export default function ActivityPage() {
                     transition={MOTION_PAGE_ENTER}
                     className="mb-14"
                 >
-                    <h1 className="font-display text-[36px] font-semibold leading-tight text-ink">
+                    <h1 className="font-display text-display font-semibold leading-tight text-ink">
                         {t("nav.activity")}
                     </h1>
-                    <p className="text-[15px] text-ink-secondary mt-1">
+                    <p className="text-body-lg text-ink-secondary mt-1">
                         Your community participation
                     </p>
                 </motion.div>
@@ -59,7 +59,7 @@ export default function ActivityPage() {
                 <div className="py-10">
                     {Object.entries(grouped).map(([date, items]) => (
                         <div key={date} className="mb-10 last:mb-0">
-                            <h2 className="text-[11px] font-semibold uppercase tracking-wider text-ink-muted mb-4">
+                            <h2 className="text-caption font-semibold uppercase tracking-wider text-ink-muted mb-4">
                                 {date}
                             </h2>
                             <div className="space-y-0">
@@ -72,10 +72,10 @@ export default function ActivityPage() {
                                             <div className="h-1.5 w-1.5 rounded-full bg-saffron" />
                                         </div>
                                         <div className="min-w-0 flex-1">
-                                            <p className="text-[14px] text-ink">
+                                            <p className="text-body text-ink">
                                                 {item.action}
                                             </p>
-                                            <p className="text-[12px] text-ink-muted mt-0.5">
+                                            <p className="text-caption text-ink-muted mt-0.5">
                                                 {item.time}
                                             </p>
                                         </div>

@@ -71,10 +71,10 @@ export default function FamiliesPage() {
                 >
                     <div className="flex items-start justify-between">
                         <div>
-                            <h1 className="text-ink font-display text-[36px] leading-tight font-semibold">
+                            <h1 className="text-ink font-display text-display leading-tight font-semibold">
                                 {t("nav.families")}
                             </h1>
-                            <p className="text-ink-secondary mt-1 text-[15px]">
+                            <p className="text-ink-secondary mt-1 text-body-lg">
                                 Manage your family connections
                             </p>
                         </div>
@@ -98,7 +98,7 @@ export default function FamiliesPage() {
                         animate={{ opacity: 1, y: 0 }}
                         className="py-10"
                     >
-                        <h2 className="text-ink mb-2 text-[18px] font-semibold">
+                        <h2 className="text-ink mb-2 text-heading-sm font-semibold">
                             Create a new family
                         </h2>
                         <p className="text-ink-muted mb-6 text-sm">
@@ -107,7 +107,7 @@ export default function FamiliesPage() {
                         </p>
                         <div className="flex max-w-md items-end gap-3">
                             <div className="flex-1">
-                                <label className="text-ink-muted mb-2 block text-[11px] font-semibold tracking-wider uppercase">
+                                <label className="text-ink-muted mb-2 block text-caption font-semibold tracking-wider uppercase">
                                     Family name
                                 </label>
                                 <Input
@@ -140,7 +140,7 @@ export default function FamiliesPage() {
                     transition={{ ...MOTION_PAGE_ENTER, delay: 0.05 }}
                     className="py-10"
                 >
-                    <h2 className="text-ink mb-2 text-[18px] font-semibold">
+                    <h2 className="text-ink mb-2 text-heading-sm font-semibold">
                         Your families
                     </h2>
                     <p className="text-ink-muted mb-8 text-sm">
@@ -200,7 +200,7 @@ export default function FamiliesPage() {
                     transition={{ ...MOTION_PAGE_ENTER, delay: 0.1 }}
                     className="py-10"
                 >
-                    <h2 className="text-ink mb-2 text-[18px] font-semibold">
+                    <h2 className="text-ink mb-2 text-heading-sm font-semibold">
                         Join an existing family
                     </h2>
                     <p className="text-ink-muted mb-4 text-sm">

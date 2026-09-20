@@ -78,33 +78,33 @@ export default function CreateEventPage() {
             <ArrowLeft className="h-3 w-3" />
             {t("events.create.back")}
           </button>
-          <h1 className="font-display text-[36px] font-semibold leading-tight text-ink">{t("events.create.title")}</h1>
-          <p className="text-[15px] text-ink-secondary mt-1">{t("events.create.description")}</p>
+          <h1 className="font-display text-display font-semibold leading-tight text-ink">{t("events.create.title")}</h1>
+          <p className="text-body-lg text-ink-secondary mt-1">{t("events.create.description")}</p>
         </motion.div>
 
         <div className="h-px bg-border" />
 
         <form onSubmit={handleSubmit} className="py-10 space-y-8">
           <div>
-            <label htmlFor="name" className="block text-[13px] font-medium text-ink-muted mb-2">{t("events.create.nameLabel")}</label>
+            <label htmlFor="name" className="block text-body font-medium text-ink-muted mb-2">{t("events.create.nameLabel")}</label>
             <input type="text" id="name" name="name" required value={formData.name} onChange={handleChange} placeholder={t("events.create.namePlaceholder")}
               className="w-full px-4 py-2.5 text-sm border border-border bg-canvas text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-saffron focus:border-saffron" />
           </div>
 
           <div>
-            <label htmlFor="description" className="block text-[13px] font-medium text-ink-muted mb-2">{t("events.create.descriptionLabel")}</label>
+            <label htmlFor="description" className="block text-body font-medium text-ink-muted mb-2">{t("events.create.descriptionLabel")}</label>
             <textarea id="description" name="description" rows={4} value={formData.description} onChange={handleChange} placeholder={t("events.create.descriptionPlaceholder")}
               className="w-full px-4 py-2.5 text-sm border border-border bg-canvas text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-saffron focus:border-saffron resize-none" />
           </div>
 
           <div>
-            <label htmlFor="date" className="block text-[13px] font-medium text-ink-muted mb-2">{t("events.create.dateLabel")}</label>
+            <label htmlFor="date" className="block text-body font-medium text-ink-muted mb-2">{t("events.create.dateLabel")}</label>
             <input type="datetime-local" id="date" name="date" required value={formData.date} onChange={handleChange}
               className="w-full px-4 py-2.5 text-sm border border-border bg-canvas text-ink focus:outline-none focus:ring-1 focus:ring-saffron focus:border-saffron" />
           </div>
 
           <div>
-            <label htmlFor="venue" className="block text-[13px] font-medium text-ink-muted mb-2">{t("events.create.venueLabel")}</label>
+            <label htmlFor="venue" className="block text-body font-medium text-ink-muted mb-2">{t("events.create.venueLabel")}</label>
             <input type="text" id="venue" name="venue" value={formData.venue} onChange={handleChange} placeholder={t("events.create.venuePlaceholder")}
               className="w-full px-4 py-2.5 text-sm border border-border bg-canvas text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-saffron focus:border-saffron" />
           </div>

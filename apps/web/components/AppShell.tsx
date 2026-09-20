@@ -211,7 +211,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     {filteredSections.map((section) => (
                         <div key={section.label}>
                             {sidebarOpen && (
-                                <p className="text-ink-muted mb-1.5 px-2 text-[10px] font-semibold tracking-wider uppercase">
+                                <p className="text-ink-muted mb-1.5 px-2 text-caption font-semibold tracking-wider uppercase">
                                     {t(section.label)}
                                 </p>
                             )}
@@ -332,7 +332,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                         >
                             {filteredSections.map((section) => (
                                 <div key={section.label}>
-                                    <p className="text-ink-muted mb-1.5 px-2 text-[10px] font-semibold tracking-wider uppercase">
+                                    <p className="text-ink-muted mb-1.5 px-2 text-caption font-semibold tracking-wider uppercase">
                                         {t(section.label)}
                                     </p>
                                     <div className="space-y-0.5">
@@ -490,7 +490,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                             >
                                 <Bell className="h-5 w-5" />
                                 {unreadCount > 0 && (
-                                    <span className="bg-saffron text-ink-on-accent absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] font-bold">
+                                    <span className="bg-saffron text-ink-on-accent absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[0.5625rem] font-bold">
                                         {unreadCount > 99 ? "99+" : unreadCount}
                                     </span>
                                 )}

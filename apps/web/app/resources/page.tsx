@@ -151,14 +151,14 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
     <div className="min-h-screen">
       <div className="mx-auto max-w-[1100px] px-6 py-10 sm:px-8 lg:px-10 lg:py-14">
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={MOTION_PAGE_ENTER} className="mb-14">
-          <h1 className="font-display text-[36px] font-semibold leading-tight text-ink">{t("resources.title")}</h1>
-          <p className="text-[15px] text-ink-secondary mt-1">{t("resources.description")}</p>
+          <h1 className="font-display text-display font-semibold leading-tight text-ink">{t("resources.title")}</h1>
+          <p className="text-body-lg text-ink-secondary mt-1">{t("resources.description")}</p>
         </motion.div>
 
         <div className="h-px bg-border" />
 
         <motion.section initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ ...MOTION_PAGE_ENTER, delay: 0.05 }} className="py-10">
-          <h2 className="text-[18px] font-semibold text-ink mb-6">{t("resources.createTitle")}</h2>
+          <h2 className="text-heading-sm font-semibold text-ink mb-6">{t("resources.createTitle")}</h2>
           <div className="flex gap-3">
             <input value={resource} onChange={(e) => setResource(e.target.value)} placeholder={t("resources.createPlaceholder")}
               onKeyDown={(e) => { if (e.key === "Enter" && resource.trim()) { e.preventDefault(); void handleCreate(); } }}
@@ -170,15 +170,15 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
         <div className="h-px bg-border" />
 
         <motion.section initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ ...MOTION_PAGE_ENTER, delay: 0.1 }} className="py-10">
-          <h2 className="text-[18px] font-semibold text-ink mb-6">{t("resources.yourRequests")}</h2>
+          <h2 className="text-heading-sm font-semibold text-ink mb-6">{t("resources.yourRequests")}</h2>
 
           {loadingData ? (
             <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 text-saffron animate-spin" /></div>
           ) : requests.length === 0 ? (
             <div className="text-center py-20">
               <Package className="w-8 h-8 text-ink-muted mx-auto mb-3" />
-              <p className="text-[14px] text-ink-muted">{t("resources.noRequests")}</p>
-              <p className="text-[13px] text-ink-muted mt-1">{t("resources.noRequestsDesc")}</p>
+              <p className="text-body text-ink-muted">{t("resources.noRequests")}</p>
+              <p className="text-body text-ink-muted mt-1">{t("resources.noRequestsDesc")}</p>
             </div>
           ) : (
             <div className="space-y-0">
@@ -186,22 +186,22 @@ export default function ResourceRequestsPage(): React.JSX.Element | null {
                 <div key={r.id} className="py-5 border-b border-border-subtle last:border-0">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0 flex-1">
-                      <p className="text-[15px] font-medium text-ink">{r.resource}</p>
+                      <p className="text-body-lg font-medium text-ink">{r.resource}</p>
                       <div className="flex items-center gap-3 mt-2">
-                        <span className={`text-[12px] font-medium border px-2 py-0.5 ${getStatusColor(r.status)}`}>{r.status.replaceAll("_", " ")}</span>
-                        <span className="text-[12px] text-ink-muted">{new Date(r.createdAt).toLocaleDateString()}</span>
+                        <span className={`text-caption font-medium border px-2 py-0.5 ${getStatusColor(r.status)}`}>{r.status.replaceAll("_", " ")}</span>
+                        <span className="text-caption text-ink-muted">{new Date(r.createdAt).toLocaleDateString()}</span>
                       </div>
                       {r.approvals?.length ? (
                         <div className="mt-3 space-y-1">
                           {r.approvals.map((a) => (
-                            <div key={a.id} className="flex items-center gap-2 text-[12px]">
+                            <div key={a.id} className="flex items-center gap-2 text-caption">
                               <div className={`h-1.5 w-1.5 rounded-full ${a.status === "APPROVED" ? "bg-emerald" : a.status === "REJECTED" ? "bg-ruby" : "bg-saffron"}`} />
                               <span className="text-ink-muted"><span className="text-ink font-medium">{a.approverName}</span> · {a.status}</span>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-[12px] text-ink-muted mt-2">{t("resources.noApprovals")}</p>
+                        <p className="text-caption text-ink-muted mt-2">{t("resources.noApprovals")}</p>
                       )}
                     </div>
                     {isAdmin && (

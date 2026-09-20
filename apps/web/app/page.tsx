@@ -82,15 +82,15 @@ export default function Home() {
                     transition={MOTION_PAGE_ENTER}
                     className="mb-14"
                 >
-                    <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-muted mb-3">
+                    <p className="text-caption font-semibold uppercase tracking-wider text-ink-muted mb-3">
                         {t("dashboard.greeting")}
                     </p>
                     {firstName && (
-                        <h1 className="font-display text-[40px] font-semibold leading-tight text-ink mb-2">
+                        <h1 className="font-display text-display-lg font-semibold leading-tight text-ink mb-2">
                             {firstName}
                         </h1>
                     )}
-                    <p className="text-[16px] text-ink-secondary">
+                    <p className="text-body-lg text-ink-secondary">
                         {t("dashboard.subtitle")}
                     </p>
                 </motion.div>
@@ -113,22 +113,22 @@ export default function Home() {
                             <div className="flex items-start justify-between">
                                 <div className="flex items-start gap-6">
                                     <div className="text-center flex-shrink-0">
-                                        <p className="font-display text-[32px] font-semibold leading-none text-ink">
+                                        <p className="font-display text-heading-lg font-semibold leading-none text-ink">
                                             {fd.day}
                                         </p>
-                                        <p className="text-[11px] font-semibold uppercase tracking-wider text-saffron mt-1">
+                                        <p className="text-caption font-semibold uppercase tracking-wider text-saffron mt-1">
                                             {fd.month}
                                         </p>
                                     </div>
                                     <div className="pt-1">
-                                        <h2 className="font-display text-[20px] font-semibold text-ink">
+                                        <h2 className="font-display text-heading font-semibold text-ink">
                                             {feat.name}
                                         </h2>
-                                        <p className="text-[14px] text-ink-secondary mt-1">
+                                        <p className="text-body text-ink-secondary mt-1">
                                             {fd.weekday} · {fd.time}
                                         </p>
                                         {feat.venue && (
-                                            <p className="text-[13px] text-ink-muted mt-1">
+                                            <p className="text-body text-ink-muted mt-1">
                                                 {feat.venue}
                                             </p>
                                         )}
@@ -154,7 +154,7 @@ export default function Home() {
                         transition={{ ...MOTION_PAGE_ENTER, delay: 0.1 }}
                     >
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-[11px] font-semibold uppercase tracking-wider text-ink-muted">
+                            <h2 className="text-caption font-semibold uppercase tracking-wider text-ink-muted">
                                 {t("dashboard.upcoming")}
                             </h2>
                             <button
@@ -176,18 +176,18 @@ export default function Home() {
                                     className="flex items-start gap-5 py-4 border-b border-border-subtle last:border-0 cursor-pointer hover:bg-surface transition-colors -mx-2 px-2"
                                 >
                                     <div className="text-center flex-shrink-0 w-10">
-                                        <p className="font-display text-[18px] font-semibold leading-none text-ink">
+                                        <p className="font-display text-heading-sm font-semibold leading-none text-ink">
                                             {ed.day}
                                         </p>
-                                        <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-muted mt-0.5">
+                                        <p className="text-caption font-semibold uppercase tracking-wider text-ink-muted mt-0.5">
                                             {ed.month}
                                         </p>
                                     </div>
                                     <div className="min-w-0 flex-1 pt-0.5">
-                                        <p className="text-[14px] font-medium text-ink truncate">
+                                        <p className="text-body font-medium text-ink truncate">
                                             {event.name}
                                         </p>
-                                        <p className="text-[13px] text-ink-secondary mt-0.5">
+                                        <p className="text-body text-ink-secondary mt-0.5">
                                             {ed.weekday} · {ed.time}
                                         </p>
                                     </div>
@@ -197,7 +197,7 @@ export default function Home() {
                         </div>
 
                         {events.length === 0 && (
-                            <p className="text-[14px] text-ink-muted py-4">
+                            <p className="text-body text-ink-muted py-4">
                                 {t("dashboard.noUpcomingEvents")}
                             </p>
                         )}
@@ -210,7 +210,7 @@ export default function Home() {
                         transition={{ ...MOTION_PAGE_ENTER, delay: 0.15 }}
                     >
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-[11px] font-semibold uppercase tracking-wider text-ink-muted">
+                            <h2 className="text-caption font-semibold uppercase tracking-wider text-ink-muted">
                                 {t("dashboard.recentActivity")}
                             </h2>
                             <button
@@ -224,7 +224,7 @@ export default function Home() {
 
                         <div className="space-y-0">
                             <div className="text-center py-8">
-                                <p className="text-[14px] text-ink-muted">
+                                <p className="text-body text-ink-muted">
                                     {t("dashboard.noActivityYet")}
                                 </p>
                             </div>
@@ -242,16 +242,16 @@ export default function Home() {
                     transition={{ ...MOTION_PAGE_ENTER, delay: 0.2 }}
                     className="py-10"
                 >
-                    <h2 className="text-[11px] font-semibold uppercase tracking-wider text-ink-muted mb-6">
+                    <h2 className="text-caption font-semibold uppercase tracking-wider text-ink-muted mb-6">
                         {t("dashboard.community")}
                     </h2>
                     <div className="grid grid-cols-3 gap-8">
                         {stats.map((stat) => (
                             <div key={stat.label}>
-                                <p className="font-display text-[28px] font-semibold text-ink leading-none">
+                                <p className="font-display text-heading-md font-semibold text-ink leading-none">
                                     {stat.value}
                                 </p>
-                                <p className="text-[13px] text-ink-muted mt-1">
+                                <p className="text-body text-ink-muted mt-1">
                                     {stat.label}
                                 </p>
                             </div>
@@ -272,13 +272,13 @@ export default function Home() {
                         >
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h2 className="text-[11px] font-semibold uppercase tracking-wider text-ink-muted mb-2">
+                                    <h2 className="text-caption font-semibold uppercase tracking-wider text-ink-muted mb-2">
                                         {t("dashboard.yourFamily")}
                                     </h2>
-                                    <p className="text-[18px] font-semibold text-ink">
+                                    <p className="text-heading-sm font-semibold text-ink">
                                         {familyInfo.name}
                                     </p>
-                                    <p className="text-[13px] text-ink-muted mt-1">
+                                    <p className="text-body text-ink-muted mt-1">
                                         {t("dashboard.yourFamily")}
                                     </p>
                                 </div>

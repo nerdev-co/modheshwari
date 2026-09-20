@@ -180,15 +180,15 @@ export default function EventsCalendar() {
                         <div className="flex items-center gap-3">
                             <CalIcon className="w-5 h-5 text-saffron" />
                             <div>
-                                <h1 className="font-display text-[36px] font-semibold leading-tight text-ink">{t("events.calendar.title")}</h1>
-                                <p className="text-[15px] text-ink-secondary mt-1">{t("events.calendar.description")}</p>
+                                <h1 className="font-display text-display font-semibold leading-tight text-ink">{t("events.calendar.title")}</h1>
+                                <p className="text-body-lg text-ink-secondary mt-1">{t("events.calendar.description")}</p>
                             </div>
                         </div>
                         <div className="flex items-center gap-2">
                             <Button variant="secondary" size="sm" onClick={() => setCurrent(new Date(current.getFullYear(), current.getMonth() - 1, 1))}>
                                 <ChevronLeft className="w-4 h-4" />
                             </Button>
-                            <span className="text-[14px] font-medium text-ink px-3">
+                            <span className="text-body font-medium text-ink px-3">
                                 {current.toLocaleString(undefined, { month: "long", year: "numeric" })}
                             </span>
                             <Button variant="secondary" size="sm" onClick={() => setCurrent(new Date(current.getFullYear(), current.getMonth() + 1, 1))}>
@@ -203,7 +203,7 @@ export default function EventsCalendar() {
                 <div className="py-10">
                     <div className="lg:flex lg:gap-8">
                         <div className="flex-1 min-w-0">
-                            <div className="grid grid-cols-7 gap-1 text-[11px] font-semibold uppercase tracking-wider text-ink-muted mb-3">
+                            <div className="grid grid-cols-7 gap-1 text-caption font-semibold uppercase tracking-wider text-ink-muted mb-3">
                                 {dayKeys.map((d) => (
                                     <div key={d} className="text-center py-2">{t(`events.calendar.${d}`)}</div>
                                 ))}
@@ -227,16 +227,16 @@ export default function EventsCalendar() {
                                             } ${isSelected ? "ring-1 ring-saffron border-saffron" : ""}`}
                                         >
                                             <div className="flex justify-end mb-1">
-                                                <span className={`text-[13px] font-medium ${isToday ? "text-saffron" : dayObj.inMonth ? "text-ink" : "text-ink-muted"}`}>
+                                                <span className={`text-body font-medium ${isToday ? "text-saffron" : dayObj.inMonth ? "text-ink" : "text-ink-muted"}`}>
                                                     {dayObj.date.getDate()}
                                                 </span>
                                             </div>
                                             {dayEvents.length > 0 && (
-                                                <div className="text-[10px] text-saffron font-medium">{dayEvents.length} event{dayEvents.length > 1 ? "s" : ""}</div>
+                                                <div className="text-caption text-saffron font-medium">{dayEvents.length} event{dayEvents.length > 1 ? "s" : ""}</div>
                                             )}
                                             {dayEvents.slice(0, 1).map((ev: EventItem) => (
                                                 <div key={ev.id} onClick={(e) => { e.stopPropagation(); navigate(`/events/${ev.id}`); }} title={ev.name}
-                                                    className="text-[11px] text-ink truncate mt-0.5 hover:text-saffron cursor-pointer">{ev.name}</div>
+                                                    className="text-caption text-ink truncate mt-0.5 hover:text-saffron cursor-pointer">{ev.name}</div>
                                             ))}
                                         </button>
                                     );
@@ -247,21 +247,21 @@ export default function EventsCalendar() {
                         <aside className="mt-6 lg:mt-0 lg:w-72 lg:flex-shrink-0">
                             <div className="border border-border p-4">
                                 <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-[14px] font-semibold text-ink">
+                                    <h3 className="text-body font-semibold text-ink">
                                         {selectedDate ? selectedDate.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" }) : t("events.calendar.upcomingEvents")}
                                     </h3>
-                                    <button onClick={() => navigate("/events")} className="text-[12px] text-saffron hover:text-ink transition-colors">{t("events.calendar.viewAll")}</button>
+                                    <button onClick={() => navigate("/events")} className="text-caption text-saffron hover:text-ink transition-colors">{t("events.calendar.viewAll")}</button>
                                 </div>
                                 <div className="space-y-3 max-h-[60vh] overflow-auto">
                                     {(selectedDate ? eventsByDay.get(selectedDate.toISOString().slice(0, 10)) || [] : events.slice(0, 50)).map((ev) => (
                                         <div key={ev.id} className="py-3 border-b border-border-subtle last:border-0">
-                                            <p className="text-[14px] font-medium text-ink">{ev.name}</p>
-                                            <p className="text-[12px] text-ink-muted">{new Date(ev.date).toLocaleString()}</p>
-                                            {ev.venue && <p className="text-[12px] text-ink-muted">{ev.venue}</p>}
+                                            <p className="text-body font-medium text-ink">{ev.name}</p>
+                                            <p className="text-caption text-ink-muted">{new Date(ev.date).toLocaleString()}</p>
+                                            {ev.venue && <p className="text-caption text-ink-muted">{ev.venue}</p>}
                                         </div>
                                     ))}
                                     {selectedDate && (eventsByDay.get(selectedDate.toISOString().slice(0, 10)) || []).length === 0 && (
-                                        <p className="text-[13px] text-ink-muted">{t("events.calendar.noEventsOnDay")}</p>
+                                        <p className="text-body text-ink-muted">{t("events.calendar.noEventsOnDay")}</p>
                                     )}
                                 </div>
                             </div>

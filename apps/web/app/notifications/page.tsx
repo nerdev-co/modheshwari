@@ -244,8 +244,8 @@ export default function NotificationsPage(): React.ReactElement {
         <div className="min-h-screen">
             <div className="mx-auto max-w-[800px] px-6 py-10 sm:px-8 lg:px-10 lg:py-14">
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={MOTION_PAGE_ENTER} className="mb-14">
-                    <h1 className="font-display text-[36px] font-semibold leading-tight text-ink">{t("notifications.title")}</h1>
-                    <p className="text-[15px] text-ink-secondary mt-1">{t("notifications.subtitle")}</p>
+                    <h1 className="font-display text-display font-semibold leading-tight text-ink">{t("notifications.title")}</h1>
+                    <p className="text-body-lg text-ink-secondary mt-1">{t("notifications.subtitle")}</p>
                 </motion.div>
 
                 <div className="h-px bg-border" />
@@ -256,7 +256,7 @@ export default function NotificationsPage(): React.ReactElement {
 
                 {isAdmin && (
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ ...MOTION_PAGE_ENTER, delay: 0.05 }} className="py-10">
-                        <h2 className="text-[18px] font-semibold text-ink mb-6">{t("notifications.broadcast")}</h2>
+                        <h2 className="text-heading-sm font-semibold text-ink mb-6">{t("notifications.broadcast")}</h2>
                         <form onSubmit={handleBroadcast} className="space-y-6">
                             <input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder={t("notifications.subjectPlaceholder")}
                                 className="w-full px-4 py-2.5 text-sm border border-border bg-canvas text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-saffron focus:border-saffron" />
@@ -278,10 +278,10 @@ export default function NotificationsPage(): React.ReactElement {
                                 <Button type="submit" disabled={broadcasting || !message.trim()}>{broadcasting ? t("notifications.sending") : t("notifications.send")}</Button>
                             </div>
                             <fieldset className="space-y-3">
-                                <legend className="block text-[13px] font-medium text-ink-muted">{t("notifications.channels")}</legend>
+                                <legend className="block text-body font-medium text-ink-muted">{t("notifications.channels")}</legend>
                                 <div className="flex gap-4">
                                     {["IN_APP", "EMAIL", "PUSH"].map((c) => (
-                                        <label key={c} className="flex items-center gap-2 text-[14px] text-ink">
+                                        <label key={c} className="flex items-center gap-2 text-body text-ink">
                                             <input type="checkbox" checked={selectedChannels.includes(c)} onChange={() => toggleChannel(c)} className="accent-saffron" />
                                             {c}
                                         </label>
@@ -290,8 +290,8 @@ export default function NotificationsPage(): React.ReactElement {
                             </fieldset>
                             {(subject.trim() || message.trim()) && (
                                 <div className="border border-border p-4">
-                                    <p className="text-[14px] font-medium text-ink">{subject.trim() || "\u2014"}</p>
-                                    <p className="text-[14px] text-ink-secondary mt-1">{message.trim()}</p>
+                                    <p className="text-body font-medium text-ink">{subject.trim() || "\u2014"}</p>
+                                    <p className="text-body text-ink-secondary mt-1">{message.trim()}</p>
                                 </div>
                             )}
                         </form>
@@ -316,16 +316,16 @@ export default function NotificationsPage(): React.ReactElement {
                             {notificationTypes.map((type) => (<option key={type} value={type}>{type}</option>))}
                         </select>
                         <div className="ml-auto flex items-center gap-3">
-                            <button onClick={() => void fetchNotifications()} className="text-[13px] text-ink-muted hover:text-ink transition-colors">{t("notifications.refresh")}</button>
-                            <button onClick={() => void handleMarkAllRead()} className="text-[13px] text-ink-muted hover:text-ink transition-colors">{t("notifications.markAllRead")}</button>
-                            {unreadCount > 0 && <span className={`text-[13px] text-saffron ${pulse ? "animate-pulse font-semibold" : "font-medium"}`}>{t("notifications.unreadPrefix")}{unreadCount > 99 ? "99+" : unreadCount}</span>}
+                            <button onClick={() => void fetchNotifications()} className="text-body text-ink-muted hover:text-ink transition-colors">{t("notifications.refresh")}</button>
+                            <button onClick={() => void handleMarkAllRead()} className="text-body text-ink-muted hover:text-ink transition-colors">{t("notifications.markAllRead")}</button>
+                            {unreadCount > 0 && <span className={`text-body text-saffron ${pulse ? "animate-pulse font-semibold" : "font-medium"}`}>{t("notifications.unreadPrefix")}{unreadCount > 99 ? "99+" : unreadCount}</span>}
                         </div>
                     </div>
 
                     {loading ? (
                         <LoadingState message={t("common.loading")} />
                     ) : filteredNotifications.length === 0 ? (
-                        <p className="text-center py-12 text-[14px] text-ink-muted">{t("notifications.noNotifications")}</p>
+                        <p className="text-center py-12 text-body text-ink-muted">{t("notifications.noNotifications")}</p>
                     ) : (
                         <div className="space-y-0">
                             {filteredNotifications.map((n) => {
@@ -334,8 +334,8 @@ export default function NotificationsPage(): React.ReactElement {
                                     <div key={dedupeKey(n)} className={`py-4 border-b border-border-subtle last:border-0 ${n.read ? "" : "bg-saffron/5"}`}>
                                         <div className="flex items-start justify-between gap-4">
                                             <div className="min-w-0 flex-1">
-                                                <p className="text-[14px] text-ink">{n.message}</p>
-                                                <p className="text-[12px] text-ink-muted mt-0.5">{new Date(n.createdAt).toLocaleString()}</p>
+                                                <p className="text-body text-ink">{n.message}</p>
+                                                <p className="text-caption text-ink-muted mt-0.5">{new Date(n.createdAt).toLocaleString()}</p>
                                             </div>
                                             {canToggleRead && (
                                                 <button onClick={() => void handleToggleRead(n.id!, !!n.read)} className="text-ink-muted hover:text-ink transition-colors flex-shrink-0" title={n.read ? t("notifications.markUnread") : t("notifications.markRead")}>

@@ -97,7 +97,7 @@ export default function EditProfilePage() {
           transition={MOTION_PAGE_ENTER}
           className="mb-14"
         >
-          <h1 className="font-display text-[36px] font-semibold leading-tight text-ink">
+          <h1 className="font-display text-display font-semibold leading-tight text-ink">
             {t("edit.title")}
           </h1>
         </motion.div>
@@ -106,7 +106,7 @@ export default function EditProfilePage() {
 
         <form onSubmit={handleSubmit} className="py-10 space-y-8">
           <div>
-            <label htmlFor="bloodGroup" className="block text-[13px] font-medium text-ink-muted mb-2">
+            <label htmlFor="bloodGroup" className="block text-body font-medium text-ink-muted mb-2">
               {t("profile.bloodGroup")}
             </label>
             <input
@@ -121,7 +121,7 @@ export default function EditProfilePage() {
           </div>
 
           <div>
-            <label htmlFor="gotra" className="block text-[13px] font-medium text-ink-muted mb-2">
+            <label htmlFor="gotra" className="block text-body font-medium text-ink-muted mb-2">
               {t("profile.gotra")}
             </label>
             <input
@@ -136,7 +136,7 @@ export default function EditProfilePage() {
           </div>
 
           <div>
-            <label htmlFor="profession" className="block text-[13px] font-medium text-ink-muted mb-2">
+            <label htmlFor="profession" className="block text-body font-medium text-ink-muted mb-2">
               {t("profile.profession")}
             </label>
             <input

@@ -76,10 +76,10 @@ export default function MembersPage() {
                     transition={MOTION_PAGE_ENTER}
                     className="mb-14"
                 >
-                    <h1 className="font-display text-[36px] font-semibold leading-tight text-ink">
+                    <h1 className="font-display text-display font-semibold leading-tight text-ink">
                         {t("nav.members")}
                     </h1>
-                    <p className="text-[15px] text-ink-secondary mt-1">
+                    <p className="text-body-lg text-ink-secondary mt-1">
                         Community members
                     </p>
                 </motion.div>
@@ -109,16 +109,16 @@ export default function MembersPage() {
                                             {member.name?.charAt(0)?.toUpperCase() || "?"}
                                         </div>
                                         <div>
-                                            <p className="text-[14px] font-medium text-ink">
+                                            <p className="text-body font-medium text-ink">
                                                 {member.name}
                                             </p>
-                                            <p className="text-[12px] text-ink-muted">
+                                            <p className="text-caption text-ink-muted">
                                                 {member.profile?.gotra || member.role?.replace(/_/g, " ")}
                                             </p>
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-[12px] text-ink-muted">
+                                        <p className="text-caption text-ink-muted">
                                             {member.families?.[0]?.family?.name || "No family"}
                                         </p>
                                     </div>
@@ -126,7 +126,7 @@ export default function MembersPage() {
                             ))}
                         </div>
                     ) : (
-                        <p className="text-[14px] text-ink-muted">
+                        <p className="text-body text-ink-muted">
                             {search ? "No members found" : "No members yet"}
                         </p>
                     )}

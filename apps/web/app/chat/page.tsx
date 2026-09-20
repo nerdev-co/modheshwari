@@ -983,7 +983,7 @@ export default function ChatPage() {
                                                                                             )}
                                                                                         <div className="flex items-center gap-2">
                                                                                             {m.clientId && (
-                                                                                                <div className="text-ink-muted text-[11px]">
+                                                                                                <div className="text-ink-muted text-caption">
                                                                                                     {m.status ===
                                                                                                     "sending"
                                                                                                         ? t(
@@ -1008,7 +1008,7 @@ export default function ChatPage() {
                                                                                                   )
                                                                                                 : m.content}
                                                                                         </div>
-                                                                                        <div className="text-ink-muted mt-2 flex items-center justify-between gap-3 text-[11px]">
+                                                                                        <div className="text-ink-muted mt-2 flex items-center justify-between gap-3 text-caption">
                                                                                             <div>
                                                                                                 {new Date(
                                                                                                     m.createdAt,

@@ -283,44 +283,44 @@ export default function EventDetailsPage() {
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ ...MOTION_PAGE_ENTER, delay: 0.05 }}>
                     <div className="flex items-center justify-between mb-6">
                         {getStatusBadge(event.status)}
-                        <span className="flex items-center gap-2 text-[13px] text-ink-muted">
+                        <span className="flex items-center gap-2 text-body text-ink-muted">
                             <Users className="w-4 h-4" />
                             {event._count.registrations} {t("events.detail.registered")}
                         </span>
                     </div>
 
-                    <h1 className="font-display text-[36px] font-semibold leading-tight text-ink mb-4">{event.name}</h1>
+                    <h1 className="font-display text-display font-semibold leading-tight text-ink mb-4">{event.name}</h1>
 
-                    {event.description && <p className="text-[15px] text-ink-secondary mb-8 leading-relaxed">{event.description}</p>}
+                    {event.description && <p className="text-body-lg text-ink-secondary mb-8 leading-relaxed">{event.description}</p>}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                         <div className="flex items-start gap-3 p-4 border border-border">
                             <Calendar className="w-4 h-4 text-saffron mt-0.5" />
                             <div>
-                                <p className="text-[11px] font-medium uppercase tracking-wider text-ink-muted mb-1">{t("events.detail.dateTime")}</p>
-                                <p className="text-[14px] text-ink">{formatDate(event.date)}</p>
+                                <p className="text-caption font-medium uppercase tracking-wider text-ink-muted mb-1">{t("events.detail.dateTime")}</p>
+                                <p className="text-body text-ink">{formatDate(event.date)}</p>
                             </div>
                         </div>
                         {event.venue && (
                             <div className="flex items-start gap-3 p-4 border border-border">
                                 <MapPin className="w-4 h-4 text-saffron mt-0.5" />
                                 <div>
-                                    <p className="text-[11px] font-medium uppercase tracking-wider text-ink-muted mb-1">{t("events.detail.venue")}</p>
-                                    <p className="text-[14px] text-ink">{event.venue}</p>
+                                    <p className="text-caption font-medium uppercase tracking-wider text-ink-muted mb-1">{t("events.detail.venue")}</p>
+                                    <p className="text-body text-ink">{event.venue}</p>
                                 </div>
                             </div>
                         )}
                     </div>
 
                     <div className="p-5 border border-border mb-8">
-                        <p className="text-[11px] font-medium uppercase tracking-wider text-ink-muted mb-2">{t("events.detail.organizedBy")}</p>
+                        <p className="text-caption font-medium uppercase tracking-wider text-ink-muted mb-2">{t("events.detail.organizedBy")}</p>
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-saffron-soft flex items-center justify-center text-saffron text-sm font-semibold">
                                 {event.createdBy.name.charAt(0).toUpperCase()}
                             </div>
                             <div>
-                                <p className="text-[14px] font-medium text-ink">{event.createdBy.name}</p>
-                                <p className="text-[12px] text-ink-muted">{event.createdBy.email}</p>
+                                <p className="text-body font-medium text-ink">{event.createdBy.name}</p>
+                                <p className="text-caption text-ink-muted">{event.createdBy.email}</p>
                             </div>
                         </div>
                     </div>
@@ -340,19 +340,19 @@ export default function EventDetailsPage() {
                     )}
 
                     {event.status === "PENDING" && (
-                        <div className="p-4 border border-saffron/30 bg-saffron/5 text-[14px] text-ink-secondary mb-8">
+                        <div className="p-4 border border-saffron/30 bg-saffron/5 text-body text-ink-secondary mb-8">
                             <strong>{t("events.detail.pendingApprovalLabel")}</strong> {t("events.detail.pendingApprovalMessage")}
                         </div>
                     )}
 
                     {event.status === "REJECTED" && (
-                        <div className="p-4 border border-ruby/30 bg-ruby/5 text-[14px] text-ruby mb-8">
+                        <div className="p-4 border border-ruby/30 bg-ruby/5 text-body text-ruby mb-8">
                             <strong>{t("events.detail.rejectedLabel")}</strong> {t("events.detail.rejectedMessage")}
                         </div>
                     )}
 
                     {event.status === "CANCELLED" && (
-                        <div className="p-4 border border-border text-[14px] text-ink-muted mb-8">
+                        <div className="p-4 border border-border text-body text-ink-muted mb-8">
                             <strong>{t("events.detail.cancelledLabel")}</strong> {t("events.detail.cancelledMessage")}
                         </div>
                     )}
@@ -361,15 +361,15 @@ export default function EventDetailsPage() {
                 {event.approvals && event.approvals.length > 0 && (
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ ...MOTION_PAGE_ENTER, delay: 0.1 }} className="mt-10">
                         <div className="h-px bg-border mb-10" />
-                        <h2 className="text-[18px] font-semibold text-ink mb-6">{t("events.detail.approvalStatus")}</h2>
+                        <h2 className="text-heading-sm font-semibold text-ink mb-6">{t("events.detail.approvalStatus")}</h2>
                         <div className="space-y-3">
                             {event.approvals.map((approval) => (
                                 <div key={approval.id} className="flex items-center justify-between gap-4 py-4 border-b border-border-subtle last:border-0">
                                     <div>
-                                        <p className="text-[14px] font-medium text-ink">{approval.approver.name}</p>
-                                        <p className="text-[12px] text-ink-muted">{approval.approver.role.replace(/_/g, " ")}</p>
+                                        <p className="text-body font-medium text-ink">{approval.approver.name}</p>
+                                        <p className="text-caption text-ink-muted">{approval.approver.role.replace(/_/g, " ")}</p>
                                     </div>
-                                    <span className={`text-[12px] font-medium ${approval.status === "APPROVED" ? "text-emerald" : approval.status === "REJECTED" ? "text-ruby" : "text-saffron"}`}>
+                                    <span className={`text-caption font-medium ${approval.status === "APPROVED" ? "text-emerald" : approval.status === "REJECTED" ? "text-ruby" : "text-saffron"}`}>
                                         {approval.status}
                                     </span>
                                 </div>
@@ -381,8 +381,8 @@ export default function EventDetailsPage() {
                 {isAdmin && (
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ ...MOTION_PAGE_ENTER, delay: 0.15 }} className="mt-10">
                         <div className="h-px bg-border mb-10" />
-                        <h2 className="text-[18px] font-semibold text-ink mb-3">{t("events.detail.moderation")}</h2>
-                        <p className="text-[14px] text-ink-muted mb-4">{t("events.detail.moderationDescription")}</p>
+                        <h2 className="text-heading-sm font-semibold text-ink mb-3">{t("events.detail.moderation")}</h2>
+                        <p className="text-body text-ink-muted mb-4">{t("events.detail.moderationDescription")}</p>
                         <textarea value={moderationRemarks} onChange={(e) => setModerationRemarks(e.target.value)} placeholder={t("events.detail.moderationPlaceholder")}
                             className="w-full min-h-[90px] px-4 py-2.5 text-sm border border-border bg-canvas text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-saffron focus:border-saffron resize-none mb-4" />
                         <div className="flex gap-3">

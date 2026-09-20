@@ -138,7 +138,7 @@ export default function MePage() {
                                 {initials}
                             </div>
                             <div className="pt-2 min-w-0">
-                                <h1 className="font-display-bold text-[36px] leading-tight text-ink truncate">
+                                <h1 className="font-display-bold text-display leading-tight text-ink truncate">
                                     {user.name || t("profile.unnamedMember")}
                                 </h1>
                                 <p className="text-body-lg text-ink-secondary mt-1">

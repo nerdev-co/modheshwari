@@ -66,7 +66,7 @@ export function MemberCard({ member, onToggle }: { member: Member; onToggle: (id
 
           <span
             className={`
-              text-[11px] px-2 py-1 rounded-full border shrink-0
+              text-caption px-2 py-1 rounded-full border shrink-0
               ${
                 alive
                   ? "bg-emerald/10 text-emerald border-emerald/20"
