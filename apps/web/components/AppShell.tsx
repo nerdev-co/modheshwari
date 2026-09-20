@@ -173,7 +173,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         navigate("/signin");
     };
 
-    if (AUTH_ROUTES.has(location.pathname)) {
+    if (AUTH_ROUTES.has(location.pathname) || (!user && !userLoading)) {
         return <>{children}</>;
     }
 

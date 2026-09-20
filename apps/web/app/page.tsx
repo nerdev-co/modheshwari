@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Calendar, Users, Search, MessageCircle, Heart } from "lucide-react";
 import { MOTION_PAGE_ENTER } from "@repo/ui/motion";
 import { Link } from "react-router-dom";
 
@@ -10,6 +10,7 @@ import { useLocale } from "../lib/LocaleContext";
 import { useUser } from "../lib/UserContext";
 import { apiFetch } from "../lib/api";
 import { API_BASE } from "../lib/config";
+import { SunMark } from "../components/SunMark";
 
 type EventItem = {
     id: string;
@@ -19,7 +20,175 @@ type EventItem = {
     status: string;
 };
 
-export default function Home() {
+/* ───────────────────────── Landing (logged out) ───────────────────────── */
+
+function LandingPage() {
+    const { t } = useLocale();
+    const navigate = useNavigate();
+    const [memberCount, setMemberCount] = useState<number | null>(null);
+
+    useEffect(() => {
+        apiFetch(`${API_BASE}/search?q=&limit=1`, { throwOnError: false })
+            .then((res) => {
+                const total = res?.data?.total || res?.total || 0;
+                if (total > 0) setMemberCount(total);
+            })
+            .catch(() => {});
+    }, []);
+
+    const features = [
+        {
+            icon: Calendar,
+            title: "Events & Gatherings",
+            desc: "Stay updated on community events, festivals, and celebrations.",
+        },
+        {
+            icon: Users,
+            title: "Family Trees",
+            desc: "Explore your family lineage and connect with relatives.",
+        },
+        {
+            icon: Search,
+            title: "Community Search",
+            desc: "Find members by name, gotra, blood group, or profession.",
+        },
+        {
+            icon: MessageCircle,
+            title: "Real-time Chat",
+            desc: "Message family members and community heads instantly.",
+        },
+    ];
+
+    return (
+        <div className="min-h-screen">
+            {/* ─── Hero ─── */}
+            <div className="mx-auto max-w-[1100px] px-6 pt-20 pb-24 sm:px-8 lg:px-10">
+                <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={MOTION_PAGE_ENTER}
+                    className="text-center max-w-2xl mx-auto"
+                >
+                    <div className="inline-flex items-center justify-center mb-8">
+                        <SunMark size={64} />
+                    </div>
+
+                    <h1 className="font-display text-display-lg sm:text-[3.5rem] font-bold leading-[1.1] text-ink mb-5">
+                        Modheshwari
+                    </h1>
+
+                    <p className="text-body-lg text-ink-secondary max-w-lg mx-auto mb-10">
+                        Your community, connected. Family trees, events, health records, and conversations — all in one place.
+                    </p>
+
+                    <div className="flex items-center justify-center gap-4">
+                        <button
+                            onClick={() => navigate("/signin")}
+                            className="inline-flex items-center gap-2 bg-ink text-canvas px-7 py-3 text-body font-semibold hover:bg-ink-muted transition-colors"
+                        >
+                            Sign In
+                            <ArrowRight className="h-4 w-4" />
+                        </button>
+                        <button
+                            onClick={() => navigate("/signup")}
+                            className="inline-flex items-center gap-2 border border-border px-7 py-3 text-body font-semibold text-ink hover:border-ink-muted hover:bg-surface transition-colors"
+                        >
+                            Join Family
+                        </button>
+                    </div>
+                </motion.div>
+            </div>
+
+            <div className="h-px bg-border mx-auto max-w-[1100px]" />
+
+            {/* ─── Features ─── */}
+            <div className="mx-auto max-w-[1100px] px-6 py-20 sm:px-8 lg:px-10">
+                <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ ...MOTION_PAGE_ENTER, delay: 0.1 }}
+                    className="text-center mb-14"
+                >
+                    <p className="text-caption font-semibold uppercase tracking-wider text-saffron mb-3">
+                        Everything you need
+                    </p>
+                    <h2 className="font-display text-heading-lg font-semibold text-ink">
+                        Built for your community
+                    </h2>
+                </motion.div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {features.map((feat, i) => (
+                        <motion.div
+                            key={feat.title}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ ...MOTION_PAGE_ENTER, delay: 0.15 + i * 0.05 }}
+                            className="border border-border p-6 hover:border-ink-muted transition-colors"
+                        >
+                            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-saffron/10 mb-4">
+                                <feat.icon className="w-5 h-5 text-saffron" />
+                            </div>
+                            <h3 className="text-body font-semibold text-ink mb-2">
+                                {feat.title}
+                            </h3>
+                            <p className="text-sm text-ink-muted leading-relaxed">
+                                {feat.desc}
+                            </p>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
+
+            {/* ─── Stats ─── */}
+            {memberCount !== null && (
+                <>
+                    <div className="h-px bg-border mx-auto max-w-[1100px]" />
+                    <motion.section
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ ...MOTION_PAGE_ENTER, delay: 0.3 }}
+                        className="mx-auto max-w-[1100px] px-6 py-16 sm:px-8 lg:px-10 text-center"
+                    >
+                        <p className="font-display text-heading-xl font-bold text-ink">
+                            {memberCount.toLocaleString()}+
+                        </p>
+                        <p className="text-body text-ink-muted mt-2">
+                            Members already part of the community
+                        </p>
+                        <button
+                            onClick={() => navigate("/signup")}
+                            className="mt-8 inline-flex items-center gap-2 bg-ink text-canvas px-7 py-3 text-body font-semibold hover:bg-ink-muted transition-colors"
+                        >
+                            <Heart className="h-4 w-4" />
+                            Join Them
+                        </button>
+                    </motion.section>
+                </>
+            )}
+
+            {/* ─── Footer ─── */}
+            <div className="h-px bg-border mx-auto max-w-[1100px]" />
+            <div className="mx-auto max-w-[1100px] px-6 py-8 sm:px-8 lg:px-10">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <SunMark size={24} />
+                        <span className="text-body font-semibold text-ink">
+                            Modheshwari
+                        </span>
+                    </div>
+                    <p className="text-caption text-ink-muted">
+                        &copy; {new Date().getFullYear()} Modheshwari Community
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/* ───────────────────────── Dashboard (logged in) ───────────────────────── */
+
+function Dashboard() {
     const navigate = useNavigate();
     const { t } = useLocale();
     const { user } = useUser();
@@ -297,4 +466,14 @@ export default function Home() {
             </div>
         </div>
     );
+}
+
+/* ───────────────────────── Router ───────────────────────── */
+
+export default function Home() {
+    const { user, loading } = useUser();
+
+    if (loading) return null;
+    if (!user) return <LandingPage />;
+    return <Dashboard />;
 }
