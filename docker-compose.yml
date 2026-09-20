@@ -157,7 +157,6 @@ services:
       - ws
 
 volumes:
-  postgres-data:
   redis-data:
   zookeeper-data:
   zookeeper-logs:
