@@ -15,7 +15,7 @@
         "nearby": "निकटतम",
         "calendar": "कैलेंडर",
         "notifications": "सूचनाएं",
-        "chat": "संदेश",
+        "chat": "चैट",
         "activity": "गतिविधि",
         "signIn": "लॉग इन",
         "signOut": "लॉग आउट",
@@ -76,7 +76,9 @@
         "view": "देखें",
         "viewAll": "सभी देखें",
         "searchPlaceholder": "खोजें...",
-        "searchLabel": "खोजें"
+        "searchLabel": "खोजें",
+        "notSet": "सेट नहीं है",
+        "addDetails": "विवरण जोड़ें"
     },
     "dashboard": {
         "greeting": "सुप्रभात",
@@ -298,6 +300,7 @@
         "fillAtLeastOne": "कृपया कम से कम एक फ़ील्ड भरें।",
         "updateSuccess": "प्रोफ़ाइल सफलतापूर्वक अपडेट हो गई।",
         "updateFailed": "प्रोफ़ाइल अपडेट करने में विफल।",
+        "sessionExpired": "आपका सत्र समाप्त हो गया है। कृपया फिर से लॉग इन करें।",
         "updateError": "आपकी प्रोफ़ाइल अपडेट करते समय एक त्रुटि हुई।",
         "loadingProfile": "आपकी प्रोफ़ाइल लोड हो रही है..."
     },

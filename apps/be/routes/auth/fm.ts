@@ -1,6 +1,6 @@
 import prisma from "@modheshwari/db";
 import { comparePassword, hashPassword } from "@modheshwari/utils/hash";
-import { signJWT } from "@modheshwari/utils/jwt";
+import { signJWT, signRefreshJWT } from "@modheshwari/utils/jwt";
 import { success, failure } from "@modheshwari/utils/response";
 import { z } from "zod";
 
@@ -81,21 +81,28 @@ export async function handleMemberLogin(req: Request) {
 
     // --- Step 5: Sign JWT token ---
     const token = signJWT({ userId: user.id, role: user.role });
+    const refreshToken = signRefreshJWT({ userId: user.id });
+    const headers = new Headers();
+    const isSecure = process.env.NODE_ENV === "production";
+    headers.append("Set-Cookie", `refreshToken=${refreshToken}; HttpOnly; Path=/; SameSite=Strict; Max-Age=604800${isSecure ? "; Secure" : ""}`);
 
     // --- Step 6: Respond with structured payload ---
-    return success(
-      "Login successful",
-      {
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
+    return new Response(
+      JSON.stringify({
+        status: "success",
+        message: "Login successful",
+        data: {
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+          },
+          families: familyLinks,
+          token,
         },
-        families: familyLinks,
-        token,
-      },
-      200,
+      }),
+      { status: 200, headers },
     );
   } catch (err) {
     logger.error("MemberLogin Error:", err);

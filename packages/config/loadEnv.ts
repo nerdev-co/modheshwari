@@ -1,9 +1,11 @@
-import { join } from "path";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
 import { config } from "dotenv";
 
-// Auto-load environment variables from the monorepo root .env file on first import.
-config({ path: join(process.cwd(), "../../.env") });
+// Resolve .env relative to this file's location (packages/config/../../.env → repo root)
+const __dirname = dirname(fileURLToPath(import.meta.url));
+config({ path: join(__dirname, "../../.env") });
 
 /**
  * Explicitly load environment variables.

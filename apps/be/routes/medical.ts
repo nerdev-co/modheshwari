@@ -5,6 +5,7 @@ import { z } from "zod";
 import { requireAuth } from "./authMiddleware";
 import { validateBody, validateQuery } from "../lib/validate";
 import { BloodGroupSchema } from "../lib/sharedSchemas";
+import { normalizeBloodGroup } from "../utils/searchParser";
 import { logger } from "../lib/logger";
 
 const UpdateMedicalSchema = z
@@ -40,7 +41,7 @@ export async function handleUpdateMedical(req: Request) {
         const updated = await prisma.profile.upsert({
             where: { userId },
             update: {
-                ...(body.bloodGroup && { bloodGroup: body.bloodGroup }),
+                ...(body.bloodGroup && { bloodGroup: normalizeBloodGroup(body.bloodGroup) }),
                 ...(body.allergies !== undefined && {
                     allergies: body.allergies,
                 }),
@@ -51,7 +52,7 @@ export async function handleUpdateMedical(req: Request) {
             create: {
                 userId,
                 status: true,
-                bloodGroup: body.bloodGroup ?? "O_POS",
+                bloodGroup: normalizeBloodGroup(body.bloodGroup ?? "O_POS"),
                 allergies: body.allergies || null,
                 medicalNotes: body.medicalNotes || null,
             },
@@ -87,7 +88,7 @@ export async function handleSearchByBloodGroup(req: Request) {
             where: {
                 status: true,
                 profile: {
-                    bloodGroup: bloodGroup as any, // Matches enum value
+                    bloodGroup: normalizeBloodGroup(bloodGroup) as any,
                 },
             },
             select: {

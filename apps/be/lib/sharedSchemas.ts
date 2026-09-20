@@ -1,15 +1,15 @@
 import { z } from "zod";
 
-export const BloodGroupSchema = z.enum([
-    "A_POS",
-    "A_NEG",
-    "B_POS",
-    "B_NEG",
-    "AB_POS",
-    "AB_NEG",
-    "O_POS",
-    "O_NEG",
-]);
+import { isValidBloodGroup } from "../utils/searchParser";
+
+export const BloodGroupSchema = z.string().superRefine((val, ctx) => {
+    if (!isValidBloodGroup(val)) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Invalid blood group. Use format like O+, A-, AB+, etc.",
+        });
+    }
+});
 
 export const RoleSchema = z.enum([
     "COMMUNITY_HEAD",

@@ -36,6 +36,7 @@ function fetchUserWithFamilies(userId: string) {
             email: true,
             role: true,
             status: true,
+            createdAt: true,
 
             profile: {
                 select: {
@@ -134,6 +135,7 @@ export async function handleGetMe(req: Request): Promise<Response> {
             email: user.email,
             role: user.role,
             status: user.status,
+            createdAt: user.createdAt,
             profile: user.profile,
             families: user.families.map((fm: any) => ({
                 id: fm.id,

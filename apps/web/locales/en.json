@@ -15,7 +15,7 @@
         "nearby": "Nearby",
         "calendar": "Calendar",
         "notifications": "Notifications",
-        "chat": "Messages",
+        "chat": "Chat",
         "activity": "Activity",
         "signIn": "Sign in",
         "signOut": "Sign out",
@@ -76,7 +76,9 @@
         "view": "View",
         "viewAll": "View all",
         "searchPlaceholder": "Search...",
-        "searchLabel": "Search"
+        "searchLabel": "Search",
+        "notSet": "Not set",
+        "addDetails": "Add details"
     },
     "dashboard": {
         "greeting": "Good morning",
@@ -298,6 +300,7 @@
         "fillAtLeastOne": "Please fill in at least one field.",
         "updateSuccess": "Profile updated successfully.",
         "updateFailed": "Failed to update profile.",
+        "sessionExpired": "Your session has expired. Please sign in again.",
         "updateError": "An error occurred while updating your profile.",
         "loadingProfile": "Loading your profile..."
     },

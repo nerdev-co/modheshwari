@@ -6,6 +6,7 @@ import { hashPassword } from "@modheshwari/utils/hash";
 import { z } from "zod";
 
 import { requireAuth } from "./authMiddleware";
+import { canGotraHeadManageFamily } from "../lib/gotraAuth";
 import { logger } from "../lib/logger";
 import { validateBody } from "../lib/validate";
 
@@ -86,11 +87,20 @@ export async function handleAddMember(
     if (!authCheck.ok) return authCheck.response as Response;
     const requesterId = authCheck.payload.userId ?? authCheck.payload.id;
 
-    // Verify requester is head of the family
+    // Verify requester is head of the family OR a GOTRA_HEAD managing their gotra
     const family = await prisma.family.findUnique({ where: { id: familyId } });
     if (!family) return failure("Family not found", "Not Found", 404);
-    if (family.headId !== requesterId)
-      return failure("Only family head can add members", "Forbidden", 403);
+
+    if (family.headId === requesterId) {
+      // Family head — allowed
+    } else if (authCheck.payload.role === "GOTRA_HEAD") {
+      const gotraAuth = await canGotraHeadManageFamily(requesterId, familyId);
+      if (!gotraAuth.ok) {
+        return failure("You can only manage families in your gotra", "Forbidden", 403);
+      }
+    } else {
+      return failure("Only family head or gotra head can add members", "Forbidden", 403);
+    }
 
     const v = await validateBody(req as Request, AddMemberSchema);
     if (!v.ok) return v.response;
@@ -156,8 +166,17 @@ export async function handleListInvites(
     const requesterId = authCheck.payload.userId ?? authCheck.payload.id;
     const family = await prisma.family.findUnique({ where: { id: familyId } });
     if (!family) return failure("Family not found", "Not Found", 404);
-    if (family.headId !== requesterId)
-      return failure("Only family head can view invites", "Forbidden", 403);
+
+    if (family.headId === requesterId) {
+      // Family head — allowed
+    } else if (authCheck.payload.role === "GOTRA_HEAD") {
+      const gotraAuth = await canGotraHeadManageFamily(requesterId, familyId);
+      if (!gotraAuth.ok) {
+        return failure("You can only view invites for families in your gotra", "Forbidden", 403);
+      }
+    } else {
+      return failure("Only family head or gotra head can view invites", "Forbidden", 403);
+    }
 
     const invites = await prisma.memberInvite.findMany({
       where: { familyId, status: "PENDING" },
@@ -235,13 +254,22 @@ export async function handleReviewInvite(
   _action: string,
 ): Promise<Response> {
   try {
-    const authCheck = requireAuth(req as Request, ["FAMILY_HEAD"]);
+    const authCheck = requireAuth(req as Request, ["FAMILY_HEAD", "GOTRA_HEAD"]);
     if (!authCheck.ok) return authCheck.response as Response;
     const reviewerId = authCheck.payload.userId ?? authCheck.payload.id;
     const family = await prisma.family.findUnique({ where: { id: familyId } });
     if (!family) return failure("Family not found", "Not Found", 404);
-    if (family.headId !== reviewerId)
-      return failure("Only family head can review invites", "Forbidden", 403);
+
+    if (family.headId === reviewerId) {
+      // Family head — allowed
+    } else if (authCheck.payload.role === "GOTRA_HEAD") {
+      const gotraAuth = await canGotraHeadManageFamily(reviewerId, familyId);
+      if (!gotraAuth.ok) {
+        return failure("You can only review invites for families in your gotra", "Forbidden", 403);
+      }
+    } else {
+      return failure("Only family head or gotra head can review invites", "Forbidden", 403);
+    }
 
     const invite = await prisma.memberInvite.findUnique({
       where: { id: inviteId },

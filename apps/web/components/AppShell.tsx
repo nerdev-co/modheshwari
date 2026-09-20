@@ -51,7 +51,7 @@ const NAV_SECTIONS: NavSection[] = [
     {
         label: "nav.sections.community",
         items: [
-            { path: "/families", i18nKey: "nav.families", icon: Users2 },
+            { path: "/family", i18nKey: "nav.families", icon: Users2 },
             { path: "/members", i18nKey: "nav.members", icon: UserCheck },
             { path: "/gotras", i18nKey: "nav.gotras", icon: GitBranch },
         ],
@@ -60,7 +60,7 @@ const NAV_SECTIONS: NavSection[] = [
         label: "nav.sections.activity",
         items: [
             { path: "/events", i18nKey: "nav.events", icon: Calendar },
-            { path: "/messages", i18nKey: "nav.messages", icon: MessageCircle },
+            { path: "/chat", i18nKey: "nav.chat", icon: MessageCircle },
         ],
     },
     {
@@ -76,11 +76,15 @@ const NAV_SECTIONS: NavSection[] = [
 ];
 
 const SIDEBAR_WIDTH = 256;
-const SIDEBAR_COLLAPSED_WIDTH = 64;
+const SIDEBAR_COLLAPSED_WIDTH = 72;
 
 const routeLabels: Record<string, string> = {
     "/": "nav.dashboard",
-    "/families": "nav.families",
+    "/signin": "nav.signIn",
+    "/signup": "nav.signIn",
+    "/signup/fh": "nav.signIn",
+    "/signup/fm": "nav.signIn",
+    "/family": "nav.families",
     "/members": "nav.members",
     "/gotras": "nav.gotras",
     "/events": "nav.events",
@@ -94,12 +98,23 @@ const routeLabels: Record<string, string> = {
     "/resources": "resources.title",
     "/medical": "medical.title",
     "/medical/records": "medical.records.title",
-    "/family": "family.title",
     "/family/tree": "family.tree.title",
     "/me": "nav.profile",
     "/me/edit": "edit.title",
     "/settings": "nav.settings",
+    "/notAuthenticated": "nav.signIn",
+    "/contact": "contact.heading",
+    "/spec": "spec.title",
+    "/privacy": "privacy.title",
 };
+
+const AUTH_ROUTES = new Set([
+    "/signin",
+    "/signup",
+    "/signup/fh",
+    "/signup/fm",
+    "/notAuthenticated",
+]);
 
 /**
  * Performs  app shell operation.
@@ -126,18 +141,17 @@ export function AppShell({ children }: { children: ReactNode }) {
         setMobileSidebarOpen(false);
     }, [location.pathname]);
 
-    const isActive = (path: string) => {
-        if (path === "/") return location.pathname === "/";
-        return location.pathname.startsWith(path);
-    };
-
-    const filteredSections = useMemo(() => NAV_SECTIONS.map((section) => ({
-        ...section,
-        items: section.items.filter((item) => {
-            if (!item.roles) return true;
-            return user && item.roles.includes(user.role);
-        }),
-    })).filter((section) => section.items.length > 0), [user?.role]);
+    const filteredSections = useMemo(
+        () =>
+            NAV_SECTIONS.map((section) => ({
+                ...section,
+                items: section.items.filter((item) => {
+                    if (!item.roles) return true;
+                    return user && item.roles.includes(user.role);
+                }),
+            })).filter((section) => section.items.length > 0),
+        [user?.role],
+    );
 
     const breadcrumbs = useMemo(() => {
         const pathname = location.pathname;
@@ -158,6 +172,15 @@ export function AppShell({ children }: { children: ReactNode }) {
     const handleLogout = () => {
         logout();
         navigate("/signin");
+    };
+
+    if (AUTH_ROUTES.has(location.pathname)) {
+        return <>{children}</>;
+    }
+
+    const isActive = (path: string) => {
+        if (path === "/") return location.pathname === "/";
+        return location.pathname.startsWith(path);
     };
 
     if (userLoading) {
@@ -211,7 +234,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     {filteredSections.map((section) => (
                         <div key={section.label}>
                             {sidebarOpen && (
-                                <p className="text-ink-muted mb-1.5 px-2 text-caption font-semibold tracking-wider uppercase">
+                                <p className="text-ink-muted text-caption mb-1.5 px-2 font-semibold tracking-wider uppercase">
                                     {t(section.label)}
                                 </p>
                             )}
@@ -229,8 +252,14 @@ export function AppShell({ children }: { children: ReactNode }) {
                                                         ? "text-saffron font-semibold"
                                                         : "text-ink-secondary hover:bg-surface-muted hover:text-ink"
                                                 }`}
-                                                aria-current={active ? "page" : undefined}
-                                                aria-label={sidebarOpen ? undefined : label}
+                                                aria-current={
+                                                    active ? "page" : undefined
+                                                }
+                                                aria-label={
+                                                    sidebarOpen
+                                                        ? undefined
+                                                        : label
+                                                }
                                             >
                                                 <Icon
                                                     className="h-4 w-4 flex-shrink-0"
@@ -267,7 +296,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                         <Link
                             to="/me"
                             className="text-ink-secondary hover:bg-surface-muted hover:text-ink flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors"
-                            aria-label={sidebarOpen ? undefined : t("nav.profile")}
+                            aria-label={
+                                sidebarOpen ? undefined : t("nav.profile")
+                            }
                         >
                             <User
                                 className="h-4 w-4 flex-shrink-0"
@@ -332,7 +363,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                         >
                             {filteredSections.map((section) => (
                                 <div key={section.label}>
-                                    <p className="text-ink-muted mb-1.5 px-2 text-caption font-semibold tracking-wider uppercase">
+                                    <p className="text-ink-muted text-caption mb-1.5 px-2 font-semibold tracking-wider uppercase">
                                         {t(section.label)}
                                     </p>
                                     <div className="space-y-0.5">
@@ -344,7 +375,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                                                     key={item.path}
                                                     to={item.path}
                                                     onClick={() =>
-                                                        setMobileSidebarOpen(false)
+                                                        setMobileSidebarOpen(
+                                                            false,
+                                                        )
                                                     }
                                                     className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                                                         active
@@ -387,23 +420,12 @@ export function AppShell({ children }: { children: ReactNode }) {
             </AnimatePresence>
 
             {/* Main Content */}
-            <div
-                className="flex min-w-0 flex-1 flex-col"
-                style={{
-                    marginLeft:
-                        typeof window !== "undefined" &&
-                        window.innerWidth >= 1024
-                            ? sidebarOpen
-                                ? 0
-                                : SIDEBAR_COLLAPSED_WIDTH - SIDEBAR_WIDTH
-                            : 0,
-                }}
-            >
+            <div className="flex min-w-0 flex-1 flex-col">
                 {/* Top Bar */}
                 <header className="bg-surface/80 border-border sticky top-0 z-30 h-14 border-b backdrop-blur-xl">
                     <div className="flex h-full items-center justify-between px-4 lg:px-5">
                         {/* Left: Mobile menu + Sidebar toggle + Breadcrumbs */}
-                        <div className="flex items-center gap-2 lg:gap-4 min-w-0 flex-1">
+                        <div className="flex min-w-0 flex-1 items-center gap-2 lg:gap-4">
                             <button
                                 onClick={() => setMobileSidebarOpen(true)}
                                 className="text-ink-secondary hover:bg-surface-muted hover:text-ink rounded-lg p-1.5 transition-colors lg:hidden"
@@ -430,25 +452,28 @@ export function AppShell({ children }: { children: ReactNode }) {
 
                             {/* Breadcrumbs */}
                             <nav
-                                className="hidden lg:flex items-center gap-1.5 text-sm"
+                                className="hidden items-center gap-1.5 text-sm lg:flex"
                                 aria-label="Breadcrumb"
                             >
                                 {breadcrumbs.map((crumb, index) => (
-                                    <span key={crumb.href} className="flex items-center gap-1.5">
+                                    <span
+                                        key={crumb.href}
+                                        className="flex items-center gap-1.5"
+                                    >
                                         {index > 0 && (
                                             <ChevronRight
-                                                className="h-3 w-3 text-ink-muted flex-shrink-0"
+                                                className="text-ink-muted h-3 w-3 flex-shrink-0"
                                                 aria-hidden="true"
                                             />
                                         )}
                                         {index === breadcrumbs.length - 1 ? (
-                                            <span className="text-ink font-medium truncate max-w-[200px]">
+                                            <span className="text-ink max-w-[200px] truncate font-medium">
                                                 {crumb.label}
                                             </span>
                                         ) : (
                                             <Link
                                                 to={crumb.href}
-                                                className="text-ink-muted hover:text-ink transition-colors truncate max-w-[150px]"
+                                                className="text-ink-muted hover:text-ink max-w-[150px] truncate transition-colors"
                                             >
                                                 {crumb.label}
                                             </Link>
@@ -469,12 +494,14 @@ export function AppShell({ children }: { children: ReactNode }) {
                                 <input
                                     type="search"
                                     placeholder={t("common.searchPlaceholder")}
-                                    className="border-border bg-canvas text-ink placeholder:text-ink-muted focus:ring-saffron focus:border-saffron w-64 sm:w-72 rounded-lg border py-1.5 pr-3 pl-10 text-sm transition-all focus:ring-1 focus:outline-none"
+                                    className="border-border bg-canvas text-ink placeholder:text-ink-muted focus:ring-saffron focus:border-saffron w-64 rounded-lg border py-1.5 pr-3 pl-10 text-sm transition-all focus:ring-1 focus:outline-none sm:w-72"
                                     aria-label={t("common.searchLabel")}
                                     onKeyDown={(e) => {
                                         if (e.key === "Enter") {
                                             e.preventDefault();
-                                            navigate(`/search?q=${encodeURIComponent(e.currentTarget.value)}`);
+                                            navigate(
+                                                `/search?q=${encodeURIComponent(e.currentTarget.value)}`,
+                                            );
                                         }
                                     }}
                                 />
@@ -541,7 +568,10 @@ export function AppShell({ children }: { children: ReactNode }) {
                                         >
                                             <div className="border-border mb-1 border-b px-2.5 py-2">
                                                 <p className="text-ink truncate text-sm font-medium">
-                                                    {user?.name || t("profile.unnamedMember")}
+                                                    {user?.name ||
+                                                        t(
+                                                            "profile.unnamedMember",
+                                                        )}
                                                 </p>
                                                 <p className="text-ink-muted truncate text-xs">
                                                     {user?.email}

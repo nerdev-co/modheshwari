@@ -114,6 +114,13 @@ export const parameterizedRoutes: ParameterizedRoute[] = [
     method: "PATCH",
     handler: (r, params) => handlers.handleUpdateEventStatus(r, params.id!),
   },
+
+  // Gotras
+  {
+    pattern: "/api/gotras/:gotraName/families",
+    method: "GET",
+    handler: (r, params) => handlers.handleGetGotraFamilies(r, params.gotraName!),
+  },
 ];
 
 /**

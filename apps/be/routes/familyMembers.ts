@@ -6,11 +6,13 @@ import {
 } from "@modheshwari/utils/pagination";
 
 import { requireAuth } from "./authMiddleware";
+import { canGotraHeadManageFamily } from "../lib/gotraAuth";
 import { logger } from "../lib/logger";
 
 /**
  * GET /api/family/members
- * Returns all (or only alive) members of the family the head belongs to
+ * Returns all (or only alive) members of the family the head belongs to.
+ * GOTRA_HEAD can pass ?familyId=xxx to view any family within their gotra.
  * Add `?all=true` to include dead members.
  * Supports pagination with `?page=1&limit=50`
  */
@@ -20,14 +22,28 @@ export async function handleGetFamilyMembers(req: Request): Promise<Response> {
     if (!auth.ok) return auth.response;
     const userId = auth.payload.userId as string;
 
-    // Find family headed by this user
-    const family = await prisma.family.findFirst({
-      where: { headId: userId },
-    });
-    if (!family) return failure("Family not found", "Not Found", 404);
+    const url = new URL(req.url);
+    const requestedFamilyId = url.searchParams.get("familyId");
+
+    let familyId: string;
+
+    if (requestedFamilyId && auth.payload.role === "GOTRA_HEAD") {
+      // GOTRA_HEAD requesting a specific family — verify gotra match
+      const gotraAuth = await canGotraHeadManageFamily(userId, requestedFamilyId);
+      if (!gotraAuth.ok) {
+        return failure("You can only view families in your gotra", "Forbidden", 403);
+      }
+      familyId = requestedFamilyId;
+    } else {
+      // Default: find family headed by this user
+      const family = await prisma.family.findFirst({
+        where: { headId: userId },
+      });
+      if (!family) return failure("Family not found", "Not Found", 404);
+      familyId = family.id;
+    }
 
     // Parse query params
-    const url = new URL(req.url);
     const includeAll = url.searchParams.get("all") === "true";
 
     // Parse pagination
@@ -45,11 +61,11 @@ export async function handleGetFamilyMembers(req: Request): Promise<Response> {
 
     // Get total count
     const total = await prisma.familyMember.count({
-      where: { familyId: family.id, user: userFilter },
+      where: { familyId, user: userFilter },
     });
 
     const members = await prisma.familyMember.findMany({
-      where: { familyId: family.id, user: userFilter },
+      where: { familyId, user: userFilter },
       include: {
         user: {
           select: {
@@ -81,7 +97,6 @@ export async function handleGetFamilyMembers(req: Request): Promise<Response> {
         ? "All family members fetched"
         : "Alive family members fetched",
       {
-        family,
         members: filteredMembers,
         pagination: buildPaginationResponse(
           filteredMembers,

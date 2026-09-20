@@ -16,7 +16,7 @@ import { useLocale } from "../../../lib/LocaleContext";
 export default function EditProfilePage() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user, loading, updateProfile } = useUser();
+  const { user, loading, updateProfile, refresh } = useUser();
   const { t } = useLocale();
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState(() => ({
@@ -50,27 +50,35 @@ export default function EditProfilePage() {
       return;
     }
 
-    if (!formData.bloodGroup && !formData.gotra && !formData.profession) {
-      toast(t("edit.fillAtLeastOne"), { variant: "warning" });
-      return;
-    }
-
     setSaving(true);
 
     try {
+      const payload: Record<string, string> = {};
+      if (formData.bloodGroup) payload.bloodGroup = formData.bloodGroup;
+      if (formData.gotra) payload.gotra = formData.gotra;
+      if (formData.profession) payload.profession = formData.profession;
+
+      if (Object.keys(payload).length === 0) {
+        toast(t("edit.fillAtLeastOne"), { variant: "warning" });
+        return;
+      }
+
       const data = await apiFetch(`${API_BASE}/me`, {
         method: "PUT",
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
+        throwOnError: false,
       });
 
       if (data?.status === "success") {
         toast(t("edit.updateSuccess"), { variant: "success" });
         const updated = data.data;
         if (updated) updateProfile(updated);
+        refresh();
         navigate("/me");
       } else {
-        const msg = data?.message || t("edit.updateFailed");
-        toast(msg, { variant: "error" });
+        const serverMsg = (data as any)?.data?.message || data?.message || t("edit.updateFailed");
+        toast(serverMsg, { variant: "error" });
+        navigate("/me");
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : t("edit.updateError");
@@ -159,7 +167,7 @@ export default function EditProfilePage() {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/me")}
               disabled={saving}
             >
               {t("common.cancel")}

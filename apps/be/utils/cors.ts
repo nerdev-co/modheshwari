@@ -45,8 +45,7 @@ export function handleCors(req: Request): Response | null {
  */
 export function withCorsHeaders(res: Response, req?: Request): Response {
   const headers = new Headers(res.headers);
-  
-  // Use request origin if provided and allowed
+
   const origin = req?.headers.get("origin") || "";
   const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : (ALLOWED_ORIGINS[0] ?? "http://localhost:3000");
 
@@ -57,6 +56,10 @@ export function withCorsHeaders(res: Response, req?: Request): Response {
     "Access-Control-Allow-Methods",
     "GET, POST, PATCH, PUT, DELETE, OPTIONS",
   );
-  
-  return new Response(res.body, { ...res, headers });
+
+  return new Response(res.body, {
+    status: res.status,
+    statusText: res.statusText,
+    headers,
+  });
 }

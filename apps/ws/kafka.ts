@@ -6,52 +6,55 @@ import { KAFKA_BROKER, NOTIFICATION_TOPIC, WS_CONSUMER_GROUP } from "./config";
 import { pushToUser } from "./utils";
 import { logger } from "./logger";
 
-export const kafka = new Kafka({
-    clientId: "modheshwari-ws",
-    brokers: [KAFKA_BROKER],
-    logCreator:
-        () =>
-            ({ namespace, level, label: _label, log }) => {
-                try {
-                    const lvl =
-                        log && (log.level || log.levelName)
-                            ? String(log.level || log.levelName).toUpperCase()
-                            : String(level || "INFO").toUpperCase();
+const KAFKA_ENABLED = !!KAFKA_BROKER || process.env.KAFKA_ENABLED === "true";
 
-                    const msgParts: any = { namespace };
-                    if (log && log.message) msgParts.message = log.message;
-                    if (log && log.error) msgParts.error = log.error;
-                    // include other useful fields
-                    for (const k of ["groupId", "memberId", "clientId", "broker"]) {
-                        if (log && (log as any)[k]) (msgParts as any)[k] = (log as any)[k];
-                    }
+const logCreator =
+    () =>
+        ({ namespace, level, label: _label, log }: any) => {
+            try {
+                const lvl =
+                    log && (log.level || log.levelName)
+                        ? String(log.level || log.levelName).toUpperCase()
+                        : String(level || "INFO").toUpperCase();
 
-                    let text: string;
-                    try {
-                        text = msgParts.message
-                            ? `${msgParts.message}`
-                            : JSON.stringify(msgParts);
-                    } catch {
-                        text = String(msgParts);
-                    }
-
-                    if (lvl.includes("ERROR"))
-                        logger.error(text, msgParts.error || msgParts);
-                    else if (lvl.includes("WARN")) logger.warn(text, msgParts);
-                    else if (lvl.includes("DEBUG")) logger.debug(text, msgParts);
-                    else logger.info(text, msgParts);
-                } catch {
-                    // fallback
-                    logger.info(String(log) || "kafkajs log", log);
+                const msgParts: any = { namespace };
+                if (log && log.message) msgParts.message = log.message;
+                if (log && log.error) msgParts.error = log.error;
+                for (const k of ["groupId", "memberId", "clientId", "broker"]) {
+                    if (log && (log as any)[k]) (msgParts as any)[k] = (log as any)[k];
                 }
-            },
-});
 
-export const consumer = kafka.consumer({ groupId: WS_CONSUMER_GROUP });
+                let text: string;
+                try {
+                    text = msgParts.message
+                        ? `${msgParts.message}`
+                        : JSON.stringify(msgParts);
+                } catch {
+                    text = String(msgParts);
+                }
+
+                if (lvl.includes("ERROR"))
+                    logger.error(text, msgParts.error || msgParts);
+                else if (lvl.includes("WARN")) logger.warn(text, msgParts);
+                else if (lvl.includes("DEBUG")) logger.debug(text, msgParts);
+                else logger.info(text, msgParts);
+            } catch {
+                logger.info(String(log) || "kafkajs log", log);
+            }
+        };
+
+export const kafka = KAFKA_ENABLED
+    ? new Kafka({
+        clientId: "modheshwari-ws",
+        brokers: [KAFKA_BROKER],
+        logCreator,
+    })
+    : null;
+
+export const consumer = kafka?.consumer({ groupId: WS_CONSUMER_GROUP }) ?? null;
 
 /**
  * Handle notification event from Kafka.
- * @param message - Kafka message payload
  */
 async function handleNotificationEvent({ message }: EachMessagePayload) {
     const raw = message.value?.toString();
@@ -95,6 +98,10 @@ async function handleNotificationEvent({ message }: EachMessagePayload) {
  * Start Kafka consumer for notifications.
  */
 export async function startKafkaConsumer() {
+    if (!consumer) {
+        logger.info("Kafka disabled — skipping consumer (no KAFKA_BROKER set)");
+        return;
+    }
     await consumer.connect();
     await consumer.subscribe({ topic: NOTIFICATION_TOPIC, fromBeginning: false });
     await consumer.run({

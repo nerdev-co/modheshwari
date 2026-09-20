@@ -152,15 +152,21 @@ export default function EventsListClient() {
               <h1 className="font-display text-display font-semibold leading-tight text-ink">{t("events.list.title")}</h1>
               <p className="text-body-lg text-ink-secondary mt-1">{t("events.list.description")}</p>
             </div>
-            <div className="flex items-center gap-3">
-              <Button variant="secondary" size="sm" onClick={() => navigate("/events/calendar")}>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => navigate("/events/calendar")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-ink-muted hover:text-ink hover:bg-surface-muted rounded-lg transition-colors"
+              >
                 <Calendar className="w-4 h-4" />
                 {t("events.list.calendar")}
-              </Button>
-              <Button size="sm" onClick={() => navigate("/events/create")}>
+              </button>
+              <button
+                onClick={() => navigate("/events/create")}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium text-white bg-saffron hover:bg-saffron/90 rounded-lg transition-colors"
+              >
                 <Plus className="w-4 h-4" />
                 {t("events.list.create")}
-              </Button>
+              </button>
             </div>
           </div>
         </motion.div>
@@ -168,15 +174,15 @@ export default function EventsListClient() {
         <div className="h-px bg-border" />
 
         <div className="py-10">
-          <div className="flex gap-2 mb-8">
+          <div className="flex gap-1 mb-8">
             {[{ label: t("events.list.filterApproved"), value: "approved" as const }, { label: t("events.list.filterPending"), value: "pending" as const }, { label: t("events.list.filterAll"), value: "all" as const }].map((f) => (
               <button
                 key={f.value}
                 onClick={() => setFilter(f.value)}
-                className={`px-4 py-1.5 text-sm font-medium transition-all border ${
+                className={`px-3.5 py-1.5 text-sm font-medium rounded-lg transition-colors ${
                   filter === f.value
-                    ? "text-saffron border-saffron"
-                    : "text-ink-muted border-transparent hover:text-ink"
+                    ? "bg-saffron/10 text-saffron"
+                    : "text-ink-muted hover:text-ink hover:bg-surface-muted"
                 }`}
               >
                 {f.label}

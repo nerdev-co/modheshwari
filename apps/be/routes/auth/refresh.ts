@@ -34,9 +34,10 @@ export async function handleRefresh(req: Request): Promise<Response> {
 
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
+    const isSecure = process.env.NODE_ENV === "production";
     headers.append(
       "Set-Cookie",
-      `refreshToken=${newRefreshToken}; HttpOnly; Path=/; SameSite=Strict; Max-Age=604800; Secure`,
+      `refreshToken=${newRefreshToken}; HttpOnly; Path=/; SameSite=Strict; Max-Age=604800${isSecure ? "; Secure" : ""}`,
     );
 
     return new Response(

@@ -192,4 +192,11 @@ export const staticRoutes: Route[] = [
     method: "GET",
     handler: (r: Request) => handlers.handleListEvents(r),
   },
+
+  // Gotras
+  {
+    path: "/api/gotras",
+    method: "GET",
+    handler: (r: Request) => handlers.handleListGotras(r),
+  },
 ];

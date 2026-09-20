@@ -8,12 +8,8 @@ import { logger } from './logger';
 let sub: RedisClientType | null = null;
 
 /**
- * Performs start redis subscriber operation.
- * Creates a DEDICATED Redis client for subscriptions so the shared
- * client pool is not put into pub/sub mode (which blocks all other
- * Redis commands).
- * @param {string} url - Description of url
- * @returns {Promise<void>} Description of return value
+ * Start Redis subscriber for in-app notifications.
+ * Fails gracefully if Redis is unavailable.
  */
 export async function startRedisSubscriber(url = REDIS_URL) {
   if (!url) {
@@ -21,11 +17,21 @@ export async function startRedisSubscriber(url = REDIS_URL) {
     return;
   }
 
-  sub = createClient({ url });
+  sub = createClient({ url, socket: { reconnectStrategy: false } });
   sub.on('error', (err: Error) => {
-    logger.error('Redis subscriber error', err.message);
+    logger.warn('Redis subscriber error (non-fatal)', err.message || 'connection failed');
   });
-  await sub.connect();
+
+  try {
+    await sub.connect();
+  } catch (err) {
+    logger.warn(
+      'Redis subscriber failed to connect — continuing without Redis',
+      err instanceof Error ? err.message : String(err),
+    );
+    sub = null;
+    return;
+  }
 
   // subscribe to pattern inapp:* for user-specific channels
   await sub.pSubscribe('inapp:*', (message: string, _channel: string) => {
@@ -43,8 +49,7 @@ export async function startRedisSubscriber(url = REDIS_URL) {
 }
 
 /**
- * Performs stop redis subscriber operation.
- * @returns {Promise<void>} Description of return value
+ * Stop Redis subscriber.
  */
 export async function stopRedisSubscriber() {
   try {

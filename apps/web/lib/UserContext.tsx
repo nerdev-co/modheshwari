@@ -11,7 +11,7 @@ interface User {
   email: string;
   role: string;
   status: boolean;
-  createdAt?: string;
+  createdAt: string;
   profile?: {
     phone?: string;
     address?: string;

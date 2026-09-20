@@ -70,7 +70,7 @@ export async function apiFetch(input: RequestInfo, init?: ApiFetchOptions) {
         },
       );
       const refreshData = await parseJsonSafe(refreshRes);
-      const newToken = refreshData?.accessToken;
+      const newToken = refreshData?.data?.accessToken;
       if (refreshRes.ok && newToken) {
         localStorage.setItem("token", newToken);
         // Retry original request with new token

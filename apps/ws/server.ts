@@ -64,7 +64,7 @@ export async function startServer() {
 export async function shutdown() {
     logger.info("shutting down...");
     try {
-        await consumer.disconnect();
+        if (consumer) await consumer.disconnect();
         await stopRedisSubscriber();
     } catch (err) {
         logger.error("consumer disconnect failed", err instanceof Error ? err : String(err));

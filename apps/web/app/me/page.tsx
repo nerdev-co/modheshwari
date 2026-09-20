@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { LoaderOne } from "@repo/ui/loading";
@@ -48,6 +49,12 @@ export default function MePage() {
     const { user, loading } = useUser();
     const { t } = useLocale();
 
+    useEffect(() => {
+        if (!loading && !user) {
+            navigate("/signin");
+        }
+    }, [loading, user, navigate]);
+
     if (loading) {
         return (
             <div className="flex min-h-[60vh] items-center justify-center">
@@ -57,7 +64,6 @@ export default function MePage() {
     }
 
     if (!user) {
-        navigate("/signin");
         return null;
     }
 
@@ -153,15 +159,13 @@ export default function MePage() {
                                 </div>
                             </div>
                         </div>
-                        <Button
-                            variant="secondary"
-                            size="sm"
+                        <button
                             onClick={() => navigate("/me/edit")}
-                            className="mt-2 shrink-0"
+                            className="text-sm text-ink-muted hover:text-ink transition-colors inline-flex items-center gap-1 mt-2 shrink-0"
                         >
                             {t("profile.editProfile")}
-                            <ArrowRight className="h-3.5 w-3.5 ml-1" />
-                        </Button>
+                            <ArrowRight className="h-3.5 w-3.5" />
+                        </button>
                     </div>
                 </motion.div>
 

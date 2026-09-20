@@ -1,5 +1,5 @@
 {
-  "$schema": "https://v2-10-8.turborepo.dev/schema.json",
+  "$schema": "https://v2-11-2.turborepo.dev/schema.json",
   "globalEnv": ["API_BASE_URL", "DATABASE_URL", "REDIS_URL", "KAFKA_BROKER", "JWT_SECRET", "JWT_REFRESH_SECRET", "NODE_ENV", "PORT", "WS_PORT", "NEXT_PUBLIC_API_BASE_URL", "ALLOWED_ORIGINS", "elastic_api_key", "elastic_node"],
   "ui": "tui",
   "tasks": {

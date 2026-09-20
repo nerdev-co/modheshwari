@@ -13,6 +13,7 @@ import { z } from "zod";
 import { logger } from "../../lib/logger";
 import { validateBody } from "../../lib/validate";
 import { BloodGroupSchema } from "../../lib/sharedSchemas";
+import { normalizeBloodGroup } from "../../utils/searchParser";
 
 const ALLOWED_ROLES = [
     "COMMUNITY_HEAD",
@@ -94,7 +95,7 @@ export async function handleAdminSignup(
                 gotra: gotra ?? null,
                 status: true,
             };
-            if (bloodGroup) profileData.bloodGroup = bloodGroup;
+            if (bloodGroup) profileData.bloodGroup = normalizeBloodGroup(bloodGroup);
             await tx.profile.create({
                 data: profileData,
             });
@@ -108,9 +109,10 @@ export async function handleAdminSignup(
         });
         const refreshToken = signRefreshJWT({ userId: user.id });
         const headers = new Headers();
+        const isSecure = process.env.NODE_ENV === "production";
         headers.append(
             "Set-Cookie",
-            `refreshToken=${refreshToken}; HttpOnly; Path=/; SameSite=Strict; Max-Age=604800; Secure`,
+            `refreshToken=${refreshToken}; HttpOnly; Path=/; SameSite=Strict; Max-Age=604800${isSecure ? "; Secure" : ""}`,
         );
         return new Response(
             JSON.stringify({
@@ -194,9 +196,10 @@ export async function handleAdminLogin(
         });
         const refreshToken = signRefreshJWT({ userId: user.id });
         const headers = new Headers();
+        const isSecure = process.env.NODE_ENV === "production";
         headers.append(
             "Set-Cookie",
-            `refreshToken=${refreshToken}; HttpOnly; Path=/; SameSite=Strict; Max-Age=604800; Secure`,
+            `refreshToken=${refreshToken}; HttpOnly; Path=/; SameSite=Strict; Max-Age=604800${isSecure ? "; Secure" : ""}`,
         );
         return new Response(
             JSON.stringify({

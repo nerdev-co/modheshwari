@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
+    "@modheshwari/config": "*",
     "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
@@ -28,11 +29,10 @@
     "prettier": "^3.6.2",
     "ts-morph": "22",
     "tsx": "^4.20.6",
-    "turbo": "^2.10.8",
+    "turbo": "^2.11.2",
     "typedoc": "^0.28.14",
     "typescript": "5.9.2",
-    "typescript-eslint": "^8.46.2",
-    "@modheshwari/config": "*"
+    "typescript-eslint": "^8.46.2"
   },
   "engines": {
     "node": ">=18"

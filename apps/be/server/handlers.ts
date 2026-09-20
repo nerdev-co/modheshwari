@@ -17,6 +17,9 @@ export {
 export { handleGetFamilyMembers } from "../routes/familyMembers";
 export { handleFamilyTransfer } from "../routes/familyTransfer";
 
+// Gotras
+export { handleListGotras, handleGetGotraFamilies } from "../routes/gotras";
+
 // Family Tree
 export {
   handleGetFamilyTree,
