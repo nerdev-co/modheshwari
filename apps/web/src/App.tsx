@@ -25,11 +25,11 @@ import Notifications from "../app/notifications/page";
 import AdminNotifications from "../app/admin/notifications/page";
 import Search from "../app/search/page";
 import Gotras from "../app/gotras/page";
-import Members from "../app/members/page";
 import Activity from "../app/activity/page";
 import Contact from "../app/contact/page";
 import Spec from "../app/spec/page";
 import Privacy from "../app/privacy/page";
+import Terms from "../app/terms/page";
 import NotAuthenticated from "../app/notAuthenticated/page";
 import NotFound from "../app/notFound/page";
 
@@ -90,11 +90,11 @@ export default function App() {
                             />
                             <Route path="/search" element={<Search />} />
                             <Route path="/gotras" element={<Gotras />} />
-                            <Route path="/members" element={<Members />} />
                             <Route path="/activity" element={<Activity />} />
                             <Route path="/contact" element={<Contact />} />
                             <Route path="/spec" element={<Spec />} />
                             <Route path="/privacy" element={<Privacy />} />
+                            <Route path="/terms" element={<Terms />} />
                             <Route
                                 path="/notAuthenticated"
                                 element={<NotAuthenticated />}

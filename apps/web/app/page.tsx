@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, Users, Search, MessageCircle, Heart } from "lucide-react";
+import { ArrowRight, Calendar, TreePine, Search, Heart, Users, Shield, Clock } from "lucide-react";
 import { MOTION_PAGE_ENTER } from "@repo/ui/motion";
 import { Link } from "react-router-dom";
 
@@ -23,7 +23,6 @@ type EventItem = {
 /* ───────────────────────── Landing (logged out) ───────────────────────── */
 
 function LandingPage() {
-    const { t } = useLocale();
     const navigate = useNavigate();
     const [memberCount, setMemberCount] = useState<number | null>(null);
 
@@ -36,149 +35,300 @@ function LandingPage() {
             .catch(() => {});
     }, []);
 
-    const features = [
+    const benefits = [
         {
             icon: Calendar,
-            title: "Events & Gatherings",
-            desc: "Stay updated on community events, festivals, and celebrations.",
+            title: "Never miss a gathering",
+            desc: "Festivals, reunions, celebrations — every event in one place, with reminders so you're always there.",
         },
         {
-            icon: Users,
-            title: "Family Trees",
-            desc: "Explore your family lineage and connect with relatives.",
+            icon: TreePine,
+            title: "Know your roots",
+            desc: "Explore your family tree, discover your gotra, and preserve your lineage for the next generation.",
         },
         {
             icon: Search,
-            title: "Community Search",
-            desc: "Find members by name, gotra, blood group, or profession.",
+            title: "Find anyone, fast",
+            desc: "Search by name, gotra, blood group, or profession. Reach the right person when it matters.",
         },
         {
-            icon: MessageCircle,
-            title: "Real-time Chat",
-            desc: "Message family members and community heads instantly.",
+            icon: Shield,
+            title: "There when it matters",
+            desc: "Blood groups, health records, emergency contacts — vital info accessible to your family in seconds.",
         },
     ];
 
     return (
         <div className="min-h-screen">
             {/* ─── Hero ─── */}
-            <div className="mx-auto max-w-[1100px] px-6 pt-20 pb-24 sm:px-8 lg:px-10">
+            <div className="mx-auto max-w-[1100px] px-6 pt-24 pb-28 sm:px-8 lg:px-10">
                 <motion.div
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={MOTION_PAGE_ENTER}
                     className="text-center max-w-2xl mx-auto"
                 >
-                    <div className="inline-flex items-center justify-center mb-8">
-                        <SunMark size={64} />
-                    </div>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ ...MOTION_PAGE_ENTER, delay: 0.05 }}
+                        className="inline-flex items-center justify-center mb-8"
+                    >
+                        <SunMark size={56} />
+                    </motion.div>
+
+                    <p className="text-caption font-semibold uppercase tracking-wider text-saffron mb-4">
+                        Community Platform
+                    </p>
 
                     <h1 className="font-display text-display-lg sm:text-[3.5rem] font-bold leading-[1.1] text-ink mb-5">
-                        Modheshwari
+                        Your community,{" "}
+                        <span className="text-saffron">one place.</span>
                     </h1>
 
                     <p className="text-body-lg text-ink-secondary max-w-lg mx-auto mb-10">
-                        Your community, connected. Family trees, events, health records, and conversations — all in one place.
+                        Family trees, events, health records, and conversations — built for communities like yours to stay connected.
                     </p>
 
                     <div className="flex items-center justify-center gap-4">
                         <button
-                            onClick={() => navigate("/signin")}
-                            className="inline-flex items-center gap-2 bg-ink text-canvas px-7 py-3 text-body font-semibold hover:bg-ink-muted transition-colors"
+                            onClick={() => navigate("/signup")}
+                            className="inline-flex items-center gap-2 bg-ink text-canvas px-8 py-3.5 text-body font-semibold hover:bg-ink-muted transition-colors"
                         >
-                            Sign In
+                            Join Your Family
                             <ArrowRight className="h-4 w-4" />
                         </button>
                         <button
-                            onClick={() => navigate("/signup")}
-                            className="inline-flex items-center gap-2 border border-border px-7 py-3 text-body font-semibold text-ink hover:border-ink-muted hover:bg-surface transition-colors"
+                            onClick={() => navigate("/signin")}
+                            className="inline-flex items-center gap-2 border border-border px-8 py-3.5 text-body font-semibold text-ink hover:border-ink-muted hover:bg-surface transition-colors"
                         >
-                            Join Family
+                            Sign In
                         </button>
                     </div>
+
+                    {memberCount !== null && (
+                        <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ ...MOTION_PAGE_ENTER, delay: 0.4 }}
+                            className="mt-8 text-sm text-ink-muted"
+                        >
+                            Trusted by{" "}
+                            <span className="font-semibold text-ink">
+                                {memberCount.toLocaleString()}+
+                            </span>{" "}
+                            community members
+                        </motion.p>
+                    )}
                 </motion.div>
             </div>
 
-            <div className="h-px bg-border mx-auto max-w-[1100px]" />
+            {/* ─── Problem ─── */}
+            <div className="bg-surface">
+                <div className="mx-auto max-w-[1100px] px-6 py-20 sm:px-8 lg:px-10">
+                    <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ ...MOTION_PAGE_ENTER, delay: 0.1 }}
+                        className="max-w-2xl"
+                    >
+                        <p className="text-caption font-semibold uppercase tracking-wider text-saffron mb-4">
+                            The problem
+                        </p>
+                        <h2 className="font-display text-heading-lg font-semibold text-ink mb-6 leading-snug">
+                            Families grow. Cities change.
+                            <br />
+                            Connections shouldn't fade.
+                        </h2>
+                        <div className="space-y-4 text-body text-ink-secondary leading-relaxed">
+                            <p>
+                                Missed a festival because nobody told you. Forgot a cousin's name at the last reunion. Scrambling for a blood group when someone's in the hospital.
+                            </p>
+                            <p>
+                                Communities don't disappear — they just lose their center.
+                            </p>
+                        </div>
+                    </motion.div>
+                </div>
+            </div>
 
-            {/* ─── Features ─── */}
-            <div className="mx-auto max-w-[1100px] px-6 py-20 sm:px-8 lg:px-10">
+            {/* ─── Benefits ─── */}
+            <div className="mx-auto max-w-[1100px] px-6 py-24 sm:px-8 lg:px-10">
                 <motion.div
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ ...MOTION_PAGE_ENTER, delay: 0.1 }}
-                    className="text-center mb-14"
+                    className="mb-14"
                 >
                     <p className="text-caption font-semibold uppercase tracking-wider text-saffron mb-3">
-                        Everything you need
+                        What you get
                     </p>
                     <h2 className="font-display text-heading-lg font-semibold text-ink">
-                        Built for your community
+                        Everything your community needs
                     </h2>
                 </motion.div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {features.map((feat, i) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                    {benefits.map((benefit, i) => (
                         <motion.div
-                            key={feat.title}
+                            key={benefit.title}
                             initial={{ opacity: 0, y: 8 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ ...MOTION_PAGE_ENTER, delay: 0.15 + i * 0.05 }}
-                            className="border border-border p-6 hover:border-ink-muted transition-colors"
+                            className="flex gap-5"
                         >
-                            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-saffron/10 mb-4">
-                                <feat.icon className="w-5 h-5 text-saffron" />
+                            <div className="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-saffron/10 flex-shrink-0 mt-0.5">
+                                <benefit.icon className="w-5 h-5 text-saffron" />
                             </div>
-                            <h3 className="text-body font-semibold text-ink mb-2">
-                                {feat.title}
-                            </h3>
-                            <p className="text-sm text-ink-muted leading-relaxed">
-                                {feat.desc}
-                            </p>
+                            <div>
+                                <h3 className="text-body font-semibold text-ink mb-1.5">
+                                    {benefit.title}
+                                </h3>
+                                <p className="text-sm text-ink-muted leading-relaxed">
+                                    {benefit.desc}
+                                </p>
+                            </div>
                         </motion.div>
                     ))}
                 </div>
             </div>
 
-            {/* ─── Stats ─── */}
-            {memberCount !== null && (
-                <>
-                    <div className="h-px bg-border mx-auto max-w-[1100px]" />
-                    <motion.section
+            {/* ─── How it works ─── */}
+            <div className="bg-surface">
+                <div className="mx-auto max-w-[1100px] px-6 py-24 sm:px-8 lg:px-10">
+                    <motion.div
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ ...MOTION_PAGE_ENTER, delay: 0.3 }}
-                        className="mx-auto max-w-[1100px] px-6 py-16 sm:px-8 lg:px-10 text-center"
+                        transition={{ ...MOTION_PAGE_ENTER, delay: 0.1 }}
+                        className="text-center mb-14"
                     >
-                        <p className="font-display text-heading-xl font-bold text-ink">
-                            {memberCount.toLocaleString()}+
+                        <p className="text-caption font-semibold uppercase tracking-wider text-saffron mb-3">
+                            How it works
                         </p>
-                        <p className="text-body text-ink-muted mt-2">
-                            Members already part of the community
-                        </p>
-                        <button
-                            onClick={() => navigate("/signup")}
-                            className="mt-8 inline-flex items-center gap-2 bg-ink text-canvas px-7 py-3 text-body font-semibold hover:bg-ink-muted transition-colors"
+                        <h2 className="font-display text-heading-lg font-semibold text-ink">
+                            Three steps to get started
+                        </h2>
+                    </motion.div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-3xl mx-auto">
+                        {[
+                            {
+                                step: "01",
+                                title: "Your family head joins",
+                                desc: "A family head creates the family and invites members.",
+                            },
+                            {
+                                step: "02",
+                                title: "You accept the invite",
+                                desc: "Get a link, create your account, and you're in.",
+                            },
+                            {
+                                step: "03",
+                                title: "You're connected",
+                                desc: "See events, chat with family, access health records — everything in one place.",
+                            },
+                        ].map((item, i) => (
+                            <motion.div
+                                key={item.step}
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ ...MOTION_PAGE_ENTER, delay: 0.15 + i * 0.05 }}
+                                className="text-center"
+                            >
+                                <p className="font-display text-heading-md font-bold text-saffron mb-3">
+                                    {item.step}
+                                </p>
+                                <h3 className="text-body font-semibold text-ink mb-2">
+                                    {item.title}
+                                </h3>
+                                <p className="text-sm text-ink-muted leading-relaxed">
+                                    {item.desc}
+                                </p>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* ─── Social Proof ─── */}
+            {memberCount !== null && (
+                <>
+                    <div className="mx-auto max-w-[1100px] px-6 py-24 sm:px-8 lg:px-10 text-center">
+                        <motion.div
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ ...MOTION_PAGE_ENTER, delay: 0.1 }}
                         >
-                            <Heart className="h-4 w-4" />
-                            Join Them
-                        </button>
-                    </motion.section>
+                            <p className="font-display text-heading-xl font-bold text-ink mb-2">
+                                {memberCount.toLocaleString()}+
+                            </p>
+                            <p className="text-body text-ink-secondary mb-2">
+                                Members across the community
+                            </p>
+                            <p className="text-sm text-ink-muted max-w-md mx-auto">
+                                Families already using Modheshwari to stay connected, coordinate events, and look out for each other.
+                            </p>
+                        </motion.div>
+                    </div>
                 </>
             )}
+
+            {/* ─── Final CTA ─── */}
+            <div className="bg-surface">
+                <div className="mx-auto max-w-[1100px] px-6 py-24 sm:px-8 lg:px-10 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ ...MOTION_PAGE_ENTER, delay: 0.1 }}
+                    >
+                        <h2 className="font-display text-heading-lg font-semibold text-ink mb-4">
+                            Ready to join your family?
+                        </h2>
+                        <p className="text-body text-ink-secondary mb-8 max-w-md mx-auto">
+                            Your community is already here. All you need is an invite.
+                        </p>
+                        <div className="flex items-center justify-center gap-4">
+                            <button
+                                onClick={() => navigate("/signup")}
+                                className="inline-flex items-center gap-2 bg-ink text-canvas px-8 py-3.5 text-body font-semibold hover:bg-ink-muted transition-colors"
+                            >
+                                Join Your Family
+                                <ArrowRight className="h-4 w-4" />
+                            </button>
+                            <button
+                                onClick={() => navigate("/signin")}
+                                className="inline-flex items-center gap-2 border border-border px-8 py-3.5 text-body font-semibold text-ink hover:border-ink-muted hover:bg-surface transition-colors"
+                            >
+                                Sign In
+                            </button>
+                        </div>
+                    </motion.div>
+                </div>
+            </div>
 
             {/* ─── Footer ─── */}
             <div className="h-px bg-border mx-auto max-w-[1100px]" />
             <div className="mx-auto max-w-[1100px] px-6 py-8 sm:px-8 lg:px-10">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <SunMark size={24} />
                         <span className="text-body font-semibold text-ink">
                             Modheshwari
                         </span>
                     </div>
+                    <div className="flex items-center gap-6 text-sm text-ink-muted">
+                        <a href="/privacy" className="hover:text-ink transition-colors">
+                            Privacy
+                        </a>
+                        <a href="/terms" className="hover:text-ink transition-colors">
+                            Terms
+                        </a>
+                        <a href="/contact" className="hover:text-ink transition-colors">
+                            Contact
+                        </a>
+                    </div>
                     <p className="text-caption text-ink-muted">
-                        &copy; {new Date().getFullYear()} Modheshwari Community
+                        &copy; {new Date().getFullYear()} Modheshwari
                     </p>
                 </div>
             </div>
