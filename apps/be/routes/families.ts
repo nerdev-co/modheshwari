@@ -275,6 +275,9 @@ export async function handleReviewInvite(
       where: { id: inviteId },
     });
     if (!invite) return failure("Invite not found", "Not Found", 404);
+    if (invite.familyId !== familyId) {
+      return failure("Invite does not belong to this family", "Forbidden", 403);
+    }
     if (invite.status !== "PENDING")
       return failure("Invite already reviewed", "Conflict", 409);
 
