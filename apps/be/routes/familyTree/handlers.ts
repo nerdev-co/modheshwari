@@ -184,6 +184,26 @@ export async function handleCreateRelationship(
             return failure("Target user not found", "Not Found", 404);
         }
 
+        // Verify both users belong to the same family
+        const [userFamily, targetFamily] = await Promise.all([
+            prisma.familyMember.findFirst({
+                where: { userId },
+                select: { familyId: true },
+            }),
+            prisma.familyMember.findFirst({
+                where: { userId: targetUserId },
+                select: { familyId: true },
+            }),
+        ]);
+
+        if (!userFamily || !targetFamily) {
+            return failure("Both users must be members of a family", "Bad Request", 400);
+        }
+
+        if (userFamily.familyId !== targetFamily.familyId) {
+            return failure("Can only create relations between members of the same family", "Forbidden", 403);
+        }
+
         // Check if relation already exists
         const existingRelation = await prisma.userRelation.findFirst({
             where: {
