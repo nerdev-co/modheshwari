@@ -278,6 +278,10 @@ export async function handleReviewStatusUpdateRequest(
             where: { userId: reqObj.targetUserId },
             data: { status: false },
           });
+          await tx.user.update({
+            where: { id: reqObj.targetUserId },
+            data: { status: false },
+          });
         }
       }
 
