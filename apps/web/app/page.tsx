@@ -328,7 +328,15 @@ function LandingPage() {
                         </a>
                     </div>
                     <p className="text-caption text-ink-muted">
-                        &copy; {new Date().getFullYear()} Modheshwari
+                        &copy; {new Date().getFullYear()} Modheshwari · Built by{" "}
+                        <a
+                            href="https://nerdev.in"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-ink transition-colors"
+                        >
+                            nerdev
+                        </a>
                     </p>
                 </div>
             </div>
