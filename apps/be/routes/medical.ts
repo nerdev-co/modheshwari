@@ -41,7 +41,7 @@ export async function handleUpdateMedical(req: Request) {
         const updated = await prisma.profile.upsert({
             where: { userId },
             update: {
-                ...(body.bloodGroup && { bloodGroup: normalizeBloodGroup(body.bloodGroup) }),
+                ...(body.bloodGroup && { bloodGroup: normalizeBloodGroup(body.bloodGroup) as any }),
                 ...(body.allergies !== undefined && {
                     allergies: body.allergies,
                 }),
@@ -52,7 +52,7 @@ export async function handleUpdateMedical(req: Request) {
             create: {
                 userId,
                 status: true,
-                bloodGroup: normalizeBloodGroup(body.bloodGroup ?? "O_POS"),
+                bloodGroup: normalizeBloodGroup(body.bloodGroup ?? "O_POS") as any,
                 allergies: body.allergies || null,
                 medicalNotes: body.medicalNotes || null,
             },
