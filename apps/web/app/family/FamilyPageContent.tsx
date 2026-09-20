@@ -64,19 +64,11 @@ export default function FamilyPageContent() {
 
             setLoading(true);
             try {
-                const res = await apiFetch(
+                const data = await apiFetch(
                     `${API_BASE}/family/members${all ? "?all=true" : ""}`,
                     { signal },
                 );
 
-                if (res.status === 401) {
-                    navigate(`/signin?next=/family`);
-                    return;
-                }
-
-                if (!res.ok) throw new Error("Failed to fetch members");
-
-                const data = await res.json();
                 setMembers(data.data?.members || []);
             } catch (err) {
                 if (err instanceof DOMException && err.name === "AbortError") return;
@@ -96,8 +88,6 @@ export default function FamilyPageContent() {
                 method: "PATCH",
                 body: JSON.stringify({ status: !currentStatus }),
             });
-
-            if (!res.ok) throw new Error("Failed to update status");
 
             setMembers((prev) =>
                 prev.map((m) =>

@@ -72,12 +72,9 @@ export default function MedicalRecordsPage() {
     setLoadingData(true);
 
     try {
-      const res = await apiFetch(`${API_BASE}/medical-records`, {
+      const json = await apiFetch(`${API_BASE}/medical-records`, {
         signal,
       });
-      if (!res.ok) throw new Error(t("medical.records.loadFailed"));
-
-      const json = await res.json();
       setRecords(json.data?.items ?? []);
     } catch (e) {
       if (e instanceof DOMException && e.name === "AbortError") return;
@@ -97,13 +94,10 @@ export default function MedicalRecordsPage() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const res = await apiFetch(`${API_BASE}/medical-records`, {
+      await apiFetch(`${API_BASE}/medical-records`, {
         method: "POST",
         body: JSON.stringify(form),
       });
-      if (!res.ok) {
-        throw new Error(t("medical.records.createError"));
-      }
 
       setForm(EMPTY_FORM);
       await loadRecords();

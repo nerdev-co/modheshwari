@@ -25,9 +25,8 @@ export default function SpecPage() {
     setSpecType(type);
     if (type === "asyncapi" && !asyncApiSpec) {
       try {
-        const res = await apiFetch("/api/asyncapi");
-        const yamlText = await res.text();
-        setAsyncApiSpec(yamlText);
+        const data = await apiFetch("/api/asyncapi");
+        setAsyncApiSpec(typeof data === "string" ? data : JSON.stringify(data));
       } catch (err) {
         console.error("Failed to load AsyncAPI spec:", err);
       }

@@ -123,9 +123,7 @@ export default function SearchInput({
     apiFetch(`${base}?q=${encodeURIComponent(query)}`, {
       signal: controller.signal,
     })
-      .then(async (res) => {
-        if (!res.ok) throw new Error("Search failed");
-        const body = await res.json();
+      .then((body) => {
         const items: SearchResult[] = body?.data?.data || [];
         cacheRef.current.set(query, items);
         setResults(items);

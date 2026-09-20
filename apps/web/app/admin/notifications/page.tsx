@@ -73,7 +73,7 @@ export default function AdminNotifications() {
         setSending(true);
         setResult(null);
         try {
-            const res = await apiFetch(`${API_BASE}/notifications`, {
+            const json = await apiFetch(`${API_BASE}/notifications`, {
                 method: "POST",
                 body: JSON.stringify({
                     message,
@@ -83,15 +83,10 @@ export default function AdminNotifications() {
                     targetRole,
                 }),
             });
-            const json = await res.json();
             setResult(json);
-            if (res.ok) {
-                setMessage("");
-                setSubject("");
-                toast(t("admin.notifications.notificationSent"), { variant: "success" });
-            } else {
-                toast(json.error || t("admin.notifications.failedToSend"), { variant: "error" });
-            }
+            setMessage("");
+            setSubject("");
+            toast(t("admin.notifications.notificationSent"), { variant: "success" });
         } catch (err) {
             const msg = err instanceof Error ? err.message : String(err);
             toast(msg || t("admin.notifications.failedToSend"), { variant: "error" });

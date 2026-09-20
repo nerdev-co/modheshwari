@@ -167,12 +167,6 @@ export default function NotificationsPage(): React.ReactElement {
                 body: JSON.stringify(body),
             });
 
-            if (!res.ok) {
-                const js = await res.json().catch(() => null);
-                toast(js?.message || t("notifications.broadcastFailed"), { variant: "error" });
-                return;
-            }
-
             setMessage("");
             setSubject("");
             setTargetRole("ALL");

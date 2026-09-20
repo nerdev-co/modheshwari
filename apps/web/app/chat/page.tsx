@@ -261,13 +261,7 @@ export default function ChatPage() {
     }, []);
 
     const fetchChats = useCallback(async () => {
-        const response = await apiFetch(`${API_BASE}/chat`);
-
-        if (!response.ok) {
-            return;
-        }
-
-        const json = await response.json();
+        const json = await apiFetch(`${API_BASE}/chat`);
 
         setPersonal(json.data?.personal || []);
 
@@ -444,15 +438,9 @@ export default function ChatPage() {
         setSearchQuery("");
         setSearchIndex(-1);
 
-        const response = await apiFetch(
+        const json = await apiFetch(
             `${API_BASE}/messages/conversations/${conversation.id}/messages?limit=50`,
         );
-
-        if (!response.ok) {
-            return;
-        }
-
-        const json = await response.json();
 
         const loadedMessages = json.data || [];
 
@@ -714,10 +702,7 @@ export default function ChatPage() {
                 const response = await apiFetch(
                     `${API_BASE}/messages/search-users?q=${encodeURIComponent(value.trim())}`,
                 );
-                if (response.ok) {
-                    const json = await response.json();
-                    setNewChatResults(json.data || []);
-                }
+                setNewChatResults(response.data || []);
             } catch {
                 // ignore
             } finally {
@@ -728,7 +713,7 @@ export default function ChatPage() {
 
     async function startConversation(userId: string) {
         try {
-            const response = await apiFetch(
+            const json = await apiFetch(
                 `${API_BASE}/messages/conversations`,
                 {
                     method: "POST",
@@ -737,9 +722,6 @@ export default function ChatPage() {
                 },
             );
 
-            if (!response.ok) return;
-
-            const json = await response.json();
             const conversation = json.data;
 
             // Refresh conversation list
@@ -758,14 +740,11 @@ export default function ChatPage() {
             setNewChatResults([]);
 
             // Load messages for the new conversation
-            const msgResponse = await apiFetch(
+            const msgJson = await apiFetch(
                 `${API_BASE}/messages/conversations/${conversation.id}/messages?limit=50`,
             );
-            if (msgResponse.ok) {
-                const msgJson = await msgResponse.json();
-                setMessages(msgJson.data || []);
-                setTimeout(scrollToBottom, 50);
-            }
+            setMessages(msgJson.data || []);
+            setTimeout(scrollToBottom, 50);
         } catch {
             // ignore
         }

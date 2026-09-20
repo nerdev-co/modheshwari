@@ -46,8 +46,8 @@ export default function GotrasPage() {
         const fetchGotras = async () => {
             try {
                 const res = await apiFetch(`${API_BASE}/gotras`);
-                if (res?.data?.data) {
-                    setGotras(res.data.data.gotras);
+                if (res?.data) {
+                    setGotras(res.data.gotras);
                 }
             } catch {
                 // silently fail
@@ -70,8 +70,8 @@ export default function GotrasPage() {
             const res = await apiFetch(
                 `${API_BASE}/gotras/${encodeURIComponent(gotraName)}/families`,
             );
-            if (res?.data?.data) {
-                setFamilies(res.data.data.families);
+            if (res?.data) {
+                setFamilies(res.data.families);
             }
         } catch {
             // silently fail
