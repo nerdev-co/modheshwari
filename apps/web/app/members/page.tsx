@@ -14,16 +14,7 @@ import { API_BASE } from "../../lib/config";
 type Member = {
     id: string;
     name: string;
-    email: string;
-    role: string;
-    profile?: {
-        gotra?: string;
-        profession?: string;
-        location?: string;
-    } | null;
-    families?: {
-        family: { name: string };
-    }[];
+    bloodGroup: string | null;
 };
 
 /**
@@ -113,14 +104,9 @@ export default function MembersPage() {
                                                 {member.name}
                                             </p>
                                             <p className="text-caption text-ink-muted">
-                                                {member.profile?.gotra || member.role?.replace(/_/g, " ")}
+                                                {member.bloodGroup || "—"}
                                             </p>
                                         </div>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-caption text-ink-muted">
-                                            {member.families?.[0]?.family?.name || "No family"}
-                                        </p>
                                     </div>
                                 </div>
                             ))}

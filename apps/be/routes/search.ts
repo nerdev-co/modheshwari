@@ -180,6 +180,7 @@ export async function handleSearch(req: Request): Promise<Response> {
           query: esQuery,
           from: skip,
           size: take,
+          _source: ["id", "name", "profile.bloodGroup"],
         };
 
         const res = await elasticClient.search({ index: "users", body: esBody });

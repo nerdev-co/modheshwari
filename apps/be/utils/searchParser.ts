@@ -234,29 +234,9 @@ export function buildSelectClause() {
   return {
     id: true,
     name: true,
-    email: true,
-    role: true,
-    status: true,
     profile: {
       select: {
-        phone: true,
-        profession: true,
-        gotra: true,
         bloodGroup: true,
-        location: true,
-        status: true, // alive/deceased
-      },
-    },
-    families: {
-      select: {
-        role: true,
-        family: {
-          select: {
-            id: true,
-            name: true,
-            uniqueId: true,
-          },
-        },
       },
     },
   };

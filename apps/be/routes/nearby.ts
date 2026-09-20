@@ -11,6 +11,7 @@ type NearbyRow = {
   name: string;
   email: string;
   phone: string | null;
+  bloodGroup: string | null;
   locationLat: number | null;
   locationLng: number | null;
   distance_m: number;
@@ -73,10 +74,8 @@ export async function handleGetNearbyUsers(req: Request): Promise<Response> {
       SELECT
         u.id,
         u.name,
-        u.email,
         p."phone",
-        p."locationLat",
-        p."locationLng",
+        p."bloodGroup",
         ST_Distance(
           p."locationGeo",
           ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)::geography
@@ -97,10 +96,8 @@ export async function handleGetNearbyUsers(req: Request): Promise<Response> {
     const data = rows.map((row) => ({
       id: row.id,
       name: row.name,
-      email: row.email,
+      bloodGroup: row.bloodGroup,
       phone: row.phone,
-      locationLat: row.locationLat,
-      locationLng: row.locationLng,
       distanceKm: Math.round((row.distance_m / 1000) * 1000) / 1000,
     }));
 
