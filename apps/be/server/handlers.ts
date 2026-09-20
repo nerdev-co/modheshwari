@@ -15,7 +15,7 @@ export {
   handleReviewInvite,
 } from "../routes/families";
 export { handleGetFamilyMembers } from "../routes/familyMembers";
-export { handleFamilyTransfer } from "../routes/familyTransfer";
+export { handleFamilyTransferRequest, handleFamilyTransferReview } from "../routes/familyTransfer";
 
 // Gotras
 export { handleListGotras, handleGetGotraFamilies } from "../routes/gotras";

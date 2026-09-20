@@ -33,6 +33,13 @@ export const parameterizedRoutes: ParameterizedRoute[] = [
     handler: (r, params) => handlers.handleDeleteRelationship(r, params.id!),
   },
 
+  // Family transfer review
+  {
+    pattern: "/api/family/transfer/:notificationId/review",
+    method: "POST",
+    handler: (r, params) => handlers.handleFamilyTransferReview(r, params.notificationId!, params.action || ""),
+  },
+
   // Resource requests
   {
     pattern: "/api/resource-requests/:id",

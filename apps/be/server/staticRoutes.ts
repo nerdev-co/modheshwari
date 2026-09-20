@@ -173,7 +173,7 @@ export const staticRoutes: Route[] = [
   {
     path: "/api/family/transfer",
     method: "POST",
-    handler: (r: Request) => handlers.handleFamilyTransfer(r),
+    handler: (r: Request) => handlers.handleFamilyTransferRequest(r),
   },
   {
     path: "/api/medical/search",
