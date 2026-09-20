@@ -473,6 +473,10 @@ export async function handleReviewResourceRequest(
                 where: { id },
                 data: {
                     status: overall,
+                    ...(overall === "APPROVED" && {
+                        approverId: reviewerId,
+                        approverName: reviewerName,
+                    }),
                 },
             });
 
