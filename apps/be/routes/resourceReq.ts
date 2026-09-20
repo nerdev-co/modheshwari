@@ -473,8 +473,6 @@ export async function handleReviewResourceRequest(
                 where: { id },
                 data: {
                     status: overall,
-                    approverId: reviewerId,
-                    approverName: reviewerName,
                 },
             });
 
