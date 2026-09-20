@@ -58,12 +58,18 @@ export async function handleGetChat(req: Request) {
         // the race window for duplicate conversations.
         // A unique constraint on participants would fully prevent this.
         familyChat = await prisma.$transaction(async (tx) => {
-          const existing = await tx.conversation.findFirst({
+          // Find conversations containing all family members (hasEvery matches supersets)
+          const candidates = await tx.conversation.findMany({
             where: {
               participants: { hasEvery: memberIds },
             },
             include: { messages: { take: 1, orderBy: { createdAt: "desc" } } },
           });
+
+          // Exact match: participants count must equal memberIds count
+          const existing = candidates.find(
+            (c) => c.participants.length === memberIds.length,
+          );
 
           if (existing) return existing;
 

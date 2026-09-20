@@ -159,8 +159,8 @@ export async function handleCreateConversation(
             new Set([userId, ...body.participantIds]),
         );
 
-        // Check if conversation already exists
-        const existingConversation = await prisma.conversation.findFirst({
+        // Check if conversation already exists (exact participant match)
+        const candidates = await prisma.conversation.findMany({
             where: {
                 AND: [
                     {
@@ -176,6 +176,10 @@ export async function handleCreateConversation(
                 ],
             },
         });
+
+        const existingConversation = candidates.find(
+            (c) => c.participants.length === allParticipants.length,
+        );
 
         if (existingConversation) {
             return success("Conversation found", existingConversation);
