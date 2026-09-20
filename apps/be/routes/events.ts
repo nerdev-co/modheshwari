@@ -521,64 +521,71 @@ export async function handleApproveEvent(
         if (!v.ok) return v.response;
         const body = v.data;
 
-        // Find the approval record
-        const approval = await prisma.eventApproval.findFirst({
-            where: {
-                eventId: id,
-                approverId,
-            },
-            include: {
-                event: {
-                    select: {
-                        id: true,
-                        name: true,
-                        status: true,
-                        createdById: true,
+        // Atomic: update approval + recompute event status in one transaction
+        // to prevent race condition where two concurrent approvers both
+        // read stale state and produce conflicting event status updates.
+        const result = await prisma.$transaction(async (tx) => {
+            // Find the approval record inside the transaction
+            const approval = await tx.eventApproval.findFirst({
+                where: {
+                    eventId: id,
+                    approverId,
+                },
+                include: {
+                    event: {
+                        select: {
+                            id: true,
+                            name: true,
+                            status: true,
+                            createdById: true,
+                        },
                     },
                 },
-            },
-        });
+            });
 
-        if (!approval) {
-            return failure("Approval record not found", "Not Found", 404);
-        }
+            if (!approval) {
+                throw new Error("NOT_FOUND");
+            }
 
-        // Update approval record
-        await prisma.eventApproval.update({
-            where: { id: approval.id },
-            data: {
-                status: body.status,
-                remarks: body.remarks,
-                reviewedAt: new Date(),
-            },
-        });
+            if (approval.status !== "PENDING") {
+                throw new Error("ALREADY_REVIEWED");
+            }
 
-        // Check if all approvals are complete
-        const allApprovals = await prisma.eventApproval.findMany({
-            where: { eventId: id },
-        });
+            // Update approval record
+            await tx.eventApproval.update({
+                where: { id: approval.id },
+                data: {
+                    status: body.status,
+                    remarks: body.remarks,
+                    reviewedAt: new Date(),
+                },
+            });
 
-        const pendingApprovals = allApprovals.filter(
-            (a) => a.status === "PENDING",
-        );
-        const rejectedApprovals = allApprovals.filter(
-            (a) => a.status === "REJECTED",
-        );
+            // Check if all approvals are complete (re-read after our update)
+            const allApprovals = await tx.eventApproval.findMany({
+                where: { eventId: id },
+            });
 
-        let eventStatus = approval.event.status;
+            const pendingApprovals = allApprovals.filter(
+                (a) => a.status === "PENDING",
+            );
+            const rejectedApprovals = allApprovals.filter(
+                (a) => a.status === "REJECTED",
+            );
 
-        // If any rejection, mark event as rejected
-        if (rejectedApprovals.length > 0) {
-            eventStatus = "REJECTED";
-        }
-        // If all approved, mark event as approved
-        else if (pendingApprovals.length === 0) {
-            eventStatus = "APPROVED";
-        }
+            let eventStatus = approval.event.status;
 
-        // Update event status if changed
-        if (eventStatus !== approval.event.status) {
-            await prisma.$transaction(async (tx) => {
+            // If any rejection, mark event as rejected
+            if (rejectedApprovals.length > 0) {
+                eventStatus = "REJECTED";
+            }
+            // If all approved, mark event as approved
+            else if (pendingApprovals.length === 0) {
+                eventStatus = "APPROVED";
+            }
+
+            // Update event status if changed
+            if (eventStatus !== approval.event.status) {
                 const updatedEvent = await tx.event.update({
                     where: { id },
                     data: { status: eventStatus },
@@ -612,18 +619,22 @@ export async function handleApproveEvent(
                     },
                     topic: TOPICS.NOTIFICATION_EVENTS,
                 });
-            });
+            }
 
+            return { eventStatus, approval };
+        });
+
+        if (result.approval.event.status !== result.eventStatus) {
             await prisma.notification.create({
                 data: {
-                    userId: approval.event.createdById,
+                    userId: result.approval.event.createdById,
                     type: "EVENT_APPROVAL",
-                    message: `Your event "${approval.event.name}" has been ${eventStatus.toLowerCase()}`,
+                    message: `Your event "${result.approval.event.name}" has been ${result.eventStatus.toLowerCase()}`,
                 },
             });
         }
 
-        return success("Approval recorded", { eventStatus });
+        return success("Approval recorded", { eventStatus: result.eventStatus });
     } catch (err) {
         logger.error("ApproveEvent Error:", err);
         return failure("Internal server error", "Unexpected Error", 500);
