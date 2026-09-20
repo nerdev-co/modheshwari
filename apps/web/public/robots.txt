@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://modheshwari.nerdev.in/sitemap.xml
